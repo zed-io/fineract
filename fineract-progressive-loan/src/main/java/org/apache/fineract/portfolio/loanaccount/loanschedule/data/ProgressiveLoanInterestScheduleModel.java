@@ -196,4 +196,5 @@ public class ProgressiveLoanInterestScheduleModel {
     public Money getZero() {
         return Money.zero(loanProductRelatedDetail.getCurrency(), mc);
     }
+
 }
