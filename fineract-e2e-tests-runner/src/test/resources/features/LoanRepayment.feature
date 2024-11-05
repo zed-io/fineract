@@ -3397,3 +3397,42 @@ Feature: LoanRepayment
     When Admin makes Credit Balance Refund transaction on "10 September 2024" with 91.21 EUR transaction amount
     When Customer undo "1"th "Repayment" transaction made on "24 June 2024"
     Then Loan status will be "ACTIVE"
+
+  Scenario: Verify the relationship for Interest Refund transaction after repayment by reverting related transaction
+    When Admin sets the business date to "30 January 2024"
+    When Admin creates a client with random data
+    When Admin creates a fully customized loan with the following data:
+      | LoanProduct                                                                           | submitted on date | with Principal | ANNUAL interest rate % | interest type     | interest calculation period | amortization type  | loanTermFrequency | loanTermFrequencyType | repaymentEvery | repaymentFrequencyType | numberOfRepayments | graceOnPrincipalPayment | graceOnInterestPayment | interest free period | Payment strategy            |
+      | LP2_ADV_PYMNT_INTEREST_DAILY_EMI_ACTUAL_ACTUAL_INTEREST_REFUND_INTEREST_RECALCULATION | 01 January 2024   | 200            | 15                     | DECLINING_BALANCE | DAILY                       | EQUAL_INSTALLMENTS | 4                 | MONTHS                | 1              | MONTHS                 | 4                  | 0                       | 0                      | 0                    | ADVANCED_PAYMENT_ALLOCATION |
+    And Admin successfully approves the loan on "01 January 2024" with "200" amount and expected disbursement date on "01 January 2024"
+    And Admin successfully disburse the loan on "01 January 2024" with "200" EUR transaction amount
+    When Customer makes "MERCHANT_ISSUED_REFUND" transaction with "AUTOPAY" payment type on "15 January 2024" with 50 EUR transaction amount and self-generated Idempotency key
+    And Customer makes "PAYOUT_REFUND" transaction with "AUTOPAY" payment type on "16 January 2024" with 50 EUR transaction amount and self-generated Idempotency key
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted |
+      | 01 January 2024  | Disbursement           | 200.0  | 0.0       | 0.0      | 0.0  | 0.0       | 200.0        | false    |
+      | 15 January 2024  | Merchant Issued Refund | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 150.0        | false    |
+      | 15 January 2024  | Interest Refund        | 0.29   | 0.29      | 0.0      | 0.0  | 0.0       | 149.71       | false    |
+      | 16 January 2024  | Payout Refund          | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 99.71        | false    |
+      | 16 January 2024  | Interest Refund        | 0.31   | 0.31      | 0.0      | 0.0  | 0.0       | 99.4         | false    |
+    When Customer makes "AUTOPAY" repayment on "10 January 2024" with 25 EUR transaction amount (and transaction fails because of wrong date)
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted |
+      | 01 January 2024  | Disbursement           | 200.0  | 0.0       | 0.0      | 0.0  | 0.0       | 200.0        | false    |
+      | 10 January 2024  | Repayment              | 25.0   | 25.0      | 0.0      | 0.0  | 0.0       | 175.0        | false    |
+      | 15 January 2024  | Merchant Issued Refund | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 125.0        | false    |
+      | 15 January 2024  | Interest Refund        | 0.29   | 0.29      | 0.0      | 0.0  | 0.0       | 124.71       | false    |
+      | 16 January 2024  | Payout Refund          | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 74.71        | false    |
+      | 16 January 2024  | Interest Refund        | 0.31   | 0.31      | 0.0      | 0.0  | 0.0       | 74.4         | false    |
+    Then In Loan Transactions the "4"th Transaction has relationship type=RELATED with the "3"th Transaction
+    Then In Loan Transactions the "6"th Transaction has relationship type=RELATED with the "5"th Transaction
+    When Customer undo "1"th "Merchant Issued Refund" transaction made on "15 January 2024"
+    When Customer undo "1"th "Payout Refund" transaction made on "16 January 2024"
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type       | Amount | Principal | Interest | Fees | Penalties | Loan Balance | Reverted |
+      | 01 January 2024  | Disbursement           | 200.0  | 0.0       | 0.0      | 0.0  | 0.0       | 200.0        | false    |
+      | 10 January 2024  | Repayment              | 25.0   | 25.0      | 0.0      | 0.0  | 0.0       | 175.0        | false    |
+      | 15 January 2024  | Merchant Issued Refund | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 125.0        | true     |
+      | 15 January 2024  | Interest Refund        | 0.29   | 0.29      | 0.0      | 0.0  | 0.0       | 124.71       | true     |
+      | 16 January 2024  | Payout Refund          | 50.0   | 50.0      | 0.0      | 0.0  | 0.0       | 125.0        | true     |
+      | 16 January 2024  | Interest Refund        | 0.31   | 0.31      | 0.0      | 0.0  | 0.0       | 124.69       | true     |
