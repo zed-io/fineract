@@ -16,18 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.testrail;
 
-public enum AdvancePaymentsAdjustmentType {
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
+@Component
+@Getter
+public class TestRailProperties {
 
-    public final Integer value;
-
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
-    }
+    @Value("${fineract-test.testrail.enabled}")
+    private boolean enabled;
+    @Value("${fineract-test.testrail.base-url}")
+    private String baseUrl;
+    @Value("${fineract-test.testrail.username}")
+    private String username;
+    @Value("${fineract-test.testrail.password}")
+    private String password;
+    @Value("${fineract-test.testrail.run-id}")
+    private int runId;
 }

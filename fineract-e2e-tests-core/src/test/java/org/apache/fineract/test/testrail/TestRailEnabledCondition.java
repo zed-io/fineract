@@ -16,18 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.testrail;
 
-public enum AdvancePaymentsAdjustmentType {
+import org.apache.fineract.test.support.PropertiesCondition;
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
+public class TestRailEnabledCondition extends PropertiesCondition<TestRailProperties> {
 
-    public final Integer value;
+    @Override
+    protected Class<TestRailProperties> getPropertiesClass() {
+        return TestRailProperties.class;
+    }
 
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
+    @Override
+    protected boolean matches(TestRailProperties properties) {
+        return properties.isEnabled();
     }
 }

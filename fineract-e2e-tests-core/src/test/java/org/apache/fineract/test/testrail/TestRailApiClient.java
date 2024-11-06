@@ -16,18 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.testrail;
 
-public enum AdvancePaymentsAdjustmentType {
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
+interface TestRailApiClient {
 
-    public final Integer value;
-
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
-    }
+    @Headers({ "Content-Type:application/json" })
+    @POST("/api/v2/add_result_for_case/{runId}/{caseId}")
+    Call<Void> addResultForCase(@Path("runId") int runId, @Path("caseId") int caseId, @Body AddResultForCaseRequest request);
 }

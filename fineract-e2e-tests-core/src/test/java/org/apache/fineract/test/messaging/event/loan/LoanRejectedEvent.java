@@ -16,18 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.messaging.event.loan;
 
-public enum AdvancePaymentsAdjustmentType {
+public class LoanRejectedEvent extends AbstractLoanEvent {
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
-
-    public final Integer value;
-
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
+    @Override
+    public String getEventName() {
+        return "LoanRejectedBusinessEvent";
     }
 }

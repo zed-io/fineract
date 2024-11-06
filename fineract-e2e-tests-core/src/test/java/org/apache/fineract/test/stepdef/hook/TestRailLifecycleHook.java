@@ -16,43 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.stepdef.hook;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.cucumber.java.After;
+import io.cucumber.java.Scenario;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.test.testrail.TestRailClient;
+import org.apache.fineract.test.testrail.TestRailProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
-public enum LoanStatus {
+@Slf4j
+public class TestRailLifecycleHook {
 
-    NONE(0), //
-    SUBMITTED_AND_PENDING_APPROVAL(100), //
-    APPROVED(200), //
-    ACTIVE(300), //
-    WITHDRAWN(400), //
-    REJECTED(500), //
-    CLOSED_OBLIGATIONS_MET(600), //
-    OVERPAID(700), //
-    CLOSED_WRITTEN_OFF(601);//
+    @Autowired
+    private TestRailProperties testRailProperties;
 
-    public final Integer value;
+    @Autowired
+    private ApplicationContext applicationContext;
 
-    LoanStatus(Integer value) {
-        this.value = value;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public LoanStatus getStatusByValue(Integer value) {
-        return BY_VALUE.get(value);
-
-    }
-
-    private static final Map<Integer, LoanStatus> BY_VALUE = new HashMap<>();
-
-    static {
-        for (LoanStatus e : values()) {
-            BY_VALUE.put(e.value, e);
+    @After
+    public void tearDown(Scenario scenario) {
+        if (testRailProperties.isEnabled()) {
+            TestRailClient testRailClient = applicationContext.getBean(TestRailClient.class);
+            testRailClient.saveScenarioResult(scenario);
         }
     }
 }

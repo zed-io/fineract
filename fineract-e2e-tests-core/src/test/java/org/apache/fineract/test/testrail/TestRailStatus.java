@@ -16,18 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.testrail;
 
-public enum AdvancePaymentsAdjustmentType {
+import com.google.gson.annotations.SerializedName;
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
-
-    public final Integer value;
-
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
-    }
+enum TestRailStatus {
+    @SerializedName("1") //
+    PASSED, //
+    @SerializedName("2") //
+    BLOCKED, //
+    @SerializedName("3") //
+    UNTESTED, //
+    @SerializedName("4") //
+    RETEST, //
+    @SerializedName("5") //
+    FAILED//
 }

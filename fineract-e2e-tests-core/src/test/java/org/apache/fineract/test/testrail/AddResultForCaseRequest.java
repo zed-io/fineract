@@ -16,18 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.test.data;
+package org.apache.fineract.test.testrail;
 
-public enum AdvancePaymentsAdjustmentType {
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    RESCHEDULE_NEXT_REPAYMENTS(1), //
-    REDUCE_NUMBER_OF_INSTALLMENTS(2), //
-    REDUCE_EMI_AMOUNT(3), //
-    ADJUST_LAST_UNPAID_PERIOD(4);//
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class AddResultForCaseRequest {
 
-    public final Integer value;
+    @SerializedName("status_id")
+    private TestRailStatus statusId;
 
-    AdvancePaymentsAdjustmentType(Integer value) {
-        this.value = value;
-    }
+    private String comment;
 }
