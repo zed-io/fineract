@@ -1310,7 +1310,21 @@ public class LoanStepDef extends AbstractStepDef {
         long loanId = loanResponse.body().getLoanId();
         PostLoansLoanIdRequest disburseRequest = LoanRequestFactory.defaultLoanDisburseRequest()
                 .actualDisbursementDate(actualDisbursementDate).transactionAmount(new BigDecimal(transactionAmount));
-        performLoanDisbursementAndVerifyStatus(loanId, disburseRequest);
+
+        Response<PostLoansLoanIdResponse> loanDisburseResponse = loansApi
+                .stateTransitions(loanId, disburseRequest, "disburseWithoutAutoDownPayment").execute();
+        testContext().set(TestContextKey.LOAN_DISBURSE_RESPONSE, loanDisburseResponse);
+        ErrorHelper.checkSuccessfulApiCall(loanDisburseResponse);
+        Long statusActual = loanDisburseResponse.body().getChanges().getStatus().getId();
+
+        Response<GetLoansLoanIdResponse> loanDetails = loansApi.retrieveLoan(loanId, false, "", "", "").execute();
+        Long statusExpected = Long.valueOf(loanDetails.body().getStatus().getId());
+
+        assertThat(statusActual)//
+                .as(ErrorMessageHelper.wrongLoanStatus(Math.toIntExact(statusActual), Math.toIntExact(statusExpected)))//
+                .isEqualTo(statusExpected);//
+        eventCheckHelper.disburseLoanEventCheck(loanId);
+        eventCheckHelper.loanDisbursalTransactionEventCheck(loanDisburseResponse);
     }
 
     @And("Admin successfully disburse the loan on {string} with {string} EUR transaction amount and {string} fixed emi amount")
