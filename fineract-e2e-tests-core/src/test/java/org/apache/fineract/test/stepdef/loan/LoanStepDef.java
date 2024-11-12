@@ -52,7 +52,9 @@ import org.apache.fineract.avro.loan.v1.LoanStatusEnumDataV1;
 import org.apache.fineract.avro.loan.v1.LoanTransactionDataV1;
 import org.apache.fineract.client.models.AdvancedPaymentData;
 import org.apache.fineract.client.models.DeleteLoansLoanIdResponse;
+import org.apache.fineract.client.models.GetLoanProductsChargeOffReasonOptions;
 import org.apache.fineract.client.models.GetLoanProductsProductIdResponse;
+import org.apache.fineract.client.models.GetLoanProductsTemplateResponse;
 import org.apache.fineract.client.models.GetLoansLoanIdDelinquencySummary;
 import org.apache.fineract.client.models.GetLoansLoanIdLoanChargeData;
 import org.apache.fineract.client.models.GetLoansLoanIdLoanChargePaidByData;
@@ -157,6 +159,9 @@ public class LoanStepDef extends AbstractStepDef {
 
     @Autowired
     private LoanProductsApi loanProductsApi;
+
+    @Autowired
+    private LoanProductsCustomApi loanProductsCustomApi;
 
     @Autowired
     private EventStore eventStore;
@@ -2550,6 +2555,66 @@ public class LoanStepDef extends AbstractStepDef {
         assertTrue(relationshipOptional.isPresent(), "Missed relationship between transactions");
     }
 
+    @Then("Loan Product Charge-Off reasons options from loan product template have {int} options, with the following data:")
+    public void loanProductTemplateChargeOffReasonOptionsCheck(final int linesExpected, final DataTable table) throws IOException {
+        final Response<GetLoanProductsTemplateResponse> loanProductDetails = loanProductsApi.retrieveTemplate11(false).execute();
+        ErrorHelper.checkSuccessfulApiCall(loanProductDetails);
+
+        assertNotNull(loanProductDetails.body());
+        final List<GetLoanProductsChargeOffReasonOptions> chargeOffReasonOptions = loanProductDetails.body().getChargeOffReasonOptions();
+        assertNotNull(chargeOffReasonOptions);
+
+        final List<List<String>> data = table.asLists();
+        final int linesActual = chargeOffReasonOptions.size();
+        data.stream().skip(1) // skip headers
+                .forEach(expectedValues -> {
+                    final List<List<String>> actualValuesList = chargeOffReasonOptions.stream()
+                            .map(chargeOffReason -> fetchValuesOfLoanChargeOffReasonOptions(data.get(0), chargeOffReason))
+                            .collect(Collectors.toList());
+
+                    final boolean containsExpectedValues = actualValuesList.stream()
+                            .anyMatch(actualValues -> actualValues.equals(expectedValues));
+                    assertThat(containsExpectedValues).as(ErrorMessageHelper
+                            .wrongValueInLineInChargeOffReasonOptions(data.indexOf(expectedValues), actualValuesList, expectedValues))
+                            .isTrue();
+
+                    assertThat(linesActual).as(ErrorMessageHelper.wrongNumberOfLinesInChargeOffReasonOptions(linesActual, linesExpected))
+                            .isEqualTo(linesExpected);
+                });
+    }
+
+    @Then("Loan Product {string} Charge-Off reasons options from specific loan product have {int} options, with the following data:")
+    public void specificLoanProductChargeOffReasonOptionsCheck(final String loanProductName, final int linesExpected, final DataTable table)
+            throws IOException {
+        final DefaultLoanProduct product = DefaultLoanProduct.valueOf(loanProductName);
+        final Long loanProductId = loanProductResolver.resolve(product);
+        final Response<GetLoanProductsProductIdResponse> loanProductDetails = loanProductsCustomApi
+                .retrieveLoanProductDetails(loanProductId, "true").execute();
+        ErrorHelper.checkSuccessfulApiCall(loanProductDetails);
+
+        assertNotNull(loanProductDetails.body());
+        final List<GetLoanProductsChargeOffReasonOptions> chargeOffReasonOptions = loanProductDetails.body().getChargeOffReasonOptions();
+        assertNotNull(chargeOffReasonOptions);
+
+        final List<List<String>> data = table.asLists();
+        final int linesActual = chargeOffReasonOptions.size();
+        data.stream().skip(1) // skip headers
+                .forEach(expectedValues -> {
+                    final List<List<String>> actualValuesList = chargeOffReasonOptions.stream()
+                            .map(chargeOffReason -> fetchValuesOfLoanChargeOffReasonOptions(data.get(0), chargeOffReason))
+                            .collect(Collectors.toList());
+
+                    final boolean containsExpectedValues = actualValuesList.stream()
+                            .anyMatch(actualValues -> actualValues.equals(expectedValues));
+                    assertThat(containsExpectedValues).as(ErrorMessageHelper
+                            .wrongValueInLineInChargeOffReasonOptions(data.indexOf(expectedValues), actualValuesList, expectedValues))
+                            .isTrue();
+
+                    assertThat(linesActual).as(ErrorMessageHelper.wrongNumberOfLinesInChargeOffReasonOptions(linesActual, linesExpected))
+                            .isEqualTo(linesExpected);
+                });
+    }
+
     private void createCustomizedLoan(final List<String> loanData, final boolean withEmi) throws IOException {
         final String loanProduct = loanData.get(0);
         final String submitDate = loanData.get(1);
@@ -2924,6 +2989,31 @@ public class LoanStepDef extends AbstractStepDef {
                 case "Is Specific To Installment" -> actualValues.add(String.valueOf(emiVariation.getIsSpecificToInstallment()));
                 case "Is Processed" ->
                     actualValues.add(emiVariation.getIsProcessed() == null ? null : String.valueOf(emiVariation.getIsProcessed()));
+            }
+        }
+        return actualValues;
+    }
+
+    @SuppressFBWarnings("SF_SWITCH_NO_DEFAULT")
+    private List<String> fetchValuesOfLoanChargeOffReasonOptions(final List<String> header,
+            final GetLoanProductsChargeOffReasonOptions chargeOffReasonOption) {
+        final List<String> actualValues = new ArrayList<>();
+        for (String headerName : header) {
+            switch (headerName) {
+                case "Charge-Off Reason Name" ->
+                    actualValues.add(chargeOffReasonOption.getName() == null ? null : chargeOffReasonOption.getName());
+                case "Description" -> {
+                    assertNotNull(chargeOffReasonOption.getDescription());
+                    actualValues
+                            .add(chargeOffReasonOption.getDescription().isEmpty() || chargeOffReasonOption.getDescription() == null ? null
+                                    : chargeOffReasonOption.getDescription());
+                }
+                case "Position" -> actualValues
+                        .add(chargeOffReasonOption.getPosition() == null ? null : String.valueOf(chargeOffReasonOption.getPosition()));
+                case "Is Active" ->
+                    actualValues.add(chargeOffReasonOption.getActive() == null ? null : String.valueOf(chargeOffReasonOption.getActive()));
+                case "Is Mandatory" -> actualValues
+                        .add(chargeOffReasonOption.getMandatory() == null ? null : String.valueOf(chargeOffReasonOption.getMandatory()));
             }
         }
         return actualValues;
