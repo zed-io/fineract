@@ -85,6 +85,7 @@ import org.apache.fineract.client.services.LoansApi;
 import org.apache.fineract.client.util.JSON;
 import org.apache.fineract.test.data.AmortizationType;
 import org.apache.fineract.test.data.InterestCalculationPeriodTime;
+import org.apache.fineract.test.data.InterestRateFrequencyType;
 import org.apache.fineract.test.data.InterestType;
 import org.apache.fineract.test.data.LoanStatus;
 import org.apache.fineract.test.data.LoanTermFrequencyType;
@@ -401,6 +402,12 @@ public class LoanStepDef extends AbstractStepDef {
         createCustomizedLoan(data.get(1), true);
     }
 
+    @When("Admin creates a fully customized loan with interestRateFrequencyType and following data:")
+    public void createFullyCustomizedLoanWithinterestRateFrequencyType(final DataTable table) throws IOException {
+        final List<List<String>> data = table.asLists();
+        createFullyCustomizedLoanWithInterestRateFrequency(data.get(1));
+    }
+
     @When("Admin creates a fully customized loan with forced disabled downpayment with the following data:")
     public void createFullyCustomizedLoanWithForcedDisabledDownpayment(DataTable table) throws IOException {
         List<List<String>> data = table.asLists();
@@ -409,13 +416,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -431,17 +438,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -481,13 +488,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -503,17 +510,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -559,13 +566,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -581,17 +588,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -632,13 +639,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -654,17 +661,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -705,13 +712,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -727,17 +734,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -778,13 +785,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -800,17 +807,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -859,13 +866,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -881,17 +888,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -938,13 +945,13 @@ public class LoanStepDef extends AbstractStepDef {
         String submitDate = loanData.get(1);
         String principal = loanData.get(2);
         BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        String interestType = loanData.get(4);
-        String interestCalculationPeriod = loanData.get(5);
-        String amortizationType = loanData.get(6);
+        String interestTypeStr = loanData.get(4);
+        String interestCalculationPeriodStr = loanData.get(5);
+        String amortizationTypeStr = loanData.get(6);
         Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         String loanTermFrequencyType = loanData.get(8);
         Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        String repaymentFrequencyType = loanData.get(10);
+        String repaymentFrequencyTypeStr = loanData.get(10);
         Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -960,17 +967,17 @@ public class LoanStepDef extends AbstractStepDef {
         LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        InterestType interestType1 = InterestType.valueOf(interestType);
-        Integer interestTypeValue = interestType1.getValue();
+        InterestType interestType = InterestType.valueOf(interestTypeStr);
+        Integer interestTypeValue = interestType.getValue();
 
-        InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        Integer amortizationTypeValue = amortizationType1.getValue();
+        AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        Integer amortizationTypeValue = amortizationType.getValue();
 
         TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -2548,13 +2555,13 @@ public class LoanStepDef extends AbstractStepDef {
         final String submitDate = loanData.get(1);
         final String principal = loanData.get(2);
         final BigDecimal interestRate = new BigDecimal(loanData.get(3));
-        final String interestType = loanData.get(4);
-        final String interestCalculationPeriod = loanData.get(5);
-        final String amortizationType = loanData.get(6);
+        final String interestTypeStr = loanData.get(4);
+        final String interestCalculationPeriodStr = loanData.get(5);
+        final String amortizationTypeStr = loanData.get(6);
         final Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
         final String loanTermFrequencyType = loanData.get(8);
         final Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
-        final String repaymentFrequencyType = loanData.get(10);
+        final String repaymentFrequencyTypeStr = loanData.get(10);
         final Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
         final Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
         final Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
@@ -2570,17 +2577,17 @@ public class LoanStepDef extends AbstractStepDef {
         final LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
         final Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
 
-        final RepaymentFrequencyType repaymentFrequencyType1 = RepaymentFrequencyType.valueOf(repaymentFrequencyType);
-        final Integer repaymentFrequencyTypeValue = repaymentFrequencyType1.getValue();
+        final RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        final Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
 
-        final InterestType interestType1 = InterestType.valueOf(interestType);
-        final Integer interestTypeValue = interestType1.getValue();
+        final InterestType interestType = InterestType.valueOf(interestTypeStr);
+        final Integer interestTypeValue = interestType.getValue();
 
-        final InterestCalculationPeriodTime interestCalculationPeriod1 = InterestCalculationPeriodTime.valueOf(interestCalculationPeriod);
-        final Integer interestCalculationPeriodValue = interestCalculationPeriod1.getValue();
+        final InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        final Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
 
-        final AmortizationType amortizationType1 = AmortizationType.valueOf(amortizationType);
-        final Integer amortizationTypeValue = amortizationType1.getValue();
+        final AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        final Integer amortizationTypeValue = amortizationType.getValue();
 
         final TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
                 .valueOf(transactionProcessingStrategyCode);
@@ -2598,6 +2605,70 @@ public class LoanStepDef extends AbstractStepDef {
         if (withEmi) {
             loansRequest.fixedEmiAmount(new BigDecimal(555));
         }
+
+        final Response<PostLoansResponse> response = loansApi.calculateLoanScheduleOrSubmitLoanApplication(loansRequest, "").execute();
+        testContext().set(TestContextKey.LOAN_CREATE_RESPONSE, response);
+        ErrorHelper.checkSuccessfulApiCall(response);
+
+        eventCheckHelper.createLoanEventCheck(response);
+    }
+
+    public void createFullyCustomizedLoanWithInterestRateFrequency(final List<String> loanData) throws IOException {
+        final String loanProduct = loanData.get(0);
+        final String submitDate = loanData.get(1);
+        final String principal = loanData.get(2);
+        final BigDecimal interestRate = new BigDecimal(loanData.get(3));
+        final String interestTypeStr = loanData.get(4);
+        final String interestCalculationPeriodStr = loanData.get(5);
+        final String amortizationTypeStr = loanData.get(6);
+        final Integer loanTermFrequency = Integer.valueOf(loanData.get(7));
+        final String loanTermFrequencyType = loanData.get(8);
+        final Integer repaymentFrequency = Integer.valueOf(loanData.get(9));
+        final String repaymentFrequencyTypeStr = loanData.get(10);
+        final Integer numberOfRepayments = Integer.valueOf(loanData.get(11));
+        final Integer graceOnPrincipalPayment = Integer.valueOf(loanData.get(12));
+        final Integer graceOnInterestPayment = Integer.valueOf(loanData.get(13));
+        final Integer graceOnInterestCharged = Integer.valueOf(loanData.get(14));
+        final String transactionProcessingStrategyCode = loanData.get(15);
+        final String interestRateFrequencyTypeStr = loanData.get(16);
+
+        final Response<PostClientsResponse> clientResponse = testContext().get(TestContextKey.CLIENT_CREATE_RESPONSE);
+        final Long clientId = clientResponse.body().getClientId();
+
+        final DefaultLoanProduct product = DefaultLoanProduct.valueOf(loanProduct);
+        final Long loanProductId = loanProductResolver.resolve(product);
+
+        final LoanTermFrequencyType termFrequencyType = LoanTermFrequencyType.valueOf(loanTermFrequencyType);
+        final Integer loanTermFrequencyTypeValue = termFrequencyType.getValue();
+
+        final RepaymentFrequencyType repaymentFrequencyType = RepaymentFrequencyType.valueOf(repaymentFrequencyTypeStr);
+        final Integer repaymentFrequencyTypeValue = repaymentFrequencyType.getValue();
+
+        final InterestType interestType = InterestType.valueOf(interestTypeStr);
+        final Integer interestTypeValue = interestType.getValue();
+
+        final InterestCalculationPeriodTime interestCalculationPeriod = InterestCalculationPeriodTime.valueOf(interestCalculationPeriodStr);
+        final Integer interestCalculationPeriodValue = interestCalculationPeriod.getValue();
+
+        final AmortizationType amortizationType = AmortizationType.valueOf(amortizationTypeStr);
+        final Integer amortizationTypeValue = amortizationType.getValue();
+
+        final TransactionProcessingStrategyCode processingStrategyCode = TransactionProcessingStrategyCode
+                .valueOf(transactionProcessingStrategyCode);
+        final String transactionProcessingStrategyCodeValue = processingStrategyCode.getValue();
+
+        InterestRateFrequencyType interestRateFrequencyType = InterestRateFrequencyType.valueOf(interestRateFrequencyTypeStr);
+        Integer interestRateFrequencyTypeValue = interestRateFrequencyType.value;
+
+        final PostLoansRequest loansRequest = loanRequestFactory.defaultLoansRequest(clientId).productId(loanProductId)
+                .principal(new BigDecimal(principal)).interestRatePerPeriod(interestRate).interestType(interestTypeValue)
+                .interestCalculationPeriodType(interestCalculationPeriodValue).amortizationType(amortizationTypeValue)
+                .loanTermFrequency(loanTermFrequency).loanTermFrequencyType(loanTermFrequencyTypeValue)
+                .numberOfRepayments(numberOfRepayments).repaymentEvery(repaymentFrequency)
+                .repaymentFrequencyType(repaymentFrequencyTypeValue).submittedOnDate(submitDate).expectedDisbursementDate(submitDate)
+                .graceOnPrincipalPayment(graceOnPrincipalPayment).graceOnInterestPayment(graceOnInterestPayment)
+                .graceOnInterestPayment(graceOnInterestCharged).transactionProcessingStrategyCode(transactionProcessingStrategyCodeValue)
+                .interestRateFrequencyType(interestRateFrequencyTypeValue);
 
         final Response<PostLoansResponse> response = loansApi.calculateLoanScheduleOrSubmitLoanApplication(loansRequest, "").execute();
         testContext().set(TestContextKey.LOAN_CREATE_RESPONSE, response);
