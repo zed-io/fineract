@@ -51,6 +51,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.Loa
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.MoneyHolder;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.TransactionCtx;
 import org.apache.fineract.portfolio.loanaccount.exception.LoanTransactionNotFoundException;
+import org.apache.fineract.portfolio.loanaccount.serialization.LoanChargeValidator;
 import org.apache.fineract.portfolio.loanaccount.service.LoanAssembler;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
@@ -70,6 +71,7 @@ public class LoanReAgingServiceImpl {
     private final LoanReAgingParameterRepository reAgingParameterRepository;
     private final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory;
     private final NoteRepository noteRepository;
+    private final LoanChargeValidator loanChargeValidator;
 
     public CommandProcessingResult reAge(Long loanId, JsonCommand command) {
         Loan loan = loanAssembler.assembleFrom(loanId);
@@ -141,6 +143,8 @@ public class LoanReAgingServiceImpl {
 
     private void reverseReAgeTransaction(LoanTransaction reAgeTransaction, JsonCommand command) {
         ExternalId reversalExternalId = externalIdFactory.createFromCommand(command, LoanReAgingApiConstants.externalIdParameterName);
+        loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(reAgeTransaction.getLoan(), reAgeTransaction,
+                "reversed");
         reAgeTransaction.reverse(reversalExternalId);
         reAgeTransaction.manuallyAdjustedOrReversed();
     }

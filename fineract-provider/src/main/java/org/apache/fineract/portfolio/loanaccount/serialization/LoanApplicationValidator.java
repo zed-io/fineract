@@ -2106,7 +2106,7 @@ public final class LoanApplicationValidator {
         }
     }
 
-    private BigDecimal getOverAppliedMax(Loan loan) {
+    public BigDecimal getOverAppliedMax(Loan loan) {
         LoanProduct loanProduct = loan.getLoanProduct();
         if ("percentage".equals(loanProduct.getOverAppliedCalculationType())) {
             BigDecimal overAppliedNumber = BigDecimal.valueOf(loanProduct.getOverAppliedNumber());

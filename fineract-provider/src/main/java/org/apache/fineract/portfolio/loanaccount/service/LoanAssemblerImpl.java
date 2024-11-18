@@ -135,6 +135,9 @@ public class LoanAssemblerImpl implements LoanAssembler {
     private final LoanChargeMapper loanChargeMapper;
     private final LoanCollateralManagementMapper loanCollateralManagementMapper;
     private final LoanAccrualsProcessingService loanAccrualsProcessingService;
+    private final LoanDisbursementService loanDisbursementService;
+    private final LoanChargeService loanChargeService;
+    private final LoanOfficerService loanOfficerService;
 
     @Override
     public Loan assembleFrom(final Long accountId) {
@@ -276,7 +279,7 @@ public class LoanAssemblerImpl implements LoanAssembler {
         loanApplication.setHelpers(defaultLoanLifecycleStateMachine, this.loanSummaryWrapper,
                 this.loanRepaymentScheduleTransactionProcessorFactory);
         // TODO: review
-        loanApplication.recalculateAllCharges();
+        loanChargeService.recalculateAllCharges(loanApplication);
         topUpLoanConfiguration(element, loanApplication);
         loanAccrualsProcessingService.reprocessExistingAccruals(loanApplication);
         return loanApplication;
@@ -608,7 +611,7 @@ public class LoanAssemblerImpl implements LoanAssembler {
             final Long newValue = command.longValueOfParameterNamed(LoanApiConstants.loanOfficerIdParameterName);
             changes.put(LoanApiConstants.loanOfficerIdParameterName, newValue);
             final Staff newOfficer = findLoanOfficerByIdIfProvided(newValue);
-            loan.updateLoanOfficerOnLoanApplication(newOfficer);
+            loanOfficerService.updateLoanOfficerOnLoanApplication(loan, newOfficer);
         }
 
         Long existingLoanPurposeId = null;
@@ -718,7 +721,7 @@ public class LoanAssemblerImpl implements LoanAssembler {
         }
 
         if (loanProduct.isMultiDisburseLoan()) {
-            loan.updateDisbursementDetails(command, changes);
+            loanDisbursementService.updateDisbursementDetails(loan, command, changes);
             if (command.isChangeInBigDecimalParameterNamed(LoanApiConstants.maxOutstandingBalanceParameterName,
                     loan.getMaxOutstandingLoanBalance())) {
                 loan.setMaxOutstandingLoanBalance(
@@ -841,7 +844,7 @@ public class LoanAssemblerImpl implements LoanAssembler {
             final LoanScheduleModel loanSchedule = this.calculationPlatformService.calculateLoanSchedule(query, false);
             loan.updateLoanSchedule(loanSchedule);
             loanAccrualsProcessingService.reprocessExistingAccruals(loan);
-            loan.recalculateAllCharges();
+            loanChargeService.recalculateAllCharges(loan);
         }
 
         // Changes to modify loan rates.

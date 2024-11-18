@@ -35,6 +35,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleIns
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+import org.apache.fineract.portfolio.loanaccount.serialization.LoanChargeValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,7 @@ public class LoanAccrualActivityProcessingServiceImpl implements LoanAccrualActi
     private final LoanWritePlatformService loanWritePlatformService;
     private final ExternalIdFactory externalIdFactory;
     private final BusinessEventNotifierService businessEventNotifierService;
+    private final LoanChargeValidator loanChargeValidator;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -92,6 +94,7 @@ public class LoanAccrualActivityProcessingServiceImpl implements LoanAccrualActi
     }
 
     private void reverseAccrualActivityTransaction(LoanTransaction loanTransaction) {
+        loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(loanTransaction.getLoan(), loanTransaction, "reversed");
         loanTransaction.reverse();
         LoanAdjustTransactionBusinessEvent.Data data = new LoanAdjustTransactionBusinessEvent.Data(loanTransaction);
         businessEventNotifierService.notifyPostBusinessEvent(new LoanAdjustTransactionBusinessEvent(data));

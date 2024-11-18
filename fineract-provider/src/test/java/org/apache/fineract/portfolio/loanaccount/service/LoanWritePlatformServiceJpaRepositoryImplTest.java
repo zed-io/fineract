@@ -76,6 +76,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
 import org.apache.fineract.portfolio.loanaccount.guarantor.service.GuarantorDomainService;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.service.LoanScheduleHistoryWritePlatformService;
 import org.apache.fineract.portfolio.loanaccount.serialization.LoanApplicationValidator;
+import org.apache.fineract.portfolio.loanaccount.serialization.LoanChargeValidator;
 import org.apache.fineract.portfolio.loanaccount.serialization.LoanTransactionValidator;
 import org.apache.fineract.portfolio.loanaccount.serialization.LoanUpdateCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
@@ -193,6 +194,8 @@ class LoanWritePlatformServiceJpaRepositoryImplTest {
     private LoanTransactionAssembler loanTransactionAssembler;
     @Mock
     private LoanAccrualsProcessingService loanAccrualsProcessingService;
+    @Mock
+    private LoanChargeValidator loanChargeValidator;
 
     @Test
     void givenMerchantIssuedRefundTransactionWithRelatedTransactions_whenAdjustExistingTransaction_thenRelatedTransactionsAreReversedAndEventsTriggered() {
@@ -235,7 +238,7 @@ class LoanWritePlatformServiceJpaRepositoryImplTest {
         // Mock methods called inside adjustExistingTransaction
         when(loan.findExistingTransactionIds()).thenReturn(Collections.emptyList());
         when(loan.findExistingReversedTransactionIds()).thenReturn(Collections.emptyList());
-        doNothing().when(loan).validateActivityNotBeforeClientOrGroupTransferDate(any(), any());
+        doNothing().when(loanTransactionValidator).validateActivityNotBeforeClientOrGroupTransferDate(any(), any(), any());
         when(loan.isClosedWrittenOff()).thenReturn(false);
         when(loan.isClosedObligationsMet()).thenReturn(false);
         when(loan.isClosedWithOutstandingAmountMarkedForReschedule()).thenReturn(false);
@@ -282,7 +285,7 @@ class LoanWritePlatformServiceJpaRepositoryImplTest {
         // Mock methods called inside adjustExistingTransaction
         when(loan.findExistingTransactionIds()).thenReturn(Collections.emptyList());
         when(loan.findExistingReversedTransactionIds()).thenReturn(Collections.emptyList());
-        doNothing().when(loan).validateActivityNotBeforeClientOrGroupTransferDate(any(), any());
+        doNothing().when(loanTransactionValidator).validateActivityNotBeforeClientOrGroupTransferDate(any(), any(), any());
         when(loan.isClosedWrittenOff()).thenReturn(false);
         when(loan.isClosedObligationsMet()).thenReturn(false);
         when(loan.isClosedWithOutstandingAmountMarkedForReschedule()).thenReturn(false);

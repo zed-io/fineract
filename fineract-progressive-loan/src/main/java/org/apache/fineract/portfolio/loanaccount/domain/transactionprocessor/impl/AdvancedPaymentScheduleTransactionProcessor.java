@@ -802,6 +802,7 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
             oldChargebackRelations.forEach(relations::remove);
             relations.add(LoanTransactionRelation.linkToTransaction(originalTransaction, newTransaction, CHARGEBACK));
         }
+        loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(oldTransaction.getLoan(), oldTransaction, "reversed");
         oldTransaction.reverse();
     }
 

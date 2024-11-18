@@ -56,12 +56,14 @@ import org.apache.fineract.infrastructure.event.business.service.BusinessEventNo
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
+import org.apache.fineract.organisation.office.domain.OfficeRepository;
 import org.apache.fineract.portfolio.loanaccount.data.AccrualChargeData;
 import org.apache.fineract.portfolio.loanaccount.data.AccrualPeriodData;
 import org.apache.fineract.portfolio.loanaccount.data.AccrualPeriodsData;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanChargePaidBy;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanChargeRepository;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanInstallmentCharge;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanInterestRecalcualtionAdditionalDetails;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanInterestRecalculationDetails;
@@ -76,6 +78,7 @@ import org.apache.fineract.portfolio.loanaccount.exception.LoanNotFoundException
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleGenerator;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleGeneratorFactory;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleType;
+import org.apache.fineract.portfolio.loanaccount.serialization.LoanChargeValidator;
 import org.apache.fineract.portfolio.loanproduct.domain.InterestRecalculationCompoundingMethod;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRelatedDetail;
 import org.springframework.stereotype.Component;
@@ -99,6 +102,9 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
     private final LoanTransactionRepository loanTransactionRepository;
     private final LoanScheduleGeneratorFactory loanScheduleFactory;
     private final LoanRepaymentScheduleTransactionProcessorFactory transactionProcessorFactory;
+    private final OfficeRepository officeRepository;
+    private final LoanChargeRepository loanChargeRepository;
+    private final LoanChargeValidator loanChargeValidator;
 
     /**
      * method adds accrual for batch job "Add Periodic Accrual Transactions" and add accruals api for Loan
@@ -735,6 +741,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
         for (LoanTransaction loanTransaction : accruals) {
             if (loanTransaction.getInterestPortion(loan.getCurrency()).isGreaterThanZero()) {
                 if (loanTransaction.getInterestPortion(loan.getCurrency()).isNotEqualTo(interestApplied)) {
+                    loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(loanTransaction.getLoan(), loanTransaction,
+                            "reversed");
                     loanTransaction.reverse();
                     if (isExternalIdAutoGenerationEnabled) {
                         externalId = ExternalId.generate();
@@ -749,6 +757,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
                     LoanCharge loanCharge = chargePaidBy.getLoanCharge();
                     Money chargeAmount = loanCharge.getAmount(loan.getCurrency());
                     if (chargeAmount.isNotEqualTo(loanTransaction.getAmount(loan.getCurrency()))) {
+                        loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(loanTransaction.getLoan(),
+                                loanTransaction, "reversed");
                         loanTransaction.reverse();
                         loan.handleChargeAppliedTransaction(loanCharge, loanTransaction.getTransactionDate());
                     }
@@ -776,6 +786,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
                     interest = interest.minus(accrualTransaction.getInterestPortion(currency));
                     fee = fee.minus(accrualTransaction.getFeeChargesPortion(currency));
                     penalty = penalty.minus(accrualTransaction.getPenaltyChargesPortion(currency));
+                    loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(accrualTransaction.getLoan(),
+                            accrualTransaction, "reversed");
                     accrualTransaction.reverse();
                 }
             }
@@ -857,6 +869,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
                     compoundingDetail.getAmount(), interest, fee, penalties, externalId);
             loan.addLoanTransaction(transaction);
         } else if (existingIncomeTransaction.getAmount(loan.getCurrency()).getAmount().compareTo(compoundingDetail.getAmount()) != 0) {
+            loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(existingIncomeTransaction.getLoan(),
+                    existingIncomeTransaction, "reversed");
             existingIncomeTransaction.reverse();
             LoanTransaction transaction = LoanTransaction.incomePosting(loan, loan.getOffice(), compoundingDetail.getEffectiveDate(),
                     compoundingDetail.getAmount(), interest, fee, penalties, externalId);
@@ -875,6 +889,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
             if (existingAccrualTransaction == null
                     || !MathUtil.isEqualTo(existingAccrualTransaction.getAmount(), compoundingDetail.getAmount())) {
                 if (existingAccrualTransaction != null) {
+                    loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(existingAccrualTransaction.getLoan(),
+                            existingAccrualTransaction, "reversed");
                     existingAccrualTransaction.reverse();
                 }
                 LoanTransaction accrual = LoanTransaction.accrueTransaction(loan, loan.getOffice(), compoundingDetail.getEffectiveDate(),
@@ -1176,6 +1192,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
         boolean reversed = false;
         for (LoanTransaction loanTransaction : transactions) {
             if (DateUtils.isAfter(loanTransaction.getTransactionDate(), effectiveDate)) {
+                loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(loanTransaction.getLoan(), loanTransaction,
+                        "reversed");
                 reverseAccrual(loanTransaction);
                 reversed = true;
             }
@@ -1187,6 +1205,8 @@ public class LoanAccrualsProcessingServiceImpl implements LoanAccrualsProcessing
         boolean reversed = false;
         for (LoanTransaction loanTransaction : transactions) {
             if (!DateUtils.isBefore(loanTransaction.getTransactionDate(), date)) {
+                loanChargeValidator.validateRepaymentTypeTransactionNotBeforeAChargeRefund(loanTransaction.getLoan(), loanTransaction,
+                        "reversed");
                 reverseAccrual(loanTransaction);
                 reversed = true;
             }

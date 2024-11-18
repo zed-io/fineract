@@ -85,6 +85,7 @@ import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanApplica
 import org.apache.fineract.portfolio.loanaccount.loanschedule.service.LoanScheduleAssembler;
 import org.apache.fineract.portfolio.loanaccount.serialization.LoanApplicationTransitionValidator;
 import org.apache.fineract.portfolio.loanaccount.serialization.LoanApplicationValidator;
+import org.apache.fineract.portfolio.loanaccount.serialization.LoanDownPaymentTransactionValidator;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.apache.fineract.portfolio.loanproduct.domain.RecalculationFrequencyType;
 import org.apache.fineract.portfolio.note.domain.Note;
@@ -124,6 +125,8 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
     private final GSIMReadPlatformService gsimReadPlatformService;
     private final LoanLifecycleStateMachine defaultLoanLifecycleStateMachine;
     private final LoanAccrualsProcessingService loanAccrualsProcessingService;
+    private final LoanDownPaymentTransactionValidator loanDownPaymentTransactionValidator;
+    private final LoanScheduleService loanScheduleService;
 
     @Transactional
     @Override
@@ -615,6 +618,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
         Loan loan = retrieveLoanBy(loanId);
         loanApplicationTransitionValidator.checkClientOrGroupActive(loan);
 
+        loanDownPaymentTransactionValidator.validateAccountStatus(loan, LoanEvent.LOAN_APPROVAL_UNDO);
         final Map<String, Object> changes = loan.undoApproval(defaultLoanLifecycleStateMachine);
         if (!changes.isEmpty()) {
 
@@ -625,7 +629,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                     || changes.containsKey(LoanApiConstants.disbursementPrincipalParameterName)) {
                 LocalDate recalculateFrom = null;
                 ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
-                loan.regenerateRepaymentSchedule(scheduleGeneratorDTO);
+                loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
                 loanAccrualsProcessingService.reprocessExistingAccruals(loan);
             }
 
