@@ -30,6 +30,7 @@ import lombok.Getter;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
+import org.apache.fineract.accounting.producttoaccountmapping.data.ChargeOffReasonToGLAccountMapper;
 import org.apache.fineract.accounting.producttoaccountmapping.data.ChargeToGLAccountMapper;
 import org.apache.fineract.accounting.producttoaccountmapping.data.PaymentTypeToGLAccountMapper;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
@@ -153,7 +154,7 @@ public class LoanProductData implements Serializable {
     private Collection<PaymentTypeToGLAccountMapper> paymentChannelToFundSourceMappings;
     private Collection<ChargeToGLAccountMapper> feeToIncomeAccountMappings;
     private Collection<ChargeToGLAccountMapper> penaltyToIncomeAccountMappings;
-    private List<ChargeToGLAccountMapper> chargeOffReasonsToExpenseMappings;
+    private List<ChargeOffReasonToGLAccountMapper> chargeOffReasonToGLAccountMappings;
     private final boolean enableAccrualActivityPosting;
 
     // rates
@@ -740,11 +741,13 @@ public class LoanProductData implements Serializable {
     public static LoanProductData withAccountingDetails(final LoanProductData productData, final Map<String, Object> accountingMappings,
             final Collection<PaymentTypeToGLAccountMapper> paymentChannelToFundSourceMappings,
             final Collection<ChargeToGLAccountMapper> feeToGLAccountMappings,
-            final Collection<ChargeToGLAccountMapper> penaltyToGLAccountMappings) {
+            final Collection<ChargeToGLAccountMapper> penaltyToGLAccountMappings,
+            final List<ChargeOffReasonToGLAccountMapper> chargeOffReasonToGLAccountMappings) {
         productData.accountingMappings = accountingMappings;
         productData.paymentChannelToFundSourceMappings = paymentChannelToFundSourceMappings;
         productData.feeToIncomeAccountMappings = feeToGLAccountMappings;
         productData.penaltyToIncomeAccountMappings = penaltyToGLAccountMappings;
+        productData.chargeOffReasonToGLAccountMappings = chargeOffReasonToGLAccountMappings;
         return productData;
     }
 
@@ -862,7 +865,7 @@ public class LoanProductData implements Serializable {
         this.paymentChannelToFundSourceMappings = null;
         this.feeToIncomeAccountMappings = null;
         this.penaltyToIncomeAccountMappings = null;
-        this.chargeOffReasonsToExpenseMappings = null;
+        this.chargeOffReasonToGLAccountMappings = null;
         this.valueConditionTypeOptions = null;
         this.principalVariationsForBorrowerCycle = principalVariations;
         this.interestRateVariationsForBorrowerCycle = interestRateVariations;
@@ -1005,7 +1008,7 @@ public class LoanProductData implements Serializable {
         this.paymentChannelToFundSourceMappings = productData.paymentChannelToFundSourceMappings;
         this.feeToIncomeAccountMappings = productData.feeToIncomeAccountMappings;
         this.penaltyToIncomeAccountMappings = productData.penaltyToIncomeAccountMappings;
-        this.chargeOffReasonsToExpenseMappings = productData.chargeOffReasonsToExpenseMappings;
+        this.chargeOffReasonToGLAccountMappings = productData.chargeOffReasonToGLAccountMappings;
 
         this.chargeOptions = chargeOptions;
         this.penaltyOptions = penaltyOptions;
