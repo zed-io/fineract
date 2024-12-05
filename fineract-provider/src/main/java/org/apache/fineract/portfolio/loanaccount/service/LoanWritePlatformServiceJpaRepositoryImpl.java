@@ -3207,10 +3207,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final List<Long> existingTransactionIds = loan.findExistingTransactionIds();
         final List<Long> existingReversedTransactionIds = loan.findExistingReversedTransactionIds();
 
-        LoanTransaction chargeOffTransaction = LoanTransaction.chargeOff(loan, transactionDate, txnExternalId);
+        final LoanTransaction chargeOffTransaction = LoanTransaction.chargeOff(loan, transactionDate, txnExternalId);
 
-        if (loan.isInterestBearing() && loan.isInterestRecalculationEnabled()
-                && DateUtils.isBefore(loan.getInterestRecalculatedOn(), DateUtils.getBusinessLocalDate())) {
+        if (loan.isInterestBearing() && loan.isInterestRecalculationEnabled()) {
             final ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, null, null);
             loanScheduleService.regenerateRepaymentScheduleWithInterestRecalculation(loan, scheduleGeneratorDTO);
             loan.addLoanTransaction(chargeOffTransaction);
@@ -3225,6 +3224,10 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             }
         } else {
             loan.addLoanTransaction(chargeOffTransaction);
+            loan.getTransactionProcessor().processLatestTransaction(chargeOffTransaction,
+                    new TransactionCtx(loan.getCurrency(), loan.getRepaymentScheduleInstallments(), loan.getActiveCharges(),
+                            new MoneyHolder(loan.getTotalOverpaidAsMoney()), null));
+            loan.updateLoanSummaryDerivedFields();
         }
         loanTransactionRepository.saveAndFlush(chargeOffTransaction);
 
@@ -3292,6 +3295,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         saveLoanWithDataIntegrityViolationChecks(loan);
         postJournalEntries(loan, existingTransactionIds, existingReversedTransactionIds);
         businessEventNotifierService.notifyPostBusinessEvent(new LoanUndoChargeOffBusinessEvent(chargedOffTransaction));
+
+        loan.reprocessTransactions();
+
         return new CommandProcessingResultBuilder() //
                 .withOfficeId(loan.getOfficeId()) //
                 .withClientId(loan.getClientId()) //

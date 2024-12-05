@@ -32,6 +32,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,6 +69,7 @@ import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsDataWrap
 import org.apache.fineract.portfolio.loanaccount.domain.ChangedTransactionDetail;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanChargeOffBehaviour;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanChargePaidBy;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCreditAllocationRule;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanPaymentAllocationRule;
@@ -1168,7 +1170,14 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
         }
     }
 
-    private void handleChargeOff(LoanTransaction loanTransaction, TransactionCtx transactionCtx) {
+    private void handleChargeOff(final LoanTransaction loanTransaction, final TransactionCtx transactionCtx) {
+        if (transactionCtx instanceof ProgressiveTransactionCtx progressiveTransactionCtx) {
+            if (LoanChargeOffBehaviour.ZERO_INTEREST.equals(loanTransaction.getLoan().getLoanProductRelatedDetail().getChargeOffBehaviour())
+                    && !loanTransaction.isReversed()) {
+                handleZeroInterestChargeOff(loanTransaction, progressiveTransactionCtx);
+            }
+        }
+
         loanTransaction.resetDerivedComponents();
         // determine how much is outstanding total and breakdown for principal, interest and charges
         Money principalPortion = Money.zero(transactionCtx.getCurrency());
@@ -1186,6 +1195,58 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
         }
 
         loanTransaction.updateComponentsAndTotal(principalPortion, interestPortion, feeChargesPortion, penaltychargesPortion);
+    }
+
+    private void handleZeroInterestChargeOff(final LoanTransaction loanTransaction,
+            final ProgressiveTransactionCtx progressiveTransactionCtx) {
+        final LocalDate transactionDate = loanTransaction.getTransactionDate();
+        final List<LoanRepaymentScheduleInstallment> installments = progressiveTransactionCtx.getInstallments();
+
+        if (!installments.isEmpty()) {
+            if (loanTransaction.getLoan().isInterestRecalculationEnabled()) {
+                installments.stream().filter(installment -> !installment.getFromDate().isAfter(transactionDate)
+                        && installment.getDueDate().isAfter(transactionDate)).forEach(installment -> {
+                            final BigDecimal newInterest = emiCalculator.getPeriodInterestTillDate(progressiveTransactionCtx.getModel(),
+                                    installment.getDueDate(), transactionDate).getAmount();
+                            final BigDecimal interestRemoved = installment.getInterestCharged().subtract(newInterest);
+                            installment.updatePrincipal(MathUtil.nullToZero(installment.getPrincipal()).add(interestRemoved));
+                            installment.updateInterestCharged(newInterest);
+                        });
+            } else {
+                calculatePartialPeriodInterest(progressiveTransactionCtx, transactionDate);
+            }
+
+            installments.stream().filter(installment -> installment.getFromDate().isAfter(transactionDate)).forEach(installment -> {
+                installment.updatePrincipal(MathUtil.nullToZero(installment.getPrincipal()).add(installment.getInterestCharged()));
+                installment.updateInterestCharged(BigDecimal.ZERO);
+            });
+
+            final BigDecimal totalInstallmentsPrincipal = installments.stream().map(LoanRepaymentScheduleInstallment::getPrincipal)
+                    .reduce(ZERO, BigDecimal::add);
+            final Money amountToEditLastInstallment = loanTransaction.getLoan().getPrincipal().minus(totalInstallmentsPrincipal);
+            final int lastInstallmentIndex = installments.size() - 1;
+            installments.get(lastInstallmentIndex)
+                    .updatePrincipal(installments.get(lastInstallmentIndex).getPrincipal().add(amountToEditLastInstallment.getAmount()));
+        }
+    }
+
+    private void calculatePartialPeriodInterest(final ProgressiveTransactionCtx progressiveTransactionCtx, final LocalDate chargeOffDate) {
+        progressiveTransactionCtx.getInstallments().stream()
+                .filter(installment -> !installment.getFromDate().isAfter(chargeOffDate) && installment.getDueDate().isAfter(chargeOffDate))
+                .forEach(installment -> {
+                    final BigDecimal totalInterest = installment.getInterestOutstanding(progressiveTransactionCtx.getCurrency())
+                            .getAmount();
+                    final long totalDaysInPeriod = ChronoUnit.DAYS.between(installment.getFromDate(), installment.getDueDate());
+                    final long daysTillChargeOff = ChronoUnit.DAYS.between(installment.getFromDate(), chargeOffDate);
+
+                    final BigDecimal interestTillChargeOff = totalInterest
+                            .divide(BigDecimal.valueOf(totalDaysInPeriod), MoneyHelper.getMathContext())
+                            .multiply(BigDecimal.valueOf(daysTillChargeOff));
+
+                    final BigDecimal interestRemoved = totalInterest.subtract(interestTillChargeOff);
+                    installment.updatePrincipal(MathUtil.nullToZero(installment.getPrincipal()).add(interestRemoved));
+                    installment.updateInterestCharged(interestTillChargeOff);
+                });
     }
 
     private void handleChargePayment(LoanTransaction loanTransaction, TransactionCtx transactionCtx) {

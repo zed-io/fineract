@@ -255,6 +255,7 @@ public abstract class AbstractLoanRepaymentScheduleTransactionProcessor implemen
             case WRITEOFF -> handleWriteOff(loanTransaction, ctx.getCurrency(), ctx.getInstallments());
             case REFUND_FOR_ACTIVE_LOAN -> handleRefund(loanTransaction, ctx.getCurrency(), ctx.getInstallments(), ctx.getCharges());
             case CHARGEBACK -> handleChargeback(loanTransaction, ctx);
+            case CHARGE_OFF -> handleChargeOff(loanTransaction, ctx);
             default -> {
                 Money transactionAmountUnprocessed = handleTransactionAndCharges(loanTransaction, ctx.getCurrency(), ctx.getInstallments(),
                         ctx.getCharges(), null, false);
@@ -394,7 +395,7 @@ public abstract class AbstractLoanRepaymentScheduleTransactionProcessor implemen
                 principalPortion = principalPortion.plus(currentInstallment.getPrincipalOutstanding(currency));
                 interestPortion = interestPortion.plus(currentInstallment.getInterestOutstanding(currency));
                 feeChargesPortion = feeChargesPortion.plus(currentInstallment.getFeeChargesOutstanding(currency));
-                penaltychargesPortion = penaltychargesPortion.plus(currentInstallment.getPenaltyChargesCharged(currency));
+                penaltychargesPortion = penaltychargesPortion.plus(currentInstallment.getPenaltyChargesOutstanding(currency));
             }
         }
 
@@ -784,6 +785,11 @@ public abstract class AbstractLoanRepaymentScheduleTransactionProcessor implemen
 
     protected void handleChargeback(LoanTransaction loanTransaction, TransactionCtx ctx) {
         processCreditTransaction(loanTransaction, ctx.getOverpaymentHolder(), ctx.getCurrency(), ctx.getInstallments());
+    }
+
+    private void handleChargeOff(LoanTransaction loanTransaction, TransactionCtx transactionCtx) {
+        recalculateChargeOffTransaction(transactionCtx.getChangedTransactionDetail(), loanTransaction, transactionCtx.getCurrency(),
+                transactionCtx.getInstallments());
     }
 
     protected void handleCreditBalanceRefund(LoanTransaction loanTransaction, MonetaryCurrency currency,

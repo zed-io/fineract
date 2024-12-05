@@ -19,6 +19,7 @@
 package org.apache.fineract.test.stepdef.loan;
 
 import static org.apache.fineract.test.data.TransactionProcessingStrategyCode.ADVANCED_PAYMENT_ALLOCATION;
+import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertNotNull;
@@ -2758,6 +2759,34 @@ public class LoanStepDef extends AbstractStepDef {
                 .graceOnInterestPayment(graceOnInterestCharged)//
                 .transactionProcessingStrategyCode(transactionProcessingStrategyCodeValue)//
                 .interestRateFrequencyType(interestRateFrequencyTypeValue);//
+
+        final Response<PostLoansResponse> response = loansApi.calculateLoanScheduleOrSubmitLoanApplication(loansRequest, "").execute();
+        testContext().set(TestContextKey.LOAN_CREATE_RESPONSE, response);
+        ErrorHelper.checkSuccessfulApiCall(response);
+
+        eventCheckHelper.createLoanEventCheck(response);
+    }
+
+    @When("Admin creates a new zero charge-off Loan with date: {string}")
+    public void createLoanWithInterestRecalculationAndZeroChargeOffBehaviour(final String date) throws IOException {
+        final Response<PostClientsResponse> clientResponse = testContext().get(TestContextKey.CLIENT_CREATE_RESPONSE);
+        final Long clientId = clientResponse.body().getClientId();
+
+        final DefaultLoanProduct product = DefaultLoanProduct
+                .valueOf(LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.getName());
+        final Long loanProductId = loanProductResolver.resolve(product);
+
+        final PostLoansRequest loansRequest = loanRequestFactory.defaultLoansRequest(clientId).productId(loanProductId)
+                .principal(new BigDecimal(100)).numberOfRepayments(6).submittedOnDate(date).expectedDisbursementDate(date)
+                .loanTermFrequency(6)//
+                .loanTermFrequencyType(LoanTermFrequencyType.MONTHS.value)//
+                .repaymentEvery(1)//
+                .repaymentFrequencyType(RepaymentFrequencyType.MONTHS.value)//
+                .interestRateFrequencyType(3)//
+                .interestRatePerPeriod(new BigDecimal(7))//
+                .interestType(InterestType.DECLINING_BALANCE.value)//
+                .interestCalculationPeriodType(InterestCalculationPeriodTime.DAILY.value)//
+                .transactionProcessingStrategyCode(ADVANCED_PAYMENT_ALLOCATION.value);
 
         final Response<PostLoansResponse> response = loansApi.calculateLoanScheduleOrSubmitLoanApplication(loansRequest, "").execute();
         testContext().set(TestContextKey.LOAN_CREATE_RESPONSE, response);

@@ -1611,3 +1611,313 @@ Feature: Charge-off
     Then Loan Repayment schedule has the following data in Total row:
       | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
       | 1000          | 12.22    | 0    | 0         | 1012.22 | 0    | 0          | 0    | 1012.22     |
+
+  Scenario: Charge-off on due date when loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    And Admin does charge-off the loan on "1 March 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.14           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.13           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.12           | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.11           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.11         | 0.0      | 0.0   | 0.0       | 16.11	| 0.0  | 0.0        | 0.0  | 16.11	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 1.16     | 0    | 0         | 101.16  | 0    | 0          | 0    | 101.16      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 01 March 2023    | Charge-off       | 101.16  | 100.0     | 1.16     | 0.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off after installment date when loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    And Admin does charge-off the loan on "28 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.12           | 16.45         | 0.56     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.11           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.1            | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.09           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.09         | 0.0      | 0.0   | 0.0       | 16.09	| 0.0  | 0.0        | 0.0  | 16.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 1.14     | 0    | 0         | 101.14  | 0    | 0          | 0    | 101.14      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 28 February 2023 | Charge-off       | 101.14  | 100.0     | 1.14     | 0.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off in the middle of installment period when loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    And Admin does charge-off the loan on "14 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 66.83           | 16.74         | 0.27     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 49.82           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 32.81           | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 15.8            | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 15.8          | 0.0      | 0.0   | 0.0       | 15.8	| 0.0  | 0.0        | 0.0  | 15.8	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 0.85     | 0    | 0         | 100.85  | 0    | 0          | 0    | 100.85      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 14 February 2023 | Charge-off       | 100.85  | 100.0     | 0.85     | 0.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off after maturity date when loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 August 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    And Admin does charge-off the loan on "15 July 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.14           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.71           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 34.28           | 16.43	       | 0.58     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 17.85           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 17.85         | 0.58     | 0.0   | 0.0       | 18.43	| 0.0  | 0.0        | 0.0  | 18.43	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 3.48     | 0    | 0         | 103.48  | 0    | 0          | 0    | 103.48      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 15 July 2023     | Charge-off       | 103.48  | 100.0     | 3.48     | 0.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off when charge is added before the charge-off date, loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    When Admin adds "LOAN_SNOOZE_FEE" due date charge with "27 February 2023" due date and 3 EUR transaction amount
+    And Admin does charge-off the loan on "28 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.12           | 16.45         | 0.56     | 3.0   | 0.0       | 20.01   | 0.0  | 0.0        | 0.0  | 20.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.11           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.1            | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.09           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.09         | 0.0      | 0.0   | 0.0       | 16.09	| 0.0  | 0.0        | 0.0  | 16.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 1.14     | 3.0  | 0         | 104.14  | 0    | 0          | 0    | 104.14      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 28 February 2023 | Charge-off       | 104.14  | 100.0     | 1.14     | 3.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off when charge is added on charge-off date, loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    When Admin adds "LOAN_SNOOZE_FEE" due date charge with "28 February 2023" due date and 3 EUR transaction amount
+    And Admin does charge-off the loan on "28 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.12           | 16.45         | 0.56     | 3.0   | 0.0       | 20.01   | 0.0  | 0.0        | 0.0  | 20.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.11           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.1            | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.09           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.09         | 0.0      | 0.0   | 0.0       | 16.09	| 0.0  | 0.0        | 0.0  | 16.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 1.14     | 3.0  | 0         | 104.14  | 0    | 0          | 0    | 104.14      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 28 February 2023 | Charge-off       | 104.14  | 100.0     | 1.14     | 3.0   | 0.0       | 0.0          |
+
+  Scenario: Charge-off when charge is added after the charge off date, loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     |      |            |      | 0.0         |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.05           | 16.52         | 0.49     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.43           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.71           | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.9            | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.9          | 0.1      | 0.0   | 0.0       | 17.0 	| 0.0  | 0.0        | 0.0  | 17.0 	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.05     | 0    | 0         | 102.05  | 0    | 0          | 0    | 102.05      |
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    When Admin adds "LOAN_SNOOZE_FEE" due date charge with "1 March 2023" due date and 3 EUR transaction amount
+    And Admin does charge-off the loan on "28 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.12           | 16.45         | 0.56     | 3.0   | 0.0       | 20.01   | 0.0  | 0.0        | 0.0  | 20.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.11           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.1            | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.09           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.09         | 0.0      | 0.0   | 0.0       | 16.09	| 0.0  | 0.0        | 0.0  | 16.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 1.14     | 3.0  | 0         | 104.14  | 0    | 0          | 0    | 104.14      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 28 February 2023 | Charge-off       | 101.14  | 100.0     | 1.14     | 0.0   | 0.0       | 0.0          |
+
+  Scenario: Undo the charge-off when loan behaviour is zero-interest and interestRecalculation = true
+    When Admin sets the business date to "1 March 2023"
+    And Admin creates a client with random data
+    When Admin creates a new zero charge-off Loan with date: "1 January 2023"
+    And Admin successfully approves the loan on "1 January 2023" with "100" amount and expected disbursement date on "1 January 2023"
+    And Admin successfully disburse the loan on "1 January 2023" with "100" EUR transaction amount
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.14           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.52           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.8            | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.99           | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.99         | 0.1      | 0.0   | 0.0       | 17.09	| 0.0  | 0.0        | 0.0  | 17.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.14     | 0    | 0         | 102.14  | 0    | 0          | 0    | 102.14      |
+    And Admin does charge-off the loan on "14 February 2023"
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 66.83           | 16.74         | 0.27     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 49.82           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 32.81           | 17.01	       | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 15.8            | 17.01         | 0.0      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 15.8          | 0.0      | 0.0   | 0.0       | 15.8	| 0.0  | 0.0        | 0.0  | 15.8	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 0.85     | 0    | 0         | 100.85  | 0    | 0          | 0    | 100.85      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 14 February 2023 | Charge-off       | 100.85  | 100.0     | 0.85     | 0.0   | 0.0       | 0.0          |
+    And Admin does a charge-off undo the loan
+    Then Loan Repayment schedule has 6 periods, with the following data for periods:
+      | Nr | Days | Date             | Paid date | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      |    |      | 01 January 2023  |           | 100.0           |               |          | 0.0   |           | 0.0     | 0.0  |            |      |             |
+      | 1  | 31   | 01 February 2023 |           | 83.57           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 2  | 28   | 01 March 2023    |           | 67.14           | 16.43         | 0.58     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2023    |           | 50.52           | 16.62         | 0.39     | 0.0   | 0.0       | 17.01   | 0.0  | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2023      |           | 33.8            | 16.72	       | 0.29     | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 5  | 31   | 01 June 2023     |           | 16.99           | 16.81         | 0.2      | 0.0   | 0.0       | 17.01	| 0.0  | 0.0        | 0.0  | 17.01	     |
+      | 6  | 30   | 01 July 2023     |           | 0.0             | 16.99         | 0.1      | 0.0   | 0.0       | 17.09	| 0.0  | 0.0        | 0.0  | 17.09	     |
+    Then Loan Repayment schedule has the following data in Total row:
+      | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
+      | 100           | 2.14     | 0    | 0         | 102.14  | 0    | 0          | 0    | 102.14      |
+    Then Loan Transactions tab has the following data:
+      | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance |
+      | 01 January 2023  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        |
+      | 14 February 2023 | Charge-off       | 100.85  | 100.0     | 0.85     | 0.0   | 0.0       | 0.0          |
+
+
