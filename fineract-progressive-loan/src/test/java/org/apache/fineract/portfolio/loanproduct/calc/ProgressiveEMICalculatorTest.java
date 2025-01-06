@@ -1168,30 +1168,30 @@ class ProgressiveEMICalculatorTest {
         checkDailyInterest(interestModel, dueDate, startDay, 5, 0.19, 0.94);
         checkDailyInterest(interestModel, dueDate, startDay, 6, 0.19, 1.13);
         checkDailyInterest(interestModel, dueDate, startDay, 7, 0.19, 1.32);
-        checkDailyInterest(interestModel, dueDate, startDay, 8, 0.18, 1.50);
-        checkDailyInterest(interestModel, dueDate, startDay, 9, 0.19, 1.69);
+        checkDailyInterest(interestModel, dueDate, startDay, 8, 0.19, 1.51);
+        checkDailyInterest(interestModel, dueDate, startDay, 9, 0.18, 1.69);
         checkDailyInterest(interestModel, dueDate, startDay, 10, 0.19, 1.88);
         checkDailyInterest(interestModel, dueDate, startDay, 11, 0.19, 2.07);
         checkDailyInterest(interestModel, dueDate, startDay, 12, 0.19, 2.26);
-        checkDailyInterest(interestModel, dueDate, startDay, 13, 0.18, 2.44);
-        checkDailyInterest(interestModel, dueDate, startDay, 14, 0.19, 2.63);
+        checkDailyInterest(interestModel, dueDate, startDay, 13, 0.19, 2.45);
+        checkDailyInterest(interestModel, dueDate, startDay, 14, 0.18, 2.63);
         checkDailyInterest(interestModel, dueDate, startDay, 15, 0.19, 2.82);
         checkDailyInterest(interestModel, dueDate, startDay, 16, 0.19, 3.01);
         checkDailyInterest(interestModel, dueDate, startDay, 17, 0.19, 3.20);
         checkDailyInterest(interestModel, dueDate, startDay, 18, 0.19, 3.39);
-        checkDailyInterest(interestModel, dueDate, startDay, 19, 0.18, 3.57);
-        checkDailyInterest(interestModel, dueDate, startDay, 20, 0.19, 3.76);
+        checkDailyInterest(interestModel, dueDate, startDay, 19, 0.19, 3.58);
+        checkDailyInterest(interestModel, dueDate, startDay, 20, 0.18, 3.76);
         checkDailyInterest(interestModel, dueDate, startDay, 21, 0.19, 3.95);
         checkDailyInterest(interestModel, dueDate, startDay, 22, 0.19, 4.14);
         checkDailyInterest(interestModel, dueDate, startDay, 23, 0.19, 4.33);
-        checkDailyInterest(interestModel, dueDate, startDay, 24, 0.18, 4.51);
-        checkDailyInterest(interestModel, dueDate, startDay, 25, 0.19, 4.70);
+        checkDailyInterest(interestModel, dueDate, startDay, 24, 0.19, 4.52);
+        checkDailyInterest(interestModel, dueDate, startDay, 25, 0.18, 4.7);
         checkDailyInterest(interestModel, dueDate, startDay, 26, 0.19, 4.89);
         checkDailyInterest(interestModel, dueDate, startDay, 27, 0.19, 5.08);
         checkDailyInterest(interestModel, dueDate, startDay, 28, 0.19, 5.27);
-        checkDailyInterest(interestModel, dueDate, startDay, 29, 0.18, 5.45);
-        checkDailyInterest(interestModel, dueDate, startDay, 30, 0.19, 5.64);
-        checkDailyInterest(interestModel, dueDate, startDay, 31, 0.19, 5.83);
+        checkDailyInterest(interestModel, dueDate, startDay, 29, 0.19, 5.46);
+        checkDailyInterest(interestModel, dueDate, startDay, 30, 0.19, 5.65);
+        checkDailyInterest(interestModel, dueDate, startDay, 31, 0.18, 5.83);
     }
 
     @Test
@@ -1235,13 +1235,13 @@ class ProgressiveEMICalculatorTest {
         checkDailyInterest(interestModel, dueDate, startDay, 5, 0.19, 0.94);
         checkDailyInterest(interestModel, dueDate, startDay, 6, 0.19, 1.13);
         checkDailyInterest(interestModel, dueDate, startDay, 7, 0.19, 1.32);
-        checkDailyInterest(interestModel, dueDate, startDay, 8, 0.18, 1.50);
-        checkDailyInterest(interestModel, dueDate, startDay, 9, 0.19, 1.69);
+        checkDailyInterest(interestModel, dueDate, startDay, 8, 0.19, 1.51);
+        checkDailyInterest(interestModel, dueDate, startDay, 9, 0.18, 1.69);
         checkDailyInterest(interestModel, dueDate, startDay, 10, 0.19, 1.88);
         checkDailyInterest(interestModel, dueDate, startDay, 11, 0.19, 2.07);
         checkDailyInterest(interestModel, dueDate, startDay, 12, 0.19, 2.26);
-        checkDailyInterest(interestModel, dueDate, startDay, 13, 0.18, 2.44);
-        checkDailyInterest(interestModel, dueDate, startDay, 14, 0.19, 2.63);
+        checkDailyInterest(interestModel, dueDate, startDay, 13, 0.19, 2.45);
+        checkDailyInterest(interestModel, dueDate, startDay, 14, 0.18, 2.63);
 
         // 2nd 1000 disbursement accruals
         // Total Interest: 6.40 (17 days)
@@ -1251,8 +1251,8 @@ class ProgressiveEMICalculatorTest {
         checkDailyInterest(interestModel, dueDate, startDay, 18, 0.38, 4.14);
         checkDailyInterest(interestModel, dueDate, startDay, 19, 0.37, 4.51);
         checkDailyInterest(interestModel, dueDate, startDay, 20, 0.38, 4.89);
-        checkDailyInterest(interestModel, dueDate, startDay, 21, 0.38, 5.27);
-        checkDailyInterest(interestModel, dueDate, startDay, 22, 0.37, 5.64);
+        checkDailyInterest(interestModel, dueDate, startDay, 21, 0.37, 5.26);
+        checkDailyInterest(interestModel, dueDate, startDay, 22, 0.38, 5.64);
         checkDailyInterest(interestModel, dueDate, startDay, 23, 0.38, 6.02);
         checkDailyInterest(interestModel, dueDate, startDay, 24, 0.37, 6.39);
         checkDailyInterest(interestModel, dueDate, startDay, 25, 0.38, 6.77);

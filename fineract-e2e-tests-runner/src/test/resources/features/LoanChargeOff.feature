@@ -2301,19 +2301,19 @@ Feature: Charge-off
       | Nr | Days | Date             | Paid date        | Balance of loan | Principal due | Interest | Fees  | Penalties | Due     | Paid  | In advance | Late | Outstanding |
       |    |      | 01 January 2024  |                  | 100.0           |               |          | 0.0   |           | 0.0     | 0.0   |            |      |             |
       | 1  | 31   | 01 February 2024 |                  | 83.52           | 16.48         | 0.53     | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
-      | 2  | 29   | 01 March 2024    |                  | 66.97           | 16.55         | 0.46     | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
-      | 3  | 31   | 01 April 2024    |                  | 49.96           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
-      | 4  | 30   | 01 May 2024      |                  | 32.95           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
-      | 5  | 31   | 01 June 2024     |                  | 17.01           | 15.94         | 0.0      | 0.0   | 0.0       | 15.94   | 0.0   | 0.0        | 0.0  | 15.94       |
+      | 2  | 29   | 01 March 2024    |                  | 66.98           | 16.54         | 0.47     | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 3  | 31   | 01 April 2024    |                  | 49.97           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 4  | 30   | 01 May 2024      |                  | 32.96           | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 0.0   | 0.0        | 0.0  | 17.01       |
+      | 5  | 31   | 01 June 2024     |                  | 17.01           | 15.95         | 0.0      | 0.0   | 0.0       | 15.95   | 0.0   | 0.0        | 0.0  | 15.95       |
       | 6  | 30   | 01 July 2024     | 15 January 2024  | 0.0             | 17.01         | 0.0      | 0.0   | 0.0       | 17.01   | 17.01 | 17.01      | 0.0  | 0.0         |
     Then Loan Repayment schedule has the following data in Total row:
       | Principal due | Interest | Fees | Penalties | Due     | Paid | In advance | Late | Outstanding |
-      | 100           | 0.99     | 0    | 0         | 100.99  | 17.01| 17.01      | 0    | 83.98       |
+      | 100           | 1.0      | 0    | 0         | 101.0   | 17.01| 17.01      | 0    | 83.99       |
     Then Loan Transactions tab has the following data:
       | Transaction date | Transaction Type | Amount  | Principal | Interest | Fees  | Penalties | Loan Balance | Reverted | Replayed |
       | 01 January 2024  | Disbursement     | 100.0   | 0.0       | 0.0      | 0.0   | 0.0       | 100.0        | false    | false    |
       | 15 January 2024  | Repayment        | 17.01   | 17.01     | 0.0      | 0.0   | 0.0       | 82.99        | false    | false    |
-      | 29 February 2024 | Charge-off       | 83.98   | 82.99     | 0.99     | 0.0   | 0.0       | 0.0          | false    | false    |
+      | 29 February 2024 | Charge-off       | 83.99   | 82.99     | 1.0      | 0.0   | 0.0       | 0.0          | false    | false    |
     And Admin set "LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR" loan product "DEFAULT" transaction type to "NEXT_INSTALLMENT" future installment allocation rule
 
   Scenario: Charge-off on due date when loan behaviour is zero-interest and interestRecalculation = false
