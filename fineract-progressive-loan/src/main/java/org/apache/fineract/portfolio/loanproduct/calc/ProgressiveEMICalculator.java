@@ -324,7 +324,7 @@ public final class ProgressiveEMICalculator implements EMICalculator {
             final List<RepaymentPeriod> relatedRepaymentPeriods) {
         MathContext mc = scheduleModel.mc();
         ProgressiveLoanInterestScheduleModel newScheduleModel = null;
-        int adjustCounter = 0;
+        int adjustCounter = 1;
         EmiAdjustment emiAdjustment;
 
         do {
@@ -367,7 +367,7 @@ public final class ProgressiveEMICalculator implements EMICalculator {
             });
             calculateOutstandingBalance(scheduleModel);
             adjustCounter++;
-        } while (emiAdjustment.hasUncountablePeriods() && adjustCounter < 3);
+        } while (adjustCounter <= 3);
     }
 
     /**
