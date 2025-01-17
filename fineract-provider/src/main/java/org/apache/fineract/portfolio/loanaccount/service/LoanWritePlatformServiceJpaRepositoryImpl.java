@@ -1144,6 +1144,10 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             loanScheduleService.regenerateRepaymentScheduleWithInterestRecalculation(loan, scheduleGeneratorDTO);
             loanAccrualsProcessingService.reprocessExistingAccruals(loan);
             loanAccrualsProcessingService.processIncomePostingAndAccruals(loan);
+        } else if (loan.getLoanProductRelatedDetail() != null
+                && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+            loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
         }
         return loan.reprocessTransactions();
     }
@@ -3624,6 +3628,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()) {
                 loanScheduleService.regenerateRepaymentScheduleWithInterestRecalculation(loan, scheduleGeneratorDTO);
             }
+            if (loan.getLoanProductRelatedDetail() != null
+                    && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                    && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+                loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+            }
             changedTransactionDetail = loan.reprocessTransactions();
             LocalDate lastLoanTransactionDate = loan.getLatestTransactionDate();
             loan.doPostLoanTransactionChecks(lastLoanTransactionDate, loanLifecycleStateMachine);
@@ -3738,7 +3747,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         loan.getLoanRepaymentScheduleDetail().setPrincipal(loan.getPrincipalAmountForRepaymentSchedule());
 
-        if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()) {
+        if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled() && !(loan.getLoanProductRelatedDetail() != null
+                && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff))) {
             loanScheduleService.regenerateRepaymentScheduleWithInterestRecalculation(loan, scheduleGeneratorDTO);
         } else {
             loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
@@ -3809,6 +3820,12 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 "reversed");
         writeOffTransaction.reverse();
         loanLifecycleStateMachine.transition(LoanEvent.WRITE_OFF_OUTSTANDING_UNDO, loan);
+        if (loan.getLoanProductRelatedDetail() != null
+                && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+            final ScheduleGeneratorDTO scheduleGeneratorDTO = loanUtilService.buildScheduleGeneratorDTO(loan, null);
+            loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+        }
         return loan.reprocessTransactions();
     }
 

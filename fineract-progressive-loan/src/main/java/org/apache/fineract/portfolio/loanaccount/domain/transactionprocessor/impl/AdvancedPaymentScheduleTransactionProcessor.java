@@ -1171,8 +1171,8 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
 
     private void handleChargeOff(final LoanTransaction loanTransaction, final TransactionCtx transactionCtx) {
         if (loanTransaction.getLoan().isProgressiveSchedule()) {
-            if (LoanChargeOffBehaviour.ZERO_INTEREST.equals(loanTransaction.getLoan().getLoanProductRelatedDetail().getChargeOffBehaviour())
-                    && !loanTransaction.isReversed()) {
+            if (LoanChargeOffBehaviour.ZERO_INTEREST
+                    .equals(loanTransaction.getLoan().getLoanProductRelatedDetail().getChargeOffBehaviour())) {
                 handleZeroInterestChargeOff(loanTransaction, transactionCtx);
             } else if (LoanChargeOffBehaviour.ACCELERATE_MATURITY
                     .equals(loanTransaction.getLoan().getLoanProductRelatedDetail().getChargeOffBehaviour())) {
@@ -1202,11 +1202,11 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
         }
     }
 
-    private void handleAccelerateMaturityChargeOff(LoanTransaction loanTransaction, TransactionCtx transactionCtx) {
+    private void handleAccelerateMaturityChargeOff(final LoanTransaction loanTransaction, final TransactionCtx transactionCtx) {
         final LocalDate transactionDate = loanTransaction.getTransactionDate();
         final List<LoanRepaymentScheduleInstallment> installments = transactionCtx.getInstallments();
-        Loan loan = loanTransaction.getLoan();
-        LoanRepaymentScheduleInstallment currentInstallment = loan.getRelatedRepaymentScheduleInstallment(transactionDate);
+        final Loan loan = loanTransaction.getLoan();
+        final LoanRepaymentScheduleInstallment currentInstallment = loan.getRelatedRepaymentScheduleInstallment(transactionDate);
 
         if (!installments.isEmpty() && transactionDate.isBefore(loan.getMaturityDate())) {
             if (transactionCtx instanceof ProgressiveTransactionCtx progressiveTransactionCtx
@@ -1228,10 +1228,11 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
             }
 
             currentInstallment.updateDueDate(transactionDate);
-            BigDecimal futurePrincipal = installments.stream().filter(installment -> transactionDate.isBefore(installment.getDueDate()))
+            final BigDecimal futurePrincipal = installments.stream()
+                    .filter(installment -> transactionDate.isBefore(installment.getDueDate()))
                     .map(LoanRepaymentScheduleInstallment::getPrincipal).reduce(BigDecimal.ZERO, BigDecimal::add);
             currentInstallment.updatePrincipal(MathUtil.nullToZero(currentInstallment.getPrincipal()).add(futurePrincipal));
-            List<LoanRepaymentScheduleInstallment> installmentsUpToTransactionDate = installments.stream()
+            final List<LoanRepaymentScheduleInstallment> installmentsUpToTransactionDate = installments.stream()
                     .filter(installment -> transactionDate.isAfter(installment.getFromDate())).toList();
             loan.updateLoanSchedule(installmentsUpToTransactionDate);
             loan.updateLoanScheduleDependentDerivedFields();

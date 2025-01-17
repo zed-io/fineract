@@ -287,6 +287,13 @@ public class LoanChargeWritePlatformServiceImpl implements LoanChargeWritePlatfo
         }
 
         if (reprocessRequired) {
+            if (loan.getLoanProductRelatedDetail() != null
+                    && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                    && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+                final ScheduleGeneratorDTO scheduleGeneratorDTO = loanUtilService.buildScheduleGeneratorDTO(loan, null);
+                loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+            }
+
             ChangedTransactionDetail changedTransactionDetail = overpaidReprocess
                     ? loan.reprocessTransactionsWithPostTransactionChecks(transactionDate)
                     : loan.reprocessTransactions();
@@ -813,6 +820,12 @@ public class LoanChargeWritePlatformServiceImpl implements LoanChargeWritePlatfo
 
             if (reprocessRequired) {
                 addInstallmentIfPenaltyAppliedAfterLastDueDate(loan, lastChargeDate);
+                if (loan.getLoanProductRelatedDetail() != null
+                        && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                        && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+                    final ScheduleGeneratorDTO scheduleGeneratorDTO = loanUtilService.buildScheduleGeneratorDTO(loan, null);
+                    loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+                }
                 ChangedTransactionDetail changedTransactionDetail = loan.reprocessTransactions();
                 if (changedTransactionDetail != null) {
                     for (final Map.Entry<Long, LoanTransaction> mapEntry : changedTransactionDetail.getNewTransactionMappings()
@@ -853,6 +866,12 @@ public class LoanChargeWritePlatformServiceImpl implements LoanChargeWritePlatfo
                 .determineProcessor(loan.transactionProcessingStrategy());
         loan.addLoanTransaction(loanChargeAdjustmentTransaction);
         if (loan.isInterestBearing() && loan.getLoanProductRelatedDetail().isInterestRecalculationEnabled()) {
+            if (loan.getLoanProductRelatedDetail() != null
+                    && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                    && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+                final ScheduleGeneratorDTO scheduleGeneratorDTO = loanUtilService.buildScheduleGeneratorDTO(loan, null);
+                loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+            }
             loan.reprocessTransactions();
         } else {
             loanRepaymentScheduleTransactionProcessor.processLatestTransaction(loanChargeAdjustmentTransaction,
@@ -1440,6 +1459,10 @@ public class LoanChargeWritePlatformServiceImpl implements LoanChargeWritePlatfo
         if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()
                 && DateUtils.isBefore(loanCharge.getDueLocalDate(), businessDate)) {
             loanScheduleService.regenerateRepaymentScheduleWithInterestRecalculation(loan, scheduleGeneratorDTO);
+        } else if (loan.getLoanProductRelatedDetail() != null
+                && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+            loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
         }
         // Waive of charges whose due date falls after latest 'repayment' transaction don't require entire loan schedule
         // to be reprocessed.
@@ -1451,6 +1474,11 @@ public class LoanChargeWritePlatformServiceImpl implements LoanChargeWritePlatfo
              * Consider removing this block of code or logically completing it for the future by getting the list of
              * affected Transactions
              */
+            if (loan.getLoanProductRelatedDetail() != null
+                    && loan.getLoanProductRelatedDetail().getLoanScheduleType().equals(LoanScheduleType.PROGRESSIVE)
+                    && loan.getLoanTransactions().stream().anyMatch(LoanTransaction::isChargeOff)) {
+                loanScheduleService.regenerateRepaymentSchedule(loan, scheduleGeneratorDTO);
+            }
             loan.reprocessTransactions();
         } else {
             // reprocess loan schedule based on charge been waived.
