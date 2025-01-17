@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -384,6 +386,12 @@ public class SavingsAccountHelper extends IntegrationTest {
             Integer amount, String feeOnMonthDay) {
         return (Integer) performSavingActions(SAVINGS_ACCOUNT_URL + "/" + savingsId + "/charges?" + Utils.TENANT_IDENTIFIER,
                 getPeriodChargeRequestJSONWithDueDateAndFeeOnMonthDay(chargeId, addDueDate, amount, feeOnMonthDay),
+                CommonConstants.RESPONSE_RESOURCE_ID);
+    }
+
+    public Integer payCharge(final Integer chargeId, final Integer savingsId, String amount, LocalDate dueDate) {
+        return (Integer) performSavingActions(createChargesURL("paycharge", savingsId, chargeId),
+                getSavingsPayChargeJSON(amount, dueDate.format(DateTimeFormatter.ofPattern(CommonConstants.DATE_FORMAT))),
                 CommonConstants.RESPONSE_RESOURCE_ID);
     }
 
