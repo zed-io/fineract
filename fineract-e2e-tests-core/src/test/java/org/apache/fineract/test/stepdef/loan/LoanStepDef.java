@@ -19,6 +19,7 @@
 package org.apache.fineract.test.stepdef.loan;
 
 import static org.apache.fineract.test.data.TransactionProcessingStrategyCode.ADVANCED_PAYMENT_ALLOCATION;
+import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR;
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -2770,22 +2771,25 @@ public class LoanStepDef extends AbstractStepDef {
 
     @When("Admin creates a new zero charge-off Loan with interest recalculation and date: {string}")
     public void createLoanWithInterestRecalculationAndZeroChargeOffBehaviour(final String date) throws IOException {
-        createLoanWithZeroChargeOffBehaviour(date, true);
+        createLoanWithLoanBehaviour(date, true, DefaultLoanProduct
+                .valueOf(LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.getName()));
     }
 
     @When("Admin creates a new zero charge-off Loan without interest recalculation and with date: {string}")
     public void createLoanWithoutInterestRecalculationAndZeroChargeOffBehaviour(final String date) throws IOException {
-        createLoanWithZeroChargeOffBehaviour(date, false);
+        createLoanWithLoanBehaviour(date, false, DefaultLoanProduct.valueOf(LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.getName()));
     }
 
-    private void createLoanWithZeroChargeOffBehaviour(final String date, final boolean isInterestRecalculation) throws IOException {
+    @When("Admin creates a new accelerate maturity charge-off Loan without interest recalculation and with date: {string}")
+    public void createLoanWithoutInterestRecalculationAndAccelerateMaturityChargeOffBehaviour(final String date) throws IOException {
+        createLoanWithLoanBehaviour(date, false,
+                DefaultLoanProduct.valueOf(LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR.getName()));
+    }
+
+    private void createLoanWithLoanBehaviour(final String date, final boolean isInterestRecalculation, final DefaultLoanProduct product)
+            throws IOException {
         final Response<PostClientsResponse> clientResponse = testContext().get(TestContextKey.CLIENT_CREATE_RESPONSE);
         final Long clientId = clientResponse.body().getClientId();
-
-        final DefaultLoanProduct product = isInterestRecalculation
-                ? DefaultLoanProduct
-                        .valueOf(LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.getName())
-                : DefaultLoanProduct.valueOf(LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR.getName());
 
         final Long loanProductId = loanProductResolver.resolve(product);
 

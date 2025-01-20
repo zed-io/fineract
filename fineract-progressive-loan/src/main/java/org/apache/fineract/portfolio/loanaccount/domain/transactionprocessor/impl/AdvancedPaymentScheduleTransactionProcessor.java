@@ -1220,11 +1220,12 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
                 final long totalDaysInPeriod = ChronoUnit.DAYS.between(currentInstallment.getFromDate(), currentInstallment.getDueDate());
                 final long daysTillChargeOff = ChronoUnit.DAYS.between(currentInstallment.getFromDate(), transactionDate);
 
-                final BigDecimal interestTillChargeOff = totalInterest
-                        .divide(BigDecimal.valueOf(totalDaysInPeriod), MoneyHelper.getMathContext())
-                        .multiply(BigDecimal.valueOf(daysTillChargeOff));
+                final MathContext mc = MoneyHelper.getMathContext();
+                final Money interestTillChargeOff = Money.of(transactionCtx.getCurrency(),
+                        totalInterest.divide(BigDecimal.valueOf(totalDaysInPeriod), mc).multiply(BigDecimal.valueOf(daysTillChargeOff), mc),
+                        mc);
 
-                currentInstallment.updateInterestCharged(interestTillChargeOff);
+                currentInstallment.updateInterestCharged(interestTillChargeOff.getAmount());
             }
 
             currentInstallment.updateDueDate(transactionDate);
