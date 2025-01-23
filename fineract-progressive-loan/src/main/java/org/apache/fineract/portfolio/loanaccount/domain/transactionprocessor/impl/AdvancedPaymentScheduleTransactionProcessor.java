@@ -1239,12 +1239,41 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
             }
 
             currentInstallment.updateDueDate(transactionDate);
-            final BigDecimal futurePrincipal = installments.stream()
-                    .filter(installment -> transactionDate.isBefore(installment.getDueDate()))
-                    .map(LoanRepaymentScheduleInstallment::getPrincipal).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            final List<LoanRepaymentScheduleInstallment> futureInstallments = installments.stream()
+                    .filter(installment -> transactionDate.isBefore(installment.getDueDate())).toList();
+
+            final BigDecimal futurePrincipal = futureInstallments.stream().map(LoanRepaymentScheduleInstallment::getPrincipal)
+                    .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            final BigDecimal futureFee = futureInstallments.stream().map(LoanRepaymentScheduleInstallment::getFeeChargesCharged)
+                    .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            final BigDecimal futurePenalty = futureInstallments.stream().map(LoanRepaymentScheduleInstallment::getPenaltyCharges)
+                    .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+
             currentInstallment.updatePrincipal(MathUtil.nullToZero(currentInstallment.getPrincipal()).add(futurePrincipal));
+
             final List<LoanRepaymentScheduleInstallment> installmentsUpToTransactionDate = installments.stream()
-                    .filter(installment -> transactionDate.isAfter(installment.getFromDate())).toList();
+                    .filter(installment -> transactionDate.isAfter(installment.getFromDate()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            if (futureFee.compareTo(BigDecimal.ZERO) > 0 || futurePenalty.compareTo(BigDecimal.ZERO) > 0) {
+                final Optional<LocalDate> latestDueDate = loan.getCharges().stream()
+                        .filter(loanCharge -> loanCharge.isActive() && loanCharge.isNotFullyPaid()).map(LoanCharge::getDueDate)
+                        .max(LocalDate::compareTo);
+
+                if (latestDueDate.isPresent()) {
+                    final LoanRepaymentScheduleInstallment lastInstallment = installmentsUpToTransactionDate
+                            .get(installmentsUpToTransactionDate.size() - 1);
+
+                    final LoanRepaymentScheduleInstallment installmentForCharges = new LoanRepaymentScheduleInstallment(loan,
+                            lastInstallment.getInstallmentNumber() + 1, currentInstallment.getDueDate(), latestDueDate.get(),
+                            BigDecimal.ZERO, BigDecimal.ZERO, futureFee, futurePenalty, null, null, null, true, false, false);
+                    installmentsUpToTransactionDate.add(installmentForCharges);
+                }
+            }
+
             loan.updateLoanSchedule(installmentsUpToTransactionDate);
             loan.updateLoanScheduleDependentDerivedFields();
         }
