@@ -88,6 +88,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.Mon
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.TransactionCtx;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.PeriodDueDetails;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.ProgressiveLoanInterestScheduleModel;
+import org.apache.fineract.portfolio.loanaccount.loanschedule.data.RepaymentPeriod;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleProcessingType;
 import org.apache.fineract.portfolio.loanaccount.service.InterestRefundService;
 import org.apache.fineract.portfolio.loanproduct.calc.EMICalculator;
@@ -1264,6 +1265,12 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
                     .filter(installment -> transactionDate.isAfter(installment.getFromDate()))
                     .collect(Collectors.toCollection(ArrayList::new));
 
+            final List<LoanTransaction> transactionsToBeReprocessed = installments.stream()
+                    .filter(installment -> transactionDate.isBefore(installment.getFromDate())
+                            && !installment.getLoanTransactionToRepaymentScheduleMappings().isEmpty())
+                    .flatMap(installment -> installment.getLoanTransactionToRepaymentScheduleMappings().stream())
+                    .map(LoanTransactionToRepaymentScheduleMapping::getLoanTransaction).toList();
+
             if (futureFee.compareTo(BigDecimal.ZERO) > 0 || futurePenalty.compareTo(BigDecimal.ZERO) > 0) {
                 final Optional<LocalDate> latestDueDate = loan.getCharges().stream()
                         .filter(loanCharge -> loanCharge.isActive() && loanCharge.isNotFullyPaid()).map(LoanCharge::getDueDate)
@@ -1282,6 +1289,19 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
 
             loan.updateLoanSchedule(installmentsUpToTransactionDate);
             loan.updateLoanScheduleDependentDerivedFields();
+
+            if (transactionCtx instanceof ProgressiveTransactionCtx progressiveTransactionCtx && loan.isInterestRecalculationEnabled()) {
+                updateRepaymentPeriodsAfterChargeOff(progressiveTransactionCtx, transactionDate, transactionsToBeReprocessed);
+            } else {
+                for (LoanTransaction processTransaction : transactionsToBeReprocessed) {
+                    final LoanTransaction newTransaction = LoanTransaction.copyTransactionProperties(processTransaction);
+                    processLatestTransaction(newTransaction, transactionCtx);
+                    createNewTransaction(processTransaction, newTransaction, transactionCtx);
+                    newTransaction.updateLoan(loan);
+                    loan.getLoanTransactions().add(newTransaction);
+                }
+                loan.updateLoanSummaryDerivedFields();
+            }
         }
     }
 
@@ -2048,5 +2068,47 @@ public class AdvancedPaymentScheduleTransactionProcessor extends AbstractLoanRep
     @NotNull
     public static LoanPaymentAllocationRule getDefaultAllocationRule(Loan loan) {
         return loan.getPaymentAllocationRules().stream().filter(e -> e.getTransactionType().isDefault()).findFirst().orElseThrow();
+    }
+
+    private void updateRepaymentPeriodsAfterChargeOff(final ProgressiveTransactionCtx transactionCtx, final LocalDate chargeOffDate,
+            final List<LoanTransaction> transactionsToBeReprocessed) {
+        final List<RepaymentPeriod> repaymentPeriods = transactionCtx.getModel().repaymentPeriods();
+
+        if (repaymentPeriods.isEmpty()) {
+            return;
+        }
+
+        final List<RepaymentPeriod> periodsBeforeChargeOff = repaymentPeriods.stream()
+                .filter(rp -> rp.getFromDate().isBefore(chargeOffDate)).toList();
+
+        if (periodsBeforeChargeOff.isEmpty()) {
+            return;
+        }
+
+        final RepaymentPeriod lastPeriod = periodsBeforeChargeOff.get(periodsBeforeChargeOff.size() - 1);
+
+        final List<RepaymentPeriod> periodsToRemove = repaymentPeriods.stream().filter(rp -> rp.getFromDate().isAfter(chargeOffDate))
+                .toList();
+
+        lastPeriod.setDueDate(chargeOffDate);
+        lastPeriod.getInterestPeriods().removeIf(interestPeriod -> !interestPeriod.getFromDate().isBefore(chargeOffDate));
+
+        transactionCtx.getModel().repaymentPeriods().removeAll(periodsToRemove);
+
+        final BigDecimal totalPrincipal = periodsToRemove.stream().map(rp -> rp.getDuePrincipal().getAmount()).reduce(BigDecimal.ZERO,
+                BigDecimal::add);
+
+        final BigDecimal newInterest = emiCalculator
+                .getPeriodInterestTillDate(transactionCtx.getModel(), lastPeriod.getDueDate(), chargeOffDate).getAmount();
+
+        lastPeriod.setEmi(lastPeriod.getDuePrincipal().add(totalPrincipal).add(newInterest));
+
+        emiCalculator.calculateRateFactorForRepaymentPeriod(lastPeriod, transactionCtx.getModel());
+
+        for (LoanTransaction processTransaction : transactionsToBeReprocessed) {
+            emiCalculator.addBalanceCorrection(transactionCtx.getModel(), processTransaction.getTransactionDate(),
+                    processTransaction.getPrincipalPortion(transactionCtx.getCurrency()));
+            processSingleTransaction(processTransaction, transactionCtx);
+        }
     }
 }

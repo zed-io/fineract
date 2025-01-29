@@ -261,6 +261,17 @@ public final class ProgressiveEMICalculator implements EMICalculator {
         return new OutstandingDetails(totalOutstandingPrincipal, totalOutstandingInterest);
     }
 
+    @Override
+    public void calculateRateFactorForRepaymentPeriod(final RepaymentPeriod repaymentPeriod,
+            final ProgressiveLoanInterestScheduleModel scheduleModel) {
+        repaymentPeriod.getInterestPeriods().forEach(interestPeriod -> {
+            interestPeriod.setRateFactor(calculateRateFactorPerPeriod(scheduleModel, repaymentPeriod, interestPeriod.getFromDate(),
+                    interestPeriod.getDueDate()));
+            interestPeriod.setRateFactorTillPeriodDueDate(calculateRateFactorPerPeriodForInterest(scheduleModel, repaymentPeriod,
+                    interestPeriod.getFromDate(), repaymentPeriod.getDueDate()));
+        });
+    }
+
     @NotNull
     private ProgressiveLoanInterestScheduleModel recalculateScheduleModelTillDate(
             @NotNull ProgressiveLoanInterestScheduleModel scheduleModel, @NotNull LocalDate periodDueDate, @NotNull LocalDate targetDate) {
@@ -417,16 +428,6 @@ public final class ProgressiveEMICalculator implements EMICalculator {
     private void calculateRateFactorForPeriods(final List<RepaymentPeriod> repaymentPeriods,
             final ProgressiveLoanInterestScheduleModel scheduleModel) {
         repaymentPeriods.forEach(repaymentPeriod -> calculateRateFactorForRepaymentPeriod(repaymentPeriod, scheduleModel));
-    }
-
-    private void calculateRateFactorForRepaymentPeriod(final RepaymentPeriod repaymentPeriod,
-            final ProgressiveLoanInterestScheduleModel scheduleModel) {
-        repaymentPeriod.getInterestPeriods().forEach(interestPeriod -> {
-            interestPeriod.setRateFactor(calculateRateFactorPerPeriod(scheduleModel, repaymentPeriod, interestPeriod.getFromDate(),
-                    interestPeriod.getDueDate()));
-            interestPeriod.setRateFactorTillPeriodDueDate(calculateRateFactorPerPeriodForInterest(scheduleModel, repaymentPeriod,
-                    interestPeriod.getFromDate(), repaymentPeriod.getDueDate()));
-        });
     }
 
     BigDecimal calculateRateFactorPerPeriodForInterest(final ProgressiveLoanInterestScheduleModel scheduleModel,

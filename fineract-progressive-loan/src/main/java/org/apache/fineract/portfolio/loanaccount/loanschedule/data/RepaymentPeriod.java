@@ -42,8 +42,9 @@ public class RepaymentPeriod {
     private final RepaymentPeriod previous;
     @Getter
     private final LocalDate fromDate;
+    @Setter
     @Getter
-    private final LocalDate dueDate;
+    private LocalDate dueDate;
     @Getter
     @Setter
     private List<InterestPeriod> interestPeriods;

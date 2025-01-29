@@ -60,7 +60,7 @@ public class ProgressiveLoanInterestScheduleModel {
     public ProgressiveLoanInterestScheduleModel(final List<RepaymentPeriod> repaymentPeriods,
             final LoanProductMinimumRepaymentScheduleRelatedDetail loanProductRelatedDetail,
             final List<LoanTermVariationsData> loanTermVariations, final Integer installmentAmountInMultiplesOf, final MathContext mc) {
-        this.repaymentPeriods = repaymentPeriods;
+        this.repaymentPeriods = new ArrayList<>(repaymentPeriods);
         this.interestRates = new TreeSet<>(Collections.reverseOrder());
         this.loanProductRelatedDetail = loanProductRelatedDetail;
         this.loanTermVariations = buildLoanTermVariationMap(loanTermVariations);

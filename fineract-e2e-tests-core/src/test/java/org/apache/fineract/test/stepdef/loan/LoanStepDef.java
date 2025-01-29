@@ -19,6 +19,7 @@
 package org.apache.fineract.test.stepdef.loan;
 
 import static org.apache.fineract.test.data.TransactionProcessingStrategyCode.ADVANCED_PAYMENT_ALLOCATION;
+import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR_LAST_INSTALLMENT_STRATEGY;
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR;
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_INTEREST_DAILY_INTEREST_RECALCULATION_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
@@ -3016,6 +3017,13 @@ public class LoanStepDef extends AbstractStepDef {
     public void createLoanWithoutInterestRecalculationAndAccelerateMaturityChargeOffBehaviour(final String date) throws IOException {
         createLoanWithLoanBehaviour(date, false,
                 DefaultLoanProduct.valueOf(LP2_ADV_PYMNT_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR.getName()));
+    }
+
+    @When("Admin creates a new accelerate maturity charge-off Loan with last installment strategy, without interest recalculation and with date: {string}")
+    public void createLoanWithoutInterestRecalculationAndAccelerateMaturityChargeOffBehaviourLastInstallmentStrategy(final String date)
+            throws IOException {
+        createLoanWithLoanBehaviour(date, false,
+                DefaultLoanProduct.valueOf(LP2_ACCELERATE_MATURITY_CHARGE_OFF_BEHAVIOUR_LAST_INSTALLMENT_STRATEGY.getName()));
     }
 
     private void createLoanWithLoanBehaviour(final String date, final boolean isInterestRecalculation, final DefaultLoanProduct product)
