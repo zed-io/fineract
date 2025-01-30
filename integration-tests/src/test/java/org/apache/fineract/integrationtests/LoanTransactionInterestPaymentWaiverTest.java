@@ -1353,7 +1353,7 @@ public class LoanTransactionInterestPaymentWaiverTest extends BaseLoanIntegratio
     // reverse 4 - 1 Interest Payment Waiver transactions
     @Test
     public void testInterestPaymentWaiverTransactionAccountingAccuralForInterestPenaltyFeeOverpaymentChargeOFFLoan() {
-        runAt("15 May 2023", () -> {
+        runAt("2 January 2023", () -> {
 
             final String disbursementDay = "01 January 2023";
             final String repaymentPeriod1DueDate = "01 February 2023";
@@ -1384,6 +1384,8 @@ public class LoanTransactionInterestPaymentWaiverTest extends BaseLoanIntegratio
             PostLoansLoanIdTransactionsResponse chargeOffTransaction = loanTransactionHelper.chargeOffLoan(loanId,
                     new PostLoansLoanIdTransactionsRequest().transactionDate("2 January 2023").locale("en").dateFormat("dd MMMM yyyy")
                             .externalId(transactionExternalId).chargeOffReasonId((long) chargeOffReasonId));
+
+            updateBusinessDate("15 May 2023");
 
             GetLoansLoanIdResponse loanDetails = loanTransactionHelper.getLoanDetails(loanId);
             validateLoanSummaryBalances(loanDetails, 1260.0, 0.0, 1000.0, 0.0, null);

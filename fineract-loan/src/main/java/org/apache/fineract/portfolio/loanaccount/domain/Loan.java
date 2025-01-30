@@ -3581,4 +3581,17 @@ public class Loan extends AbstractAuditableWithUTCDateTimeCustom<Long> {
         return (chargeOffTransaction == null) ? false : (chargeOffTransaction.getDateOf().compareTo(onDate) <= 0);
     }
 
+    public boolean hasMonetaryActivityAfter(final LocalDate transactionDate) {
+        for (LoanTransaction transaction : this.getLoanTransactions()) {
+            if (transaction.getTransactionDate().isAfter(transactionDate) && !transaction.isNonMonetaryTransaction()) {
+                return true;
+            }
+        }
+        for (LoanCharge loanCharge : this.getLoanCharges()) {
+            if (!loanCharge.determineIfFullyPaid() && loanCharge.getSubmittedOnDate().isAfter(transactionDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

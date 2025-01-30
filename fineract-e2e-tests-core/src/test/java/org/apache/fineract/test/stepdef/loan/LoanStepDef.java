@@ -24,6 +24,7 @@ import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_A
 import static org.apache.fineract.test.data.loanproduct.DefaultLoanProduct.LP2_ADV_PYMNT_ZERO_INTEREST_CHARGE_OFF_BEHAVIOUR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -1402,6 +1403,24 @@ public class LoanStepDef extends AbstractStepDef {
         Long transactionId = chargeOffResponse.body().getResourceId();
         eventAssertion.assertEvent(LoanChargeOffEvent.class, transactionId).extractingData(LoanTransactionDataV1::getLoanId)
                 .isEqualTo(loanId).extractingData(LoanTransactionDataV1::getId).isEqualTo(chargeOffResponse.body().getResourceId());
+    }
+
+    @And("Admin tries to charge-off the loan on {string} but fails due to monetary activity after the charge-off date")
+    public void chargeOffLoanWithError(final String transactionDate) throws IOException {
+        final Response<PostLoansResponse> loanResponse = testContext().get(TestContextKey.LOAN_CREATE_RESPONSE);
+        final long loanId = loanResponse.body().getLoanId();
+
+        final PostLoansLoanIdTransactionsRequest chargeOffRequest = LoanRequestFactory.defaultChargeOffRequest()
+                .transactionDate(transactionDate).dateFormat(DATE_FORMAT).locale(DEFAULT_LOCALE);
+
+        final Response<PostLoansLoanIdTransactionsResponse> chargeOffResponse = loanTransactionsApi
+                .executeLoanTransaction(loanId, chargeOffRequest, "charge-off").execute();
+        final ErrorResponse errorDetails = ErrorResponse.from(chargeOffResponse);
+        final String expectedErrorMessage = "Loan: " + loanId
+                + " charge-off cannot be executed. Loan has monetary activity after the charge-off transaction date!";
+        assertThat(errorDetails.getSingleError().getDeveloperMessage()).isEqualTo(expectedErrorMessage);
+
+        assertFalse(chargeOffResponse.isSuccessful());
     }
 
     @Then("Charge-off attempt on {string} results an error")

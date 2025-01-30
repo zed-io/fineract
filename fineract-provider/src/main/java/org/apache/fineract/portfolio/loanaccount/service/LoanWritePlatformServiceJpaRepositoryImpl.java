@@ -3201,6 +3201,12 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     transactionDate);
         }
 
+        if (loan.hasMonetaryActivityAfter(transactionDate)) {
+            throw new GeneralPlatformDomainRuleException("error.msg.loan.monetary.transactions.after.charge.off",
+                    "Loan: " + loanId + " charge-off cannot be executed. Loan has monetary activity after the charge-off transaction date!",
+                    loanId);
+        }
+
         businessEventNotifierService.notifyPreBusinessEvent(new LoanChargeOffPreBusinessEvent(loan));
 
         if (command.hasParameter(LoanApiConstants.chargeOffReasonIdParamName)) {
