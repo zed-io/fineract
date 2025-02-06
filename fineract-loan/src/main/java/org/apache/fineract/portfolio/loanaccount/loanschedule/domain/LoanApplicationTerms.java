@@ -1677,6 +1677,14 @@ public final class LoanApplicationTerms {
         return LoanRescheduleStrategyMethod.REDUCE_EMI_AMOUNT;
     }
 
+    public boolean isInterestBearing() {
+        return BigDecimal.ZERO.compareTo(getAnnualNominalInterestRate()) < 0;
+    }
+
+    public boolean isInterestBearingAndInterestRecalculationEnabled() {
+        return isInterestBearing() && isInterestRecalculationEnabled();
+    }
+
     public boolean isInterestRecalculationEnabled() {
         return this.interestRecalculationEnabled;
     }
