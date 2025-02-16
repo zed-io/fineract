@@ -68,7 +68,6 @@ public final class AccrualAccountingDataValidator {
                 .validateDateBefore(DateUtils.getBusinessLocalDate());
 
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
-
     }
 
     public void throwExceptionIfValidationWarningsExist(final List<ApiParameterError> dataValidationErrors) {
