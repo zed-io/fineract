@@ -1,0 +1,272 @@
+actions:
+  - name: approveLoan
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/loan/approve"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to approve a loan application
+
+  - name: disburseLoan
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/loan/disburse"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to disburse an approved loan
+
+  - name: makeLoanRepayment
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/loan/repayment"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to record a loan repayment
+
+  - name: writeOffLoan
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/loan/writeoff"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+    comment: Action to write off a loan
+
+  - name: calculateLoanSchedule
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/loan/calculate-schedule"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+      - role: client_self_service
+    comment: Action to calculate a loan repayment schedule
+
+custom_types:
+  enums: []
+  input_objects:
+    - name: LoanApprovalInput
+      fields:
+        - name: loanId
+          type: uuid!
+        - name: approvedOnDate
+          type: date!
+        - name: approvedAmount
+          type: numeric
+        - name: note
+          type: String
+
+    - name: LoanDisbursementInput
+      fields:
+        - name: loanId
+          type: uuid!
+        - name: disbursementDate
+          type: date!
+        - name: paymentTypeId
+          type: uuid!
+        - name: transactionAmount
+          type: numeric!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: LoanRepaymentInput
+      fields:
+        - name: loanId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: LoanWriteOffInput
+      fields:
+        - name: loanId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: note
+          type: String
+
+    - name: LoanScheduleInput
+      fields:
+        - name: productId
+          type: uuid!
+        - name: principalAmount
+          type: numeric!
+        - name: numberOfRepayments
+          type: Int!
+        - name: interestRatePerPeriod
+          type: numeric!
+        - name: disbursementDate
+          type: date!
+        - name: repaymentEvery
+          type: Int!
+        - name: repaymentFrequencyType
+          type: String!
+        - name: interestType
+          type: String!
+        - name: amortizationType
+          type: String!
+        - name: termFrequency
+          type: Int
+        - name: termFrequencyType
+          type: String
+        - name: graceOnPrincipal
+          type: Int
+        - name: graceOnInterest
+          type: Int
+
+  objects:
+    - name: LoanApprovalResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: loanId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: approvedOnDate
+          type: date!
+        - name: approvedAmount
+          type: numeric!
+
+    - name: LoanDisbursementResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: loanId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: uuid!
+        - name: disbursementDate
+          type: date!
+        - name: disbursedAmount
+          type: numeric!
+
+    - name: LoanRepaymentResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: loanId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: amount
+          type: numeric!
+        - name: principalPortion
+          type: numeric!
+        - name: interestPortion
+          type: numeric!
+        - name: feesPortion
+          type: numeric!
+        - name: penaltyPortion
+          type: numeric!
+        - name: outstandingBalance
+          type: numeric!
+
+    - name: LoanWriteOffResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: loanId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: uuid!
+        - name: writeOffDate
+          type: date!
+        - name: writeOffAmount
+          type: numeric!
+
+    - name: SchedulePeriod
+      fields:
+        - name: periodNumber
+          type: Int!
+        - name: fromDate
+          type: date
+        - name: dueDate
+          type: date!
+        - name: principalAmount
+          type: numeric!
+        - name: interestAmount
+          type: numeric!
+        - name: feeAmount
+          type: numeric!
+        - name: penaltyAmount
+          type: numeric!
+        - name: totalDue
+          type: numeric!
+        - name: outstandingBalance
+          type: numeric!
+
+    - name: LoanScheduleResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: currency
+          type: String!
+        - name: periods
+          type: [SchedulePeriod!]!
+        - name: totalPrincipal
+          type: numeric!
+        - name: totalInterest
+          type: numeric!
+        - name: totalFees
+          type: numeric!
+        - name: totalRepayment
+          type: numeric!
+        - name: message
+          type: String

@@ -1,0 +1,265 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan"
+      },
+      "object_relationships": [
+        {
+          "name": "client",
+          "using": {
+            "foreign_key_constraint_on": "client_id"
+          }
+        },
+        {
+          "name": "group",
+          "using": {
+            "foreign_key_constraint_on": "group_id"
+          }
+        },
+        {
+          "name": "product",
+          "using": {
+            "foreign_key_constraint_on": "loan_product_id"
+          }
+        },
+        {
+          "name": "fund",
+          "using": {
+            "foreign_key_constraint_on": "fund_id"
+          }
+        },
+        {
+          "name": "loanOfficer",
+          "using": {
+            "foreign_key_constraint_on": "loan_officer_id"
+          }
+        },
+        {
+          "name": "submittedByUser",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_user_id"
+          }
+        },
+        {
+          "name": "approvedByUser",
+          "using": {
+            "foreign_key_constraint_on": "approved_by_user_id"
+          }
+        },
+        {
+          "name": "disbursedByUser",
+          "using": {
+            "foreign_key_constraint_on": "disbursed_by_user_id"
+          }
+        },
+        {
+          "name": "closedByUser",
+          "using": {
+            "foreign_key_constraint_on": "closed_by_user_id"
+          }
+        },
+        {
+          "name": "writtenOffByUser",
+          "using": {
+            "foreign_key_constraint_on": "written_off_by_user_id"
+          }
+        },
+        {
+          "name": "rejectedByUser",
+          "using": {
+            "foreign_key_constraint_on": "rejected_by_user_id"
+          }
+        },
+        {
+          "name": "withdrawnByUser",
+          "using": {
+            "foreign_key_constraint_on": "withdrawn_by_user_id"
+          }
+        },
+        {
+          "name": "lockedByUser",
+          "using": {
+            "foreign_key_constraint_on": "locked_by_user_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "charges",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_charge"
+              },
+              "column": "loan_id"
+            }
+          }
+        },
+        {
+          "name": "collateral",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_collateral"
+              },
+              "column": "loan_id"
+            }
+          }
+        },
+        {
+          "name": "guarantors",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_guarantor"
+              },
+              "column": "loan_id"
+            }
+          }
+        },
+        {
+          "name": "transactions",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_transaction"
+              },
+              "column": "loan_id"
+            }
+          }
+        },
+        {
+          "name": "repaymentSchedule",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_repayment_schedule"
+              },
+              "column": "loan_id"
+            }
+          }
+        },
+        {
+          "name": "officerAssignments",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_officer_assignment"
+              },
+              "column": "loan_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan_product"
+      },
+      "object_relationships": [
+        {
+          "name": "fund",
+          "using": {
+            "foreign_key_constraint_on": "fund_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "charges",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_product_charge"
+              },
+              "column": "loan_product_id"
+            }
+          }
+        },
+        {
+          "name": "loans",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan"
+              },
+              "column": "loan_product_id"
+            }
+          }
+        },
+        {
+          "name": "accountMappings",
+          "using": {
+            "manual_configuration": {
+              "remote_table": {
+                "schema": "fineract_default",
+                "name": "product_account_mapping"
+              },
+              "column_mapping": {
+                "id": "product_id"
+              },
+              "insertion_order": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan_transaction"
+      },
+      "object_relationships": [
+        {
+          "name": "loan",
+          "using": {
+            "foreign_key_constraint_on": "loan_id"
+          }
+        },
+        {
+          "name": "paymentDetail",
+          "using": {
+            "foreign_key_constraint_on": "payment_detail_id"
+          }
+        },
+        {
+          "name": "submittedByUser",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_user_id"
+          }
+        },
+        {
+          "name": "reversedByUser",
+          "using": {
+            "foreign_key_constraint_on": "reversed_by_user_id"
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan_repayment_schedule"
+      },
+      "object_relationships": [
+        {
+          "name": "loan",
+          "using": {
+            "foreign_key_constraint_on": "loan_id"
+          }
+        }
+      ]
+    }
+  ]
+}

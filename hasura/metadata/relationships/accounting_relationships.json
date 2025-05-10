@@ -1,0 +1,214 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "gl_account"
+      },
+      "object_relationships": [
+        {
+          "name": "parent",
+          "using": {
+            "foreign_key_constraint_on": "parent_id"
+          }
+        },
+        {
+          "name": "tag",
+          "using": {
+            "foreign_key_constraint_on": "tag_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "children",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "gl_account"
+              },
+              "column": "parent_id"
+            }
+          }
+        },
+        {
+          "name": "journalEntries",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "gl_journal_entry"
+              },
+              "column": "account_id"
+            }
+          }
+        },
+        {
+          "name": "productMappings",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "product_account_mapping"
+              },
+              "column": "gl_account_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "gl_journal_entry"
+      },
+      "object_relationships": [
+        {
+          "name": "account",
+          "using": {
+            "foreign_key_constraint_on": "account_id"
+          }
+        },
+        {
+          "name": "office",
+          "using": {
+            "foreign_key_constraint_on": "office_id"
+          }
+        },
+        {
+          "name": "reversal",
+          "using": {
+            "foreign_key_constraint_on": "reversal_id"
+          }
+        },
+        {
+          "name": "submittedByUser",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_user_id"
+          }
+        },
+        {
+          "name": "paymentDetails",
+          "using": {
+            "foreign_key_constraint_on": "payment_details_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "reversedEntries",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "gl_journal_entry"
+              },
+              "column": "reversal_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "gl_closure"
+      },
+      "object_relationships": [
+        {
+          "name": "office",
+          "using": {
+            "foreign_key_constraint_on": "office_id"
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "product_account_mapping"
+      },
+      "object_relationships": [
+        {
+          "name": "glAccount",
+          "using": {
+            "foreign_key_constraint_on": "gl_account_id"
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "payment_type"
+      },
+      "array_relationships": [
+        {
+          "name": "paymentDetails",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "payment_detail"
+              },
+              "column": "payment_type_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "payment_detail"
+      },
+      "object_relationships": [
+        {
+          "name": "paymentType",
+          "using": {
+            "foreign_key_constraint_on": "payment_type_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "loanTransactions",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan_transaction"
+              },
+              "column": "payment_detail_id"
+            }
+          }
+        },
+        {
+          "name": "savingsTransactions",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account_transaction"
+              },
+              "column": "payment_detail_id"
+            }
+          }
+        },
+        {
+          "name": "journalEntries",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "gl_journal_entry"
+              },
+              "column": "payment_details_id"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "object_relationships": [
+        {
+          "name": "office",
+          "using": {
+            "foreign_key_constraint_on": "office_id"
+          }
+        },
+        {
+          "name": "staff",
+          "using": {
+            "foreign_key_constraint_on": "staff_id"
+          }
+        },
+        {
+          "name": "submittedBy",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_userid"
+          }
+        },
+        {
+          "name": "closedBy",
+          "using": {
+            "foreign_key_constraint_on": "closed_by_userid"
+          }
+        },
+        {
+          "name": "reopenedBy",
+          "using": {
+            "foreign_key_constraint_on": "reopened_by_userid"
+          }
+        },
+        {
+          "name": "clientClassification",
+          "using": {
+            "foreign_key_constraint_on": "client_classification_cv_id"
+          }
+        },
+        {
+          "name": "legalForm",
+          "using": {
+            "foreign_key_constraint_on": "legal_form_id"
+          }
+        },
+        {
+          "name": "businessDetails",
+          "using": {
+            "manual_configuration": {
+              "remote_table": {
+                "schema": "fineract_default",
+                "name": "client_business"
+              },
+              "column_mapping": {
+                "id": "client_id"
+              }
+            }
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "identifiers",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_identifier"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "addresses",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_address"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "familyMembers",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_family_member"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "documents",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_document"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "notes",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_note"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "auditTrail",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_audit"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "loans",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "savingsAccounts",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "groupMemberships",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_group_member"
+              },
+              "column": "client_id"
+            }
+          }
+        },
+        {
+          "name": "transfers",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_transfer"
+              },
+              "column": "client_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client_group"
+      },
+      "object_relationships": [
+        {
+          "name": "office",
+          "using": {
+            "foreign_key_constraint_on": "office_id"
+          }
+        },
+        {
+          "name": "staff",
+          "using": {
+            "foreign_key_constraint_on": "staff_id"
+          }
+        },
+        {
+          "name": "parentGroup",
+          "using": {
+            "foreign_key_constraint_on": "parent_id"
+          }
+        },
+        {
+          "name": "level",
+          "using": {
+            "foreign_key_constraint_on": "level_id"
+          }
+        },
+        {
+          "name": "submitter",
+          "using": {
+            "foreign_key_constraint_on": "submitter_user_id"
+          }
+        },
+        {
+          "name": "closedBy",
+          "using": {
+            "foreign_key_constraint_on": "closed_by_userid"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "members",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_group_member"
+              },
+              "column": "group_id"
+            }
+          }
+        },
+        {
+          "name": "roles",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_group_role"
+              },
+              "column": "group_id"
+            }
+          }
+        },
+        {
+          "name": "notes",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "group_note"
+              },
+              "column": "group_id"
+            }
+          }
+        },
+        {
+          "name": "childGroups",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "client_group"
+              },
+              "column": "parent_id"
+            }
+          }
+        },
+        {
+          "name": "loans",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "loan"
+              },
+              "column": "group_id"
+            }
+          }
+        },
+        {
+          "name": "savingsAccounts",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account"
+              },
+              "column": "group_id"
+            }
+          }
+        },
+        {
+          "name": "transfers",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "group_transfer"
+              },
+              "column": "group_id"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

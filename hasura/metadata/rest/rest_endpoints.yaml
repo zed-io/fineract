@@ -1,0 +1,447 @@
+rest_endpoints:
+  - name: getClients
+    url: /api/v1/clients
+    methods:
+      - GET
+    definition:
+      query:
+        query_name: GetClients
+        collection_name: clients
+        query:
+          query: |
+            query GetClients($offset: Int!, $limit: Int!, $search: String, $status: String, $officeId: uuid) {
+              clients: fineract_default_client(
+                limit: $limit
+                offset: $offset
+                where: {
+                  _and: [
+                    { status: { _eq: $status } },
+                    { office_id: { _eq: $officeId } },
+                    { 
+                      _or: [
+                        { firstname: { _ilike: $search } },
+                        { lastname: { _ilike: $search } },
+                        { mobile_no: { _ilike: $search } },
+                        { account_no: { _ilike: $search } }
+                      ]
+                    }
+                  ]
+                }
+                order_by: { submitted_date: desc }
+              ) {
+                id
+                account_no
+                external_id
+                status
+                office_id
+                office {
+                  id
+                  name
+                }
+                firstname
+                lastname
+                display_name
+                mobile_no
+                activation_date
+                submitted_date
+              }
+              total: fineract_default_client_aggregate(
+                where: {
+                  _and: [
+                    { status: { _eq: $status } },
+                    { office_id: { _eq: $officeId } },
+                    { 
+                      _or: [
+                        { firstname: { _ilike: $search } },
+                        { lastname: { _ilike: $search } },
+                        { mobile_no: { _ilike: $search } },
+                        { account_no: { _ilike: $search } }
+                      ]
+                    }
+                  ]
+                }
+              ) {
+                aggregate {
+                  count
+                }
+              }
+            }
+        variables:
+          offset:
+            type: Int!
+            default: 0
+            required: false
+            description: Pagination offset
+          limit:
+            type: Int!
+            default: 10
+            required: false
+            description: Pagination limit
+          search:
+            type: String
+            required: false
+            description: Search term
+          status:
+            type: String
+            default: "active"
+            required: false
+            description: Client status filter
+          officeId:
+            type: uuid
+            required: false
+            description: Office ID filter
+
+  - name: getLoans
+    url: /api/v1/loans
+    methods:
+      - GET
+    definition:
+      query:
+        query_name: GetLoans
+        collection_name: loans
+        query:
+          query: |
+            query GetLoans($offset: Int!, $limit: Int!, $status: String, $clientId: uuid) {
+              loans: fineract_default_loan(
+                limit: $limit
+                offset: $offset
+                where: {
+                  _and: [
+                    { loan_status: { _eq: $status } },
+                    { client_id: { _eq: $clientId } }
+                  ]
+                }
+                order_by: { submitted_on_date: desc }
+              ) {
+                id
+                account_no
+                external_id
+                loan_status
+                client_id
+                client {
+                  id
+                  display_name
+                }
+                group_id
+                group {
+                  id
+                  group_name
+                }
+                loan_product_id
+                product {
+                  id
+                  name
+                }
+                principal_amount
+                total_outstanding_derived
+                submitted_on_date
+                approved_on_date
+                disbursed_on_date
+              }
+              total: fineract_default_loan_aggregate(
+                where: {
+                  _and: [
+                    { loan_status: { _eq: $status } },
+                    { client_id: { _eq: $clientId } }
+                  ]
+                }
+              ) {
+                aggregate {
+                  count
+                }
+              }
+            }
+        variables:
+          offset:
+            type: Int!
+            default: 0
+            required: false
+            description: Pagination offset
+          limit:
+            type: Int!
+            default: 10
+            required: false
+            description: Pagination limit
+          status:
+            type: String
+            default: "active"
+            required: false
+            description: Loan status filter
+          clientId:
+            type: uuid
+            required: false
+            description: Client ID filter
+
+  - name: getSavingsAccounts
+    url: /api/v1/savings
+    methods:
+      - GET
+    definition:
+      query:
+        query_name: GetSavingsAccounts
+        collection_name: savingsAccounts
+        query:
+          query: |
+            query GetSavingsAccounts($offset: Int!, $limit: Int!, $status: String, $clientId: uuid) {
+              savingsAccounts: fineract_default_savings_account(
+                limit: $limit
+                offset: $offset
+                where: {
+                  _and: [
+                    { status: { _eq: $status } },
+                    { client_id: { _eq: $clientId } }
+                  ]
+                }
+                order_by: { submitted_on_date: desc }
+              ) {
+                id
+                account_no
+                external_id
+                status
+                client_id
+                client {
+                  id
+                  display_name
+                }
+                group_id
+                group {
+                  id
+                  group_name
+                }
+                product_id
+                product {
+                  id
+                  name
+                }
+                currency_code
+                account_balance_derived
+                submitted_on_date
+                activated_on_date
+              }
+              total: fineract_default_savings_account_aggregate(
+                where: {
+                  _and: [
+                    { status: { _eq: $status } },
+                    { client_id: { _eq: $clientId } }
+                  ]
+                }
+              ) {
+                aggregate {
+                  count
+                }
+              }
+            }
+        variables:
+          offset:
+            type: Int!
+            default: 0
+            required: false
+            description: Pagination offset
+          limit:
+            type: Int!
+            default: 10
+            required: false
+            description: Pagination limit
+          status:
+            type: String
+            default: "active"
+            required: false
+            description: Savings account status filter
+          clientId:
+            type: uuid
+            required: false
+            description: Client ID filter
+
+  - name: getClientById
+    url: /api/v1/clients/:clientId
+    methods:
+      - GET
+    definition:
+      query:
+        query_name: GetClientById
+        collection_name: client
+        query:
+          query: |
+            query GetClientById($clientId: uuid!) {
+              client: fineract_default_client_by_pk(id: $clientId) {
+                id
+                account_no
+                external_id
+                status
+                office_id
+                office {
+                  id
+                  name
+                }
+                staff_id
+                staff {
+                  id
+                  display_name
+                }
+                firstname
+                middlename
+                lastname
+                fullname
+                display_name
+                mobile_no
+                email_address
+                gender
+                date_of_birth
+                submitted_date
+                activation_date
+                client_type
+                company_name
+                company_registration_no
+                company_registration_date
+                addresses {
+                  id
+                  address_type
+                  address_line_1
+                  address_line_2
+                  city
+                  state_province
+                  country
+                  postal_code
+                }
+                familyMembers {
+                  id
+                  firstname
+                  lastname
+                  relationship_id
+                  relationship: relationship_id {
+                    code_value
+                  }
+                  mobile_number
+                  age
+                  date_of_birth
+                }
+                identifiers {
+                  id
+                  document_type_id
+                  document_type: document_type_id {
+                    code_value
+                  }
+                  document_key
+                  description
+                }
+              }
+            }
+        variables:
+          clientId:
+            type: uuid!
+            description: Client ID
+            source:
+              url_params:
+                name: clientId
+                cast_type: uuid
+
+  - name: getLoanById
+    url: /api/v1/loans/:loanId
+    methods:
+      - GET
+    definition:
+      query:
+        query_name: GetLoanById
+        collection_name: loan
+        query:
+          query: |
+            query GetLoanById($loanId: uuid!) {
+              loan: fineract_default_loan_by_pk(id: $loanId) {
+                id
+                account_no
+                external_id
+                loan_status
+                client_id
+                client {
+                  id
+                  display_name
+                }
+                group_id
+                group {
+                  id
+                  group_name
+                }
+                loan_product_id
+                product {
+                  id
+                  name
+                }
+                fund_id
+                fund {
+                  id
+                  name
+                }
+                loan_officer_id
+                loanOfficer {
+                  id
+                  display_name
+                }
+                principal_amount
+                approved_principal
+                annual_nominal_interest_rate
+                interest_method_type
+                term_frequency
+                term_frequency_type
+                repay_every
+                repayment_frequency_type
+                number_of_repayments
+                submitted_on_date
+                approved_on_date
+                expected_disbursement_date
+                disbursed_on_date
+                expected_maturity_date
+                matures_on_date
+                total_outstanding_derived
+                principal_disbursed_derived
+                principal_repaid_derived
+                principal_outstanding_derived
+                interest_charged_derived
+                interest_repaid_derived
+                interest_outstanding_derived
+                transactions(order_by: {transaction_date: desc}) {
+                  id
+                  transaction_type
+                  transaction_date
+                  submitted_on_date
+                  amount
+                  principal_portion_derived
+                  interest_portion_derived
+                  fee_charges_portion_derived
+                  penalty_charges_portion_derived
+                  outstanding_loan_balance_derived
+                  is_reversed
+                }
+                repaymentSchedule(order_by: {installment_number: asc}) {
+                  id
+                  installment_number
+                  from_date
+                  due_date
+                  principal_amount
+                  interest_amount
+                  fee_charges_amount
+                  penalty_charges_amount
+                  completed_derived
+                  principal_completed_derived
+                  interest_completed_derived
+                }
+                charges {
+                  id
+                  charge_id
+                  charge_time_type
+                  amount
+                  amount_paid_derived
+                  amount_waived_derived
+                  amount_outstanding_derived
+                  is_paid_derived
+                  is_waived
+                }
+              }
+            }
+        variables:
+          loanId:
+            type: uuid!
+            description: Loan ID
+            source:
+              url_params:
+                name: loanId
+                cast_type: uuid

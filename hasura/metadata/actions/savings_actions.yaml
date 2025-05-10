@@ -1,0 +1,229 @@
+actions:
+  - name: approveSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/approve"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to approve a savings account application
+
+  - name: activateSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/activate"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to activate an approved savings account
+
+  - name: depositToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/deposit"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to make a deposit to a savings account
+
+  - name: withdrawFromSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/withdraw"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to make a withdrawal from a savings account
+
+  - name: postInterestToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/post-interest"
+      timeout: 120
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+    comment: Action to post interest to savings accounts
+
+  - name: calculateSavingsInterest
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/calculate-interest"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+      - role: client_self_service
+    comment: Action to calculate interest for a savings account
+
+custom_types:
+  enums: []
+  input_objects:
+    - name: SavingsApprovalInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: approvedOnDate
+          type: date!
+        - name: note
+          type: String
+
+    - name: SavingsActivationInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: activatedOnDate
+          type: date!
+        - name: note
+          type: String
+
+    - name: SavingsDepositInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: SavingsWithdrawalInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: PostInterestInput
+      fields:
+        - name: postingDate
+          type: date!
+        - name: accountIds
+          type: [uuid!]
+
+    - name: CalculateInterestInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: calculateAsOf
+          type: date
+
+  objects:
+    - name: SavingsApprovalResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: approvedOnDate
+          type: date!
+
+    - name: SavingsActivationResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: activatedOnDate
+          type: date!
+
+    - name: SavingsTransactionResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: amount
+          type: numeric!
+        - name: runningBalance
+          type: numeric!
+        - name: transactionType
+          type: String!
+
+    - name: PostInterestResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: accountsProcessed
+          type: Int!
+        - name: failedAccounts
+          type: Int!
+        - name: totalInterestPosted
+          type: numeric!
+        - name: postingDate
+          type: date!
+
+    - name: InterestCalculationResult
+      fields:
+        - name: interestCalculatedFrom
+          type: date!
+        - name: interestCalculatedTo
+          type: date!
+        - name: interestAmount
+          type: numeric!
+        - name: averageBalance
+          type: numeric
+        - name: daysInPeriod
+          type: Int!

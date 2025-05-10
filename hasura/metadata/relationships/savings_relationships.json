@@ -1,0 +1,177 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account"
+      },
+      "object_relationships": [
+        {
+          "name": "client",
+          "using": {
+            "foreign_key_constraint_on": "client_id"
+          }
+        },
+        {
+          "name": "group",
+          "using": {
+            "foreign_key_constraint_on": "group_id"
+          }
+        },
+        {
+          "name": "product",
+          "using": {
+            "foreign_key_constraint_on": "product_id"
+          }
+        },
+        {
+          "name": "fieldOfficer",
+          "using": {
+            "foreign_key_constraint_on": "field_officer_id"
+          }
+        },
+        {
+          "name": "submittedByUser",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_user_id"
+          }
+        },
+        {
+          "name": "approvedByUser",
+          "using": {
+            "foreign_key_constraint_on": "approved_by_user_id"
+          }
+        },
+        {
+          "name": "activatedByUser",
+          "using": {
+            "foreign_key_constraint_on": "activated_by_user_id"
+          }
+        },
+        {
+          "name": "closedByUser",
+          "using": {
+            "foreign_key_constraint_on": "closed_by_user_id"
+          }
+        }
+      ],
+      "array_relationships": [
+        {
+          "name": "charges",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account_charge"
+              },
+              "column": "savings_account_id"
+            }
+          }
+        },
+        {
+          "name": "transactions",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account_transaction"
+              },
+              "column": "savings_account_id"
+            }
+          }
+        },
+        {
+          "name": "officerAssignments",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_officer_assignment"
+              },
+              "column": "savings_account_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_product"
+      },
+      "array_relationships": [
+        {
+          "name": "charges",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_product_charge"
+              },
+              "column": "savings_product_id"
+            }
+          }
+        },
+        {
+          "name": "accounts",
+          "using": {
+            "foreign_key_constraint_on": {
+              "table": {
+                "schema": "fineract_default",
+                "name": "savings_account"
+              },
+              "column": "product_id"
+            }
+          }
+        },
+        {
+          "name": "accountMappings",
+          "using": {
+            "manual_configuration": {
+              "remote_table": {
+                "schema": "fineract_default",
+                "name": "product_account_mapping"
+              },
+              "column_mapping": {
+                "id": "product_id"
+              },
+              "insertion_order": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account_transaction"
+      },
+      "object_relationships": [
+        {
+          "name": "account",
+          "using": {
+            "foreign_key_constraint_on": "savings_account_id"
+          }
+        },
+        {
+          "name": "paymentDetail",
+          "using": {
+            "foreign_key_constraint_on": "payment_detail_id"
+          }
+        },
+        {
+          "name": "submittedByUser",
+          "using": {
+            "foreign_key_constraint_on": "submitted_by_user_id"
+          }
+        },
+        {
+          "name": "reversedByUser",
+          "using": {
+            "foreign_key_constraint_on": "reversed_by_user_id"
+          }
+        }
+      ]
+    }
+  ]
+}
