@@ -1,0 +1,155 @@
+- name: getReportDefinitions
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/definitions'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve all regulatory report definitions
+
+- name: getReportDefinition
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/definition'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve a specific regulatory report definition
+
+- name: generateReport
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/generate'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+      - name: x-hasura-user-id
+        value: $request.headers.x-hasura-user-id
+    timeout: 60
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Generate a regulatory report based on specified parameters
+
+- name: getReportInstances
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/instances'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve all regulatory report instances with optional filtering
+
+- name: getReportInstance
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/instance'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve a specific regulatory report instance
+
+- name: updateReportStatus
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/status'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+      - name: x-hasura-user-id
+        value: $request.headers.x-hasura-user-id
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Update the status of a regulatory report instance
+
+- name: getUpcomingDeadlines
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/deadlines'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve upcoming regulatory report deadlines
+
+- name: getReportSchedules
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/schedules'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Retrieve all regulatory report schedules
+
+- name: createReportSchedule
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/schedule'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+      - name: x-hasura-user-id
+        value: $request.headers.x-hasura-user-id
+    timeout: 30
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: cu_admin
+  comment: Create a new regulatory report schedule
+
+- name: runScheduledReports
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/regulatory-reporting/run-scheduled'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-role
+        value: $request.headers.x-hasura-role
+    timeout: 60
+  permissions:
+    - role: admin
+    - role: bank_admin
+    - role: scheduler
+  comment: Manually trigger execution of scheduled regulatory reports

@@ -1,0 +1,388 @@
+type Query {
+  getPaymentGatewayProviders(
+    providerType: String
+    isActive: Boolean
+    limit: Int
+    offset: Int
+  ): PaymentGatewayProviderListResponse
+  
+  getPaymentGatewayProviderById(
+    providerId: String!
+  ): PaymentGatewayProvider
+  
+  getPaymentGatewayTransactions(
+    providerId: String
+    status: PaymentTransactionStatus
+    clientId: String
+    loanId: String
+    savingsAccountId: String
+    dateFrom: String
+    dateTo: String
+    limit: Int
+    offset: Int
+  ): PaymentGatewayTransactionListResponse
+  
+  getPaymentGatewayTransactionById(
+    transactionId: String!
+  ): PaymentGatewayTransaction
+  
+  getClientPaymentMethods(
+    clientId: String!
+    providerId: String
+    isActive: Boolean
+  ): PaymentMethodListResponse
+  
+  getRecurringPaymentConfigurations(
+    clientId: String
+    providerId: String
+    status: RecurringPaymentStatus
+    limit: Int
+    offset: Int
+  ): RecurringPaymentConfigListResponse
+}
+
+type Mutation {
+  registerPaymentGatewayProvider(
+    code: String!
+    name: String!
+    description: String
+    providerType: PaymentGatewayType!
+    configuration: JSON!
+    webhookUrl: String
+    webhookSecret: String
+    isActive: Boolean
+    supportsRefunds: Boolean
+    supportsPartialPayments: Boolean
+    supportsRecurringPayments: Boolean
+  ): RegisterPaymentGatewayProviderResponse
+  
+  updatePaymentGatewayProvider(
+    providerId: String!
+    updates: PaymentGatewayProviderUpdates!
+  ): PaymentGatewayProvider
+  
+  deletePaymentGatewayProvider(
+    providerId: String!
+  ): DeleteResponse
+  
+  createPaymentTransaction(
+    providerId: String!
+    amount: Float!
+    currency: String!
+    clientId: String
+    loanId: String
+    savingsAccountId: String
+    paymentMethod: String
+    paymentDetails: JSON
+    referenceNumber: String
+    callbackUrl: String
+    metadata: JSON
+  ): CreatePaymentTransactionResponse
+  
+  executePayment(
+    transactionId: String!
+    paymentMethod: String
+    paymentMethodToken: String
+    paymentDetails: JSON
+  ): PaymentExecutionResponse
+  
+  checkPaymentStatus(
+    transactionId: String!
+  ): PaymentStatusResponse
+  
+  refundPayment(
+    transactionId: String!
+    amount: Float
+    reason: String
+    metadata: JSON
+  ): RefundResponse
+  
+  savePaymentMethod(
+    providerId: String!
+    clientId: String!
+    paymentMethodType: PaymentMethodType!
+    token: String!
+    isDefault: Boolean
+    maskedNumber: String
+    expiryDate: String
+    cardType: String
+    holderName: String
+    billingAddress: JSON
+    metadata: JSON
+  ): SavePaymentMethodResponse
+  
+  deletePaymentMethod(
+    paymentMethodId: String!
+  ): DeleteResponse
+  
+  createRecurringPaymentConfiguration(
+    providerId: String!
+    clientId: String!
+    paymentMethodToken: String!
+    frequency: RecurringFrequency!
+    amount: Float!
+    currency: String!
+    startDate: String!
+    endDate: String
+    description: String
+    metadata: JSON
+  ): CreateRecurringPaymentResponse
+  
+  updateRecurringPaymentStatus(
+    configId: String!
+    status: RecurringPaymentStatus!
+  ): RecurringPaymentConfig
+  
+  processPaymentWebhook(
+    providerId: String!
+    eventType: String!
+    payload: JSON!
+  ): WebhookProcessingResponse
+}
+
+# Common types
+scalar JSON
+
+# Payment Gateway Types
+enum PaymentGatewayType {
+  stripe
+  paypal
+  authorize_net
+  mpesa
+  paytm
+  square
+  razorpay
+  adyen
+  worldpay
+  custom
+}
+
+enum PaymentTransactionStatus {
+  pending
+  completed
+  failed
+  refunded
+  partially_refunded
+  authorized
+  cancelled
+  expired
+}
+
+enum PaymentMethodType {
+  credit_card
+  debit_card
+  bank_transfer
+  bank_account
+  mobile_money
+  wallet
+  cash
+  other
+}
+
+enum RecurringFrequency {
+  daily
+  weekly
+  biweekly
+  monthly
+  quarterly
+  annual
+  custom
+}
+
+enum RecurringPaymentStatus {
+  active
+  paused
+  cancelled
+  completed
+  failed
+}
+
+input PaymentGatewayProviderUpdates {
+  name: String
+  description: String
+  configuration: JSON
+  webhookUrl: String
+  webhookSecret: String
+  isActive: Boolean
+  supportsRefunds: Boolean
+  supportsPartialPayments: Boolean
+  supportsRecurringPayments: Boolean
+}
+
+type PaymentGatewayProvider {
+  id: String!
+  code: String!
+  name: String!
+  description: String
+  providerType: PaymentGatewayType!
+  configuration: JSON
+  webhookUrl: String
+  isActive: Boolean!
+  supportsRefunds: Boolean!
+  supportsPartialPayments: Boolean!
+  supportsRecurringPayments: Boolean!
+  createdBy: String
+  createdDate: String!
+  updatedBy: String
+  updatedDate: String
+}
+
+type PaymentGatewayTransaction {
+  id: String!
+  providerId: String!
+  providerName: String
+  providerType: PaymentGatewayType
+  transactionType: String!
+  externalId: String
+  amount: Float!
+  currency: String!
+  status: PaymentTransactionStatus!
+  errorMessage: String
+  paymentMethod: String
+  paymentDetails: JSON
+  referenceNumber: String
+  clientId: String
+  clientName: String
+  loanId: String
+  savingsAccountId: String
+  metadata: JSON
+  createdDate: String!
+  updatedDate: String
+}
+
+type PaymentMethod {
+  id: String!
+  providerId: String!
+  providerName: String
+  clientId: String!
+  paymentMethodType: PaymentMethodType!
+  token: String!
+  isDefault: Boolean!
+  maskedNumber: String
+  expiryDate: String
+  cardType: String
+  holderName: String
+  billingAddress: JSON
+  isActive: Boolean!
+  createdDate: String!
+  updatedDate: String
+}
+
+type RecurringPaymentConfig {
+  id: String!
+  providerId: String!
+  providerName: String
+  clientId: String
+  clientName: String
+  externalSubscriptionId: String
+  paymentMethodToken: String
+  frequency: RecurringFrequency!
+  amount: Float!
+  currency: String!
+  startDate: String!
+  endDate: String
+  status: RecurringPaymentStatus!
+  description: String
+  metadata: JSON
+  createdDate: String!
+  updatedDate: String
+}
+
+type RegisterPaymentGatewayProviderResponse {
+  id: String!
+  code: String!
+  name: String!
+  providerType: PaymentGatewayType!
+  isActive: Boolean!
+}
+
+type CreatePaymentTransactionResponse {
+  transactionId: String!
+  providerId: String!
+  amount: Float!
+  currency: String!
+  status: PaymentTransactionStatus!
+  createdDate: String!
+  paymentUrl: String
+  externalId: String
+}
+
+type PaymentExecutionResponse {
+  success: Boolean!
+  transactionId: String!
+  status: PaymentTransactionStatus!
+  externalId: String
+  errorMessage: String
+  redirectUrl: String
+}
+
+type PaymentStatusResponse {
+  transactionId: String!
+  status: PaymentTransactionStatus!
+  amount: Float!
+  currency: String!
+  externalId: String
+  errorMessage: String
+  paymentDetails: JSON
+}
+
+type RefundResponse {
+  success: Boolean!
+  originalTransactionId: String!
+  refundTransactionId: String!
+  amount: Float!
+  currency: String!
+  status: PaymentTransactionStatus!
+  externalId: String
+}
+
+type SavePaymentMethodResponse {
+  id: String!
+  token: String!
+  paymentMethodType: PaymentMethodType!
+  maskedNumber: String
+  isDefault: Boolean!
+}
+
+type CreateRecurringPaymentResponse {
+  configId: String!
+  externalSubscriptionId: String
+  amount: Float!
+  currency: String!
+  frequency: RecurringFrequency!
+  startDate: String!
+  status: RecurringPaymentStatus!
+}
+
+type WebhookProcessingResponse {
+  success: Boolean!
+  eventId: String!
+  eventType: String!
+  relatedTransactionId: String
+  status: String!
+  message: String
+}
+
+type PaymentGatewayProviderListResponse {
+  providers: [PaymentGatewayProvider!]!
+  total: Int!
+}
+
+type PaymentGatewayTransactionListResponse {
+  transactions: [PaymentGatewayTransaction!]!
+  total: Int!
+}
+
+type PaymentMethodListResponse {
+  paymentMethods: [PaymentMethod!]!
+  total: Int!
+}
+
+type RecurringPaymentConfigListResponse {
+  configurations: [RecurringPaymentConfig!]!
+  total: Int!
+}
+
+type DeleteResponse {
+  success: Boolean!
+}

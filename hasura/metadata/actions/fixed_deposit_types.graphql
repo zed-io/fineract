@@ -1,0 +1,431 @@
+type Query {
+  getFixedDepositProduct(
+    productId: String!
+  ): FixedDepositProductResponse
+  
+  getFixedDepositProducts: FixedDepositProductsResponse
+  
+  getFixedDepositAccount(
+    accountId: String!
+  ): FixedDepositAccountResponse
+  
+  getClientFixedDepositAccounts(
+    clientId: String!
+  ): ClientFixedDepositAccountsResponse
+  
+  getFixedDepositTemplate(
+    clientId: String
+    productId: String
+  ): FixedDepositTemplateResponse
+}
+
+type Mutation {
+  createFixedDepositProduct(
+    name: String!
+    shortName: String!
+    description: String
+    currencyCode: String!
+    currencyDigits: Int
+    minDepositTerm: Int!
+    maxDepositTerm: Int
+    minDepositTermType: String!
+    maxDepositTermType: String
+    inMultiplesOfTerm: Int
+    inMultiplesOfTermType: String
+    isPrematureClosureAllowed: Boolean!
+    preClosurePenalApplicable: Boolean!
+    preClosurePenalInterest: Float
+    preClosurePenalInterestOnType: String
+    minDepositAmount: Float
+    depositAmount: Float
+    maxDepositAmount: Float
+    interestRate: Float!
+    interestCompoundingPeriodType: String!
+    interestPostingPeriodType: String!
+    interestCalculationType: String!
+    interestCalculationDaysInYearType: Int!
+    lockinPeriodFrequency: Int
+    lockinPeriodFrequencyType: String
+    accountingRule: String!
+    charges: [String]
+    charts: [FixedDepositInterestRateChartInput]
+  ): CreateFixedDepositProductResponse
+  
+  createFixedDepositAccount(
+    clientId: String
+    groupId: String
+    productId: String!
+    submittedOnDate: String!
+    fieldOfficerId: String
+    externalId: String
+    depositAmount: Float!
+    depositPeriod: Int!
+    depositPeriodFrequencyType: String!
+    expectedFirstDepositOnDate: String
+    interestRate: Float
+    isRenewalAllowed: Boolean
+    isPrematureClosureAllowed: Boolean
+    linkedAccountId: String
+    transferInterestToLinkedAccount: Boolean
+    locale: String
+    charges: [FixedDepositAccountChargeInput]
+  ): CreateFixedDepositAccountResponse
+  
+  approveFixedDepositAccount(
+    accountId: String!
+    approvedOnDate: String!
+    note: String
+  ): ApproveFixedDepositAccountResponse
+  
+  activateFixedDepositAccount(
+    accountId: String!
+    activatedOnDate: String!
+    note: String
+  ): ActivateFixedDepositAccountResponse
+  
+  prematureCloseFixedDepositAccount(
+    accountId: String!
+    closedOnDate: String!
+    note: String
+    onAccountClosureType: String!
+    toSavingsAccountId: String
+    transferDescription: String
+    paymentTypeId: String
+    accountNumber: String
+    checkNumber: String
+    routingCode: String
+    receiptNumber: String
+    bankNumber: String
+  ): PrematureCloseFixedDepositAccountResponse
+  
+  updateFixedDepositMaturityInstructions(
+    accountId: String!
+    onAccountClosureType: String!
+    transferToSavingsAccountId: String
+    transferDescription: String
+  ): UpdateFixedDepositMaturityInstructionsResponse
+}
+
+# Common types
+type Currency {
+  code: String!
+  name: String!
+  decimalPlaces: Int!
+  inMultiplesOf: Int!
+  displaySymbol: String!
+  nameCode: String!
+  displayLabel: String!
+}
+
+type EnumOption {
+  id: Int!
+  code: String!
+  value: String!
+}
+
+# Fixed Deposit Product types
+input FixedDepositInterestRateChartInput {
+  name: String!
+  description: String
+  fromDate: String!
+  endDate: String
+  isPrimaryGroupingByAmount: Boolean!
+  chartSlabs: [FixedDepositInterestRateSlabInput!]!
+}
+
+input FixedDepositInterestRateSlabInput {
+  description: String
+  periodType: String!
+  fromPeriod: Int!
+  toPeriod: Int
+  amountRangeFrom: Float
+  amountRangeTo: Float
+  annualInterestRate: Float!
+  currencyCode: String!
+}
+
+type FixedDepositInterestRateChart {
+  id: String!
+  name: String!
+  description: String
+  fromDate: String!
+  endDate: String
+  isPrimaryGroupingByAmount: Boolean!
+  chartSlabs: [FixedDepositInterestRateSlab!]!
+}
+
+type FixedDepositInterestRateSlab {
+  id: String!
+  description: String
+  periodType: EnumOption!
+  fromPeriod: Int!
+  toPeriod: Int
+  amountRangeFrom: Float
+  amountRangeTo: Float
+  annualInterestRate: Float!
+  currency: Currency!
+}
+
+type FixedDepositProductResponse {
+  id: String!
+  name: String!
+  shortName: String!
+  description: String
+  currency: Currency!
+  minDepositTerm: Int!
+  maxDepositTerm: Int
+  minDepositTermType: EnumOption!
+  maxDepositTermType: EnumOption
+  inMultiplesOfTerm: Int
+  inMultiplesOfTermType: EnumOption
+  preClosurePenalApplicable: Boolean!
+  preClosurePenalInterest: Float
+  preClosurePenalInterestOnType: EnumOption
+  minDepositAmount: Float
+  depositAmount: Float
+  maxDepositAmount: Float
+  interestCompoundingPeriodType: EnumOption!
+  interestPostingPeriodType: EnumOption!
+  interestCalculationType: EnumOption!
+  interestCalculationDaysInYearType: EnumOption!
+  accountingRule: EnumOption!
+  charts: [FixedDepositInterestRateChart!]!
+}
+
+type FixedDepositProductsResponse {
+  products: [FixedDepositProductResponse!]!
+}
+
+type CreateFixedDepositProductResponse {
+  productId: String!
+}
+
+# Fixed Deposit Account types
+input FixedDepositAccountChargeInput {
+  chargeId: String!
+  amount: Float!
+  dueDate: String
+  feeOnMonthDay: String
+  feeInterval: Int
+}
+
+type FixedDepositAccountCharge {
+  id: String!
+  chargeId: String!
+  name: String!
+  chargeTimeType: EnumOption!
+  chargeCalculationType: EnumOption!
+  percentage: Float
+  amountPercentageAppliedTo: Float
+  currency: Currency!
+  amount: Float!
+  amountPaid: Float
+  amountWaived: Float
+  amountWrittenOff: Float
+  amountOutstanding: Float
+  amountOrPercentage: Float!
+  penalty: Boolean!
+  dueDate: String
+}
+
+type FixedDepositTransaction {
+  id: String!
+  transactionType: FixedDepositTransactionType!
+  accountId: String!
+  accountNo: String!
+  date: String!
+  amount: Float!
+  currency: Currency!
+  paymentDetailData: PaymentDetail
+  runningBalance: Float
+  reversed: Boolean!
+  submittedOnDate: String!
+}
+
+type FixedDepositTransactionType {
+  id: Int!
+  code: String!
+  value: String!
+  deposit: Boolean!
+  withdrawal: Boolean!
+  interestPosting: Boolean!
+  feeDeduction: Boolean!
+  initiateTransfer: Boolean!
+  approveTransfer: Boolean!
+  withdrawTransfer: Boolean!
+  rejectTransfer: Boolean!
+  overdraftInterest: Boolean!
+  writtenoff: Boolean!
+  overdraftFee: Boolean!
+  withholdTax: Boolean!
+}
+
+type PaymentDetail {
+  id: String!
+  paymentType: PaymentType!
+  accountNumber: String
+  checkNumber: String
+  routingCode: String
+  receiptNumber: String
+  bankNumber: String
+}
+
+type PaymentType {
+  id: String!
+  name: String!
+}
+
+type AccountStatus {
+  id: Int!
+  code: String!
+  value: String!
+  submittedAndPendingApproval: Boolean!
+  approved: Boolean!
+  rejected: Boolean!
+  withdrawnByApplicant: Boolean!
+  active: Boolean!
+  closed: Boolean!
+  prematureClosed: Boolean!
+  transferInProgress: Boolean!
+  transferOnHold: Boolean!
+  matured: Boolean!
+}
+
+type Timeline {
+  submittedOnDate: String!
+  submittedByUsername: String!
+  submittedByFirstname: String!
+  submittedByLastname: String!
+  approvedOnDate: String
+  approvedByUsername: String
+  approvedByFirstname: String
+  approvedByLastname: String
+  activatedOnDate: String
+  activatedByUsername: String
+  activatedByFirstname: String
+  activatedByLastname: String
+  closedOnDate: String
+  closedByUsername: String
+  closedByFirstname: String
+  closedByLastname: String
+}
+
+type FixedDepositSummary {
+  totalDeposits: Float!
+  totalInterestEarned: Float!
+  totalWithdrawals: Float!
+  totalWithholdTax: Float
+  accountBalance: Float!
+}
+
+type LinkedAccount {
+  id: String!
+  accountNo: String!
+}
+
+type FixedDepositAccountResponse {
+  id: String!
+  accountNo: String!
+  externalId: String
+  clientId: String
+  clientName: String
+  groupId: String
+  groupName: String
+  productId: String!
+  productName: String!
+  fieldOfficerId: String
+  fieldOfficerName: String
+  status: AccountStatus!
+  timeline: Timeline!
+  currency: Currency!
+  interestCompoundingPeriodType: EnumOption!
+  interestPostingPeriodType: EnumOption!
+  interestCalculationType: EnumOption!
+  interestCalculationDaysInYearType: EnumOption!
+  depositAmount: Float!
+  maturityAmount: Float
+  maturityDate: String
+  depositPeriod: Int!
+  depositPeriodFrequencyType: EnumOption!
+  interestRate: Float!
+  interestEarned: Float
+  preClosurePenalApplicable: Boolean!
+  preClosurePenalInterest: Float
+  preClosurePenalInterestOnType: EnumOption
+  summary: FixedDepositSummary!
+  charges: [FixedDepositAccountCharge!]!
+  linkedAccount: LinkedAccount
+  transferInterestToLinkedAccount: Boolean!
+  maturityInstructions: EnumOption!
+  transactions: [FixedDepositTransaction!]
+}
+
+type CreateFixedDepositAccountResponse {
+  accountId: String!
+}
+
+type ApproveFixedDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  approvedOnDate: String!
+  maturityDate: String!
+  maturityAmount: Float!
+}
+
+type ActivateFixedDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  activatedOnDate: String!
+  transactionId: String!
+}
+
+type PrematureCloseFixedDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  closedOnDate: String!
+  totalAmount: Float!
+  transactionId: String!
+}
+
+type UpdateFixedDepositMaturityInstructionsResponse {
+  accountId: String!
+  onAccountClosureType: String!
+  transferToSavingsAccountId: String
+}
+
+type ClientFixedDepositAccountsResponse {
+  accounts: [FixedDepositAccountResponse!]!
+}
+
+type FixedDepositTemplateResponse {
+  productOptions: [ProductOption!]!
+  interestCompoundingPeriodTypeOptions: [EnumOption!]!
+  interestPostingPeriodTypeOptions: [EnumOption!]!
+  interestCalculationTypeOptions: [EnumOption!]!
+  interestCalculationDaysInYearTypeOptions: [EnumOption!]!
+  lockinPeriodFrequencyTypeOptions: [EnumOption!]!
+  depositTermTypeOptions: [EnumOption!]!
+  inMultiplesOfDepositTermTypeOptions: [EnumOption!]!
+  preClosurePenalInterestOnTypeOptions: [EnumOption!]!
+  savingsAccounts: [SavingsAccountOption!]!
+}
+
+type ProductOption {
+  id: String!
+  name: String!
+  minDepositTerm: Int!
+  maxDepositTerm: Int
+  minDepositTermType: EnumOption!
+  maxDepositTermType: EnumOption
+  minDepositAmount: Float
+  depositAmount: Float
+  maxDepositAmount: Float
+  interestRate: Float!
+}
+
+type SavingsAccountOption {
+  id: String!
+  accountNo: String!
+  productName: String!
+  status: String!
+}

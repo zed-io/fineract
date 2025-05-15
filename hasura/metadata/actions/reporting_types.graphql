@@ -1,0 +1,827 @@
+type ReportColumn {
+  name: String!
+  displayName: String!
+  dataType: String!
+  isVisible: Boolean!
+}
+
+type ReportPaging {
+  pageSize: Int!
+  pageNumber: Int!
+  totalRecords: Int!
+  totalPages: Int!
+}
+
+type ReportExecutionResult {
+  reportId: String!
+  reportName: String!
+  executionDate: String!
+  columns: [ReportColumn!]!
+  data: [JSON!]!
+  totals: JSON
+  paging: ReportPaging
+  executionTimeMs: Int!
+}
+
+input ReportExecutionInput {
+  reportId: String!
+  parameters: JSON!
+  pagination: JSON
+  sorting: JSON
+  filters: JSON
+}
+
+type ReportExecutionResponse {
+  success: Boolean!
+  report: ReportExecutionResult
+  message: String
+}
+
+input ReportExportInput {
+  reportId: String!
+  parameters: JSON!
+  format: String!
+  pagination: JSON
+  sorting: JSON
+  filters: JSON
+}
+
+# Portfolio at Risk Report
+type ParBracket {
+  name: String!
+  daysOverdueFrom: Int!
+  daysOverdueTo: Int
+  outstandingAmount: Float!
+  numberOfLoans: Int!
+  percentOfPortfolio: Float!
+}
+
+type ParBreakdown {
+  name: String!
+  amount: Float!
+  ratio: Float!
+}
+
+type ParByLoanOfficer {
+  loanOfficerId: String!
+  loanOfficerName: String!
+  totalOutstanding: Float!
+  portfolioAtRisk: Float!
+  parRatio: Float!
+  parBrackets: [ParBreakdown!]!
+}
+
+type ParByBranch {
+  branchId: String!
+  branchName: String!
+  totalOutstanding: Float!
+  portfolioAtRisk: Float!
+  parRatio: Float!
+  parBrackets: [ParBreakdown!]!
+}
+
+type ParByProduct {
+  productId: String!
+  productName: String!
+  totalOutstanding: Float!
+  portfolioAtRisk: Float!
+  parRatio: Float!
+  parBrackets: [ParBreakdown!]!
+}
+
+type PortfolioAtRiskReport {
+  asOfDate: String!
+  currency: String!
+  totalOutstanding: Float!
+  parBrackets: [ParBracket!]!
+  parByLoanOfficer: [ParByLoanOfficer!]
+  parByBranch: [ParByBranch!]
+  parByProduct: [ParByProduct!]
+  parRatio: Float!
+}
+
+input PortfolioAtRiskInput {
+  asOfDate: String!
+  officeId: String
+  currencyCode: String
+  includeDetails: Boolean
+}
+
+type PortfolioAtRiskResponse {
+  success: Boolean!
+  report: PortfolioAtRiskReport
+  message: String
+}
+
+# Collection Report
+type AmountBreakdown {
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  total: Float!
+}
+
+type DailyCollection {
+  date: String!
+  expected: Float!
+  actual: Float!
+  ratio: Float!
+}
+
+type ProductCollection {
+  productId: String!
+  productName: String!
+  expected: Float!
+  actual: Float!
+  ratio: Float!
+}
+
+type LoanOfficerCollection {
+  loanOfficerId: String!
+  loanOfficerName: String!
+  expected: Float!
+  actual: Float!
+  ratio: Float!
+}
+
+type CollectionReport {
+  fromDate: String!
+  toDate: String!
+  currency: String!
+  expected: AmountBreakdown!
+  actual: AmountBreakdown!
+  variance: AmountBreakdown!
+  collectionRatio: Float!
+  collectionsByDay: [DailyCollection!]
+  collectionsByProduct: [ProductCollection!]
+  collectionsByLoanOfficer: [LoanOfficerCollection!]
+}
+
+input CollectionReportInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  loanOfficerId: String
+  currencyCode: String
+}
+
+type CollectionReportResponse {
+  success: Boolean!
+  report: CollectionReport
+  message: String
+}
+
+# Loan Portfolio Summary
+type PortfolioByStatus {
+  status: String!
+  count: Int!
+  outstanding: Float!
+  percentByCount: Float!
+  percentByAmount: Float!
+}
+
+type PortfolioByProduct {
+  productId: String!
+  productName: String!
+  count: Int!
+  outstanding: Float!
+  percentByCount: Float!
+  percentByAmount: Float!
+}
+
+type PortfolioByBranch {
+  branchId: String!
+  branchName: String!
+  count: Int!
+  outstanding: Float!
+  percentByCount: Float!
+  percentByAmount: Float!
+}
+
+type DisbursementTrend {
+  period: String!
+  count: Int!
+  amount: Float!
+}
+
+type RepaymentTrend {
+  period: String!
+  expected: Float!
+  actual: Float!
+  ratio: Float!
+}
+
+type LoanPortfolioSummary {
+  asOfDate: String!
+  currency: String!
+  activeLoanCount: Int!
+  totalDisbursed: Float!
+  totalOutstanding: Float!
+  totalPrincipalOutstanding: Float!
+  totalInterestOutstanding: Float!
+  totalFeesOutstanding: Float!
+  totalPenaltiesOutstanding: Float!
+  overdueLoanCount: Int!
+  overdueAmount: Float!
+  overdueRatio: Float!
+  portfolioByStatus: [PortfolioByStatus!]!
+  portfolioByProduct: [PortfolioByProduct!]!
+  portfolioByBranch: [PortfolioByBranch!]!
+  disbursementTrends: [DisbursementTrend!]!
+  repaymentTrends: [RepaymentTrend!]!
+}
+
+input LoanPortfolioSummaryInput {
+  asOfDate: String!
+  officeId: String
+  currencyCode: String
+}
+
+type LoanPortfolioSummaryResponse {
+  success: Boolean!
+  report: LoanPortfolioSummary
+  message: String
+}
+
+# Expected Repayments Report
+type RepaymentScheduleItem {
+  date: String!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  total: Float!
+  runningTotal: Float!
+  loanCount: Int!
+}
+
+type RepaymentsByLoanOfficer {
+  loanOfficerId: String!
+  loanOfficerName: String!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  total: Float!
+  loanCount: Int!
+}
+
+type RepaymentsByBranch {
+  branchId: String!
+  branchName: String!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  total: Float!
+  loanCount: Int!
+}
+
+type RepaymentsByProduct {
+  productId: String!
+  productName: String!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  total: Float!
+  loanCount: Int!
+}
+
+type ExpectedRepaymentsReport {
+  fromDate: String!
+  toDate: String!
+  currency: String!
+  totalExpected: Float!
+  repaymentSchedule: [RepaymentScheduleItem!]!
+  repaymentsByLoanOfficer: [RepaymentsByLoanOfficer!]!
+  repaymentsByBranch: [RepaymentsByBranch!]!
+  repaymentsByProduct: [RepaymentsByProduct!]!
+}
+
+input ExpectedRepaymentsInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  loanOfficerId: String
+  currencyCode: String
+}
+
+type ExpectedRepaymentsResponse {
+  success: Boolean!
+  report: ExpectedRepaymentsReport
+  message: String
+}
+
+# Income Statement Report
+type IncomeStatementAccount {
+  id: String!
+  name: String!
+  glCode: String!
+  amount: Float!
+  previousAmount: Float
+  change: Float
+  changePercentage: Float
+}
+
+type IncomeStatementCategory {
+  id: String!
+  name: String!
+  amount: Float!
+  previousAmount: Float
+  change: Float
+  changePercentage: Float
+  accounts: [IncomeStatementAccount!]!
+}
+
+type IncomeStatementSection {
+  total: Float!
+  previousTotal: Float
+  change: Float
+  changePercentage: Float
+  categories: [IncomeStatementCategory!]!
+}
+
+type IncomeStatementSummary {
+  totalIncome: Float!
+  totalExpenses: Float!
+  netIncome: Float!
+  previousTotalIncome: Float
+  previousTotalExpenses: Float
+  previousNetIncome: Float
+  changeInNetIncome: Float
+  changeInNetIncomePercentage: Float
+}
+
+type ComparativePeriod {
+  fromDate: String!
+  toDate: String!
+}
+
+type IncomeStatementReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  comparativePeriod: ComparativePeriod
+  generatedOn: String!
+  income: IncomeStatementSection!
+  expenses: IncomeStatementSection!
+  summary: IncomeStatementSummary!
+}
+
+input IncomeStatementInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  currencyCode: String
+  includeComparative: Boolean
+}
+
+type IncomeStatementResponse {
+  success: Boolean!
+  report: IncomeStatementReport
+  message: String
+}
+
+# Balance Sheet Report
+type BalanceSheetAccount {
+  id: String!
+  name: String!
+  glCode: String!
+  amount: Float!
+  previousAmount: Float
+  change: Float
+  changePercentage: Float
+}
+
+type BalanceSheetCategory {
+  id: String!
+  name: String!
+  amount: Float!
+  previousAmount: Float
+  change: Float
+  changePercentage: Float
+  accounts: [BalanceSheetAccount!]!
+}
+
+type BalanceSheetSection {
+  total: Float!
+  previousTotal: Float
+  change: Float
+  changePercentage: Float
+  categories: [BalanceSheetCategory!]!
+}
+
+type BalanceSheetSummary {
+  totalAssets: Float!
+  totalLiabilities: Float!
+  totalEquity: Float!
+  previousTotalAssets: Float
+  previousTotalLiabilities: Float
+  previousTotalEquity: Float
+}
+
+type BalanceSheetReport {
+  reportName: String!
+  currency: String!
+  asOfDate: String!
+  comparativeDate: String
+  generatedOn: String!
+  assets: BalanceSheetSection!
+  liabilities: BalanceSheetSection!
+  equity: BalanceSheetSection!
+  summary: BalanceSheetSummary!
+}
+
+input BalanceSheetInput {
+  asOfDate: String!
+  officeId: String
+  currencyCode: String
+  includeComparative: Boolean
+}
+
+type BalanceSheetResponse {
+  success: Boolean!
+  report: BalanceSheetReport
+  message: String
+}
+
+# Financial Ratios Report
+type ProfitabilityRatios {
+  returnOnAssets: Float!
+  returnOnEquity: Float!
+  operationalSelfSufficiency: Float!
+  financialSelfSufficiency: Float!
+  profitMargin: Float!
+  yieldOnGrossPortfolio: Float!
+  portfolioToAssets: Float!
+  costPerClient: Float!
+}
+
+type AssetQualityRatios {
+  portfolioAtRisk30: Float!
+  portfolioAtRisk90: Float!
+  writeOffRatio: Float!
+  riskCoverageRatio: Float!
+  loanLossReserveRatio: Float!
+}
+
+type FinancialStructureRatios {
+  debtToEquityRatio: Float!
+  debtToAssetRatio: Float!
+  equityToAssetRatio: Float!
+  capitalAdequacyRatio: Float!
+}
+
+type LiquidityRatios {
+  currentRatio: Float!
+  quickRatio: Float!
+  cashRatio: Float!
+}
+
+type EfficiencyRatios {
+  operatingExpenseRatio: Float!
+  costToIncomeRatio: Float!
+  personnelExpenseRatio: Float!
+  administrativeExpenseRatio: Float!
+  loanOfficerProductivity: Float!
+  staffProductivity: Float!
+}
+
+type GrowthRatios {
+  assetGrowth: Float!
+  loanPortfolioGrowth: Float!
+  clientGrowth: Float!
+  revenueGrowth: Float!
+}
+
+type FinancialRatiosReport {
+  reportName: String!
+  asOfDate: String!
+  generatedOn: String!
+  profitabilityRatios: ProfitabilityRatios!
+  assetQualityRatios: AssetQualityRatios!
+  financialStructureRatios: FinancialStructureRatios!
+  liquidityRatios: LiquidityRatios!
+  efficiencyRatios: EfficiencyRatios!
+  growthRatios: GrowthRatios!
+}
+
+input FinancialRatiosInput {
+  asOfDate: String!
+  officeId: String
+}
+
+type FinancialRatiosResponse {
+  success: Boolean!
+  report: FinancialRatiosReport
+  message: String
+}
+
+# Interest Income Report
+type ProductInterest {
+  productId: String!
+  productName: String!
+  interestIncome: Float!
+  outstandingPrincipal: Float!
+  averageRate: Float!
+  portfolioPercentage: Float!
+}
+
+type BranchInterest {
+  branchId: String!
+  branchName: String!
+  interestIncome: Float!
+  outstandingPrincipal: Float!
+  portfolioPercentage: Float!
+}
+
+type LoanOfficerInterest {
+  loanOfficerId: String!
+  loanOfficerName: String!
+  interestIncome: Float!
+  outstandingPrincipal: Float!
+  portfolioPercentage: Float!
+}
+
+type InterestTrend {
+  period: String!
+  accrued: Float!
+  collected: Float!
+}
+
+type InterestIncomeReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  generatedOn: String!
+  totalInterestIncome: Float!
+  accrualBaseInterest: Float!
+  cashBaseInterest: Float!
+  interestByProduct: [ProductInterest!]!
+  interestByBranch: [BranchInterest!]!
+  interestByLoanOfficer: [LoanOfficerInterest!]!
+  interestTrend: [InterestTrend!]!
+}
+
+input InterestIncomeInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  currencyCode: String
+}
+
+type InterestIncomeResponse {
+  success: Boolean!
+  report: InterestIncomeReport
+  message: String
+}
+
+# Fee Income Report
+type FeesByType {
+  feeTypeId: String!
+  feeTypeName: String!
+  amount: Float!
+  percentage: Float!
+}
+
+type FeesByProduct {
+  productId: String!
+  productName: String!
+  amount: Float!
+  percentage: Float!
+}
+
+type FeesByBranch {
+  branchId: String!
+  branchName: String!
+  amount: Float!
+  percentage: Float!
+}
+
+type FeesByLoanOfficer {
+  loanOfficerId: String!
+  loanOfficerName: String!
+  amount: Float!
+  percentage: Float!
+}
+
+type FeeTrend {
+  period: String!
+  amount: Float!
+}
+
+type FeeIncomeReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  generatedOn: String!
+  totalFeeIncome: Float!
+  feesByType: [FeesByType!]!
+  feesByProduct: [FeesByProduct!]!
+  feesByBranch: [FeesByBranch!]!
+  feesByLoanOfficer: [FeesByLoanOfficer!]!
+  feeTrend: [FeeTrend!]!
+}
+
+input FeeIncomeInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  currencyCode: String
+}
+
+type FeeIncomeResponse {
+  success: Boolean!
+  report: FeeIncomeReport
+  message: String
+}
+
+# Trial Balance Report
+type TrialBalanceAccount {
+  id: String!
+  name: String!
+  glCode: String!
+  type: String!
+  debit: Float!
+  credit: Float!
+}
+
+type TrialBalanceSummary {
+  totalDebits: Float!
+  totalCredits: Float!
+}
+
+type TrialBalanceReport {
+  reportName: String!
+  currency: String!
+  asOfDate: String!
+  generatedOn: String!
+  accounts: [TrialBalanceAccount!]!
+  summary: TrialBalanceSummary!
+}
+
+input TrialBalanceInput {
+  asOfDate: String!
+  officeId: String
+  currencyCode: String
+}
+
+type TrialBalanceResponse {
+  success: Boolean!
+  report: TrialBalanceReport
+  message: String
+}
+
+# General Ledger Report
+type GeneralLedgerEntry {
+  id: String!
+  date: String!
+  description: String!
+  debit: Float!
+  credit: Float!
+  balance: Float!
+  transactionId: String!
+  transactionType: String!
+  officeId: String!
+  officeName: String!
+}
+
+type GeneralLedgerAccount {
+  id: String!
+  name: String!
+  glCode: String!
+  type: String!
+  openingBalance: Float!
+  closingBalance: Float!
+  entries: [GeneralLedgerEntry!]!
+}
+
+type GeneralLedgerReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  generatedOn: String!
+  accounts: [GeneralLedgerAccount!]!
+}
+
+input GeneralLedgerInput {
+  fromDate: String!
+  toDate: String!
+  accountId: String
+  officeId: String
+  currencyCode: String
+}
+
+type GeneralLedgerResponse {
+  success: Boolean!
+  report: GeneralLedgerReport
+  message: String
+}
+
+# Journal Entry Report
+type JournalGLEntry {
+  accountId: String!
+  accountName: String!
+  glCode: String!
+  debit: Float!
+  credit: Float!
+}
+
+type JournalEntry {
+  id: String!
+  date: String!
+  description: String!
+  reference: String!
+  createdByUserId: String!
+  createdByUsername: String!
+  transactionId: String!
+  transactionType: String!
+  officeId: String!
+  officeName: String!
+  glEntries: [JournalGLEntry!]!
+}
+
+type JournalEntryReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  generatedOn: String!
+  entries: [JournalEntry!]!
+}
+
+input JournalEntryInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  glAccountId: String
+  currencyCode: String
+}
+
+type JournalEntryResponse {
+  success: Boolean!
+  report: JournalEntryReport
+  message: String
+}
+
+# Cash Flow Statement Report
+type CashFlowItem {
+  id: String!
+  name: String!
+  amount: Float!
+  previousAmount: Float
+  change: Float
+  changePercentage: Float
+}
+
+type CashFlowSection {
+  total: Float!
+  previousTotal: Float
+  change: Float
+  changePercentage: Float
+  items: [CashFlowItem!]!
+}
+
+type CashFlowSummary {
+  netCashFromOperating: Float!
+  netCashFromInvesting: Float!
+  netCashFromFinancing: Float!
+  netIncreaseInCash: Float!
+  beginningCashBalance: Float!
+  endingCashBalance: Float!
+  previousNetIncreaseInCash: Float
+  reconciliationAdjustment: Float
+}
+
+type CashFlowReport {
+  reportName: String!
+  currency: String!
+  fromDate: String!
+  toDate: String!
+  comparativePeriod: ComparativePeriod
+  generatedOn: String!
+  operatingActivities: CashFlowSection!
+  investingActivities: CashFlowSection!
+  financingActivities: CashFlowSection!
+  summary: CashFlowSummary!
+}
+
+input CashFlowInput {
+  fromDate: String!
+  toDate: String!
+  officeId: String
+  currencyCode: String
+  includeComparative: Boolean
+}
+
+type CashFlowResponse {
+  success: Boolean!
+  report: CashFlowReport
+  message: String
+}

@@ -1,0 +1,55 @@
+# Savings Reporting Actions
+- name: savingsProductPerformanceReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/savings/product-performance'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: savingsDormancyAnalysisReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/savings/dormancy-analysis'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: savingsInterestDistributionReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/savings/interest-distribution'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: savingsAccountActivityReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/savings/account-activity'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: savingsFinancialProjectionReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/savings/financial-projection'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user

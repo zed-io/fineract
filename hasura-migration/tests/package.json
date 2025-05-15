@@ -1,0 +1,29 @@
+{
+  "name": "fineract-hasura-integration-tests",
+  "version": "1.0.0",
+  "description": "Integration testing framework for Fineract Hasura GraphQL API",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:integration": "jest --config=jest.integration.config.js",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "apollo-server-testing": "^2.25.3",
+    "graphql": "^16.8.0",
+    "graphql-request": "^6.1.0",
+    "graphql-tag": "^2.12.6",
+    "pg": "^8.11.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.6.0",
+    "@types/pg": "^8.10.2",
+    "@types/uuid": "^9.0.2",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}

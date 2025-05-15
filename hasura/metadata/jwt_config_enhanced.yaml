@@ -1,0 +1,142 @@
+# Hasura JWT Authentication Configuration for Credit Union Core Banking
+# This configuration provides secure, multi-tenant authentication
+
+jwt:
+  # JWT authentication method (RS256 recommended for production)
+  # Using RS256 allows for key rotation and better security than HS256
+  algorithm: RS256
+  
+  # JWT public key for verification (in production, store securely and reference via env var)
+  public_key: "${JWT_PUBLIC_KEY}"
+  
+  # For development/testing only (use RS256 with public_key in production)
+  # secret: "${JWT_SECRET}"
+  
+  # JWT claim field for Hasura claims namespace
+  claims_namespace: "https://hasura.io/jwt/claims"
+  
+  # JWT claim format (json or stringified_json)
+  claims_format: json
+  
+  # Name of the claim field containing Hasura-specific claims
+  claims_namespace_path: $.hasura.claims
+  
+  # Allowed audiences for the JWT (restrict to known API consumers)
+  audience: 
+    - "fineract-credit-union-api"
+    - "credit-union-web-app"
+    - "credit-union-mobile-app"
+  
+  # Allowed issuers for the JWT (restrict to known authentication providers)
+  issuer: "credit-union-auth-service"
+  
+  # Optional: JWT verification leeway in seconds for dealing with clock skew 
+  # between servers (recommended 30 seconds or less)
+  leeway: 30
+
+# JWT claim mapping to Hasura session variables
+claims_map:
+  # User ID mapping (typically from JWT 'sub' field)
+  # This will be available as x-hasura-user-id in permission rules
+  x-hasura-user-id: "$.sub"
+  
+  # Default role for the authenticated user (first role in array)
+  x-hasura-default-role: "$.hasura.roles[0]"
+  
+  # All roles the user is allowed to assume (used for role-based access control)
+  x-hasura-allowed-roles: "$.hasura.roles"
+  
+  # Tenant ID for multi-tenancy (critical for data isolation)
+  # This will restrict data access to the user's assigned tenant
+  x-hasura-tenant-id: "$.hasura.tenant_id"
+  
+  # Credit Union office ID for branch-level permissions
+  x-hasura-office-id: "$.hasura.office_id"
+  
+  # User permissions bitfield or array (for fine-grained permissions beyond roles)
+  x-hasura-permissions: "$.hasura.permissions"
+  
+  # Member ID if user is associated with a member (for self-service)
+  x-hasura-member-id: "$.hasura.member_id"
+  
+  # Optional: Custom namespaced session variables
+  # x-custom-tenant-type: "$.hasura.tenant_type"
+  # x-custom-user-locale: "$.hasura.locale"
+
+# Authorization settings
+authorization:
+  # Default role for unauthenticated users (extremely limited access)
+  anonymous_role: anonymous
+  
+  # Default role for authenticated users if not specified in JWT
+  default_role: member
+  
+  # JWT verification must be enabled in production
+  disable_jwt_verification: false
+  
+  # List of roles that can be used for authorization
+  roles:
+    - anonymous     # Unauthenticated users (public endpoints only)
+    - member        # Credit union members (self-service)
+    - teller        # Branch tellers (limited transaction processing)
+    - officer       # Loan/account officers (client management)
+    - manager       # Branch managers (approvals, reporting)
+    - compliance    # Compliance officers (AML/KYC review)
+    - developer     # API/integration users
+    - administrator # System administrators
+    - auditor       # Read-only system auditors
+
+# Custom JWT handlers (for complex JWT processing if needed)
+custom_jwt_handlers:
+  # Authorization header format: Bearer <token>
+  header_name: Authorization
+  prefix: Bearer
+  
+  # Optional: Custom JWT decoder function for complex JWT structures
+  jwt_decoded_handler:
+    function_name: custom_jwt_decode
+    schema_name: auth_functions
+
+# CORS configuration for API access
+cors:
+  # Allow requests from these origins (restrict to known web/mobile apps)
+  allowed_origins:
+    - https://app.creditunion.tt
+    - https://admin.creditunion.tt
+    - https://mobile.creditunion.tt
+  
+  # Allow these HTTP methods
+  allowed_methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS
+  
+  # Allow these HTTP headers
+  allowed_headers:
+    - Authorization
+    - Content-Type
+    - x-hasura-admin-secret
+    - x-hasura-role
+  
+  # Max age for CORS preflight requests (in seconds)
+  max_age: 1800
+  
+  # Allow credentials (cookies, etc.)
+  allow_credentials: true
+
+# Logging and monitoring for authentication issues
+logging:
+  # Log level for authentication events
+  log_level: info
+  
+  # Enable detailed logs for authentication failures
+  verbose_errors: true
+  
+  # Enable JWT validation event logging
+  jwt_validation_logging: true
+  
+  # Mask sensitive data in logs
+  mask_sensitive_data: true

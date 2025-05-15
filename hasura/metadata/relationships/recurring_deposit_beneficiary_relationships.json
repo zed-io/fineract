@@ -1,0 +1,27 @@
+{
+  "name": "RecurringDepositBeneficiary",
+  "fields": [
+    {
+      "name": "accountId",
+      "relationship": {
+        "field_mapping": {
+          "accountId": "id"
+        },
+        "name": "recurringDepositAccount",
+        "type": "RecurringDepositAccountResponse",
+        "source": "recurring_deposit_account"
+      }
+    },
+    {
+      "name": "clientId",
+      "relationship": {
+        "field_mapping": {
+          "clientId": "id"
+        },
+        "name": "client",
+        "type": "Client",
+        "source": "client"
+      }
+    }
+  ]
+}

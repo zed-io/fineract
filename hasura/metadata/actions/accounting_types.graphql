@@ -1,0 +1,550 @@
+# Accounting GraphQL Types
+
+# GL Account Types
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  INCOME
+  EXPENSE
+}
+
+enum AccountUsage {
+  DETAIL
+  HEADER
+}
+
+input GLAccountCreateInput {
+  name: String!
+  glCode: String!
+  type: AccountType!
+  usage: AccountUsage!
+  parentId: ID
+  description: String
+  manualEntriesAllowed: Boolean
+  disabled: Boolean
+}
+
+input GLAccountUpdateInput {
+  accountId: ID!
+  name: String
+  glCode: String
+  type: AccountType
+  usage: AccountUsage
+  parentId: ID
+  description: String
+  manualEntriesAllowed: Boolean
+  disabled: Boolean
+}
+
+input GLAccountDeleteInput {
+  accountId: ID!
+}
+
+input GLAccountGetInput {
+  accountId: ID!
+}
+
+input GLAccountsGetInput {
+  type: AccountType
+  usage: AccountUsage
+  disabled: Boolean
+  manualEntriesAllowed: Boolean
+}
+
+input GLAccountsTreeInput {
+  type: AccountType
+}
+
+type GLAccount {
+  id: ID!
+  name: String!
+  glCode: String!
+  type: AccountType!
+  usage: AccountUsage!
+  parentId: ID
+  description: String
+  manualEntriesAllowed: Boolean!
+  disabled: Boolean!
+  createdAt: String
+  createdBy: String
+  updatedAt: String
+  updatedBy: String
+  children: [GLAccount]
+}
+
+type GLAccountsResponse {
+  accounts: [GLAccount]!
+  totalCount: Int!
+}
+
+type GLAccountCreateResponse {
+  success: Boolean!
+  accountId: ID!
+  message: String
+}
+
+type GLAccountUpdateResponse {
+  success: Boolean!
+  account: GLAccount
+  message: String
+}
+
+type GLAccountDeleteResponse {
+  success: Boolean!
+  message: String
+}
+
+type GLAccountGetResponse {
+  success: Boolean!
+  account: GLAccount
+}
+
+type GLAccountsGetResponse {
+  success: Boolean!
+  accounts: [GLAccount]!
+  totalCount: Int!
+}
+
+type GLAccountsTreeResponse {
+  success: Boolean!
+  glAccountsTree: [GLAccount]!
+}
+
+# GL Closure Types
+input GLClosureCreateInput {
+  officeId: ID!
+  closingDate: String!
+  comments: String
+}
+
+input GLClosureDeleteInput {
+  closureId: ID!
+}
+
+input GLClosureGetInput {
+  closureId: ID!
+}
+
+input GLClosuresGetInput {
+  officeId: ID
+}
+
+type GLClosure {
+  id: ID!
+  officeId: ID!
+  officeName: String
+  closingDate: String!
+  createdDate: String!
+  createdBy: String
+  updatedBy: String
+  comments: String
+}
+
+type GLClosuresResponse {
+  closures: [GLClosure]!
+  totalCount: Int!
+}
+
+type GLClosureCreateResponse {
+  success: Boolean!
+  closureId: ID!
+  message: String
+}
+
+type GLClosureDeleteResponse {
+  success: Boolean!
+  message: String
+}
+
+type GLClosureGetResponse {
+  success: Boolean!
+  closure: GLClosure
+}
+
+type GLClosuresGetResponse {
+  success: Boolean!
+  closures: [GLClosure]!
+  totalCount: Int!
+}
+
+# Accounting Rule Types
+enum AccountingRuleType {
+  FIXED
+  MANUAL
+}
+
+input AccountingRuleCreateInput {
+  name: String!
+  officeId: ID!
+  description: String
+  ruleType: AccountingRuleType!
+  debitAccountId: ID
+  creditAccountId: ID
+  debitTags: [ID]
+  creditTags: [ID]
+  allowMultipleDebitEntries: Boolean
+  allowMultipleCreditEntries: Boolean
+}
+
+input AccountingRuleUpdateInput {
+  ruleId: ID!
+  name: String
+  description: String
+  debitAccountId: ID
+  creditAccountId: ID
+  debitTags: [ID]
+  creditTags: [ID]
+  allowMultipleDebitEntries: Boolean
+  allowMultipleCreditEntries: Boolean
+}
+
+input AccountingRuleDeleteInput {
+  ruleId: ID!
+}
+
+input AccountingRuleGetInput {
+  ruleId: ID!
+}
+
+type AccountTag {
+  id: ID!
+  tag: String!
+}
+
+type AccountingRule {
+  id: ID!
+  officeId: ID!
+  officeName: String
+  name: String!
+  description: String
+  ruleType: AccountingRuleType!
+  debitAccountId: ID
+  debitAccountName: String
+  creditAccountId: ID
+  creditAccountName: String
+  debitTags: [AccountTag]
+  creditTags: [AccountTag]
+  allowMultipleDebitEntries: Boolean!
+  allowMultipleCreditEntries: Boolean!
+  createdAt: String
+  createdBy: String
+  updatedAt: String
+  updatedBy: String
+}
+
+type AccountingRulesResponse {
+  rules: [AccountingRule]!
+  totalCount: Int!
+}
+
+type AccountingRuleCreateResponse {
+  success: Boolean!
+  ruleId: ID!
+  message: String
+}
+
+type AccountingRuleUpdateResponse {
+  success: Boolean!
+  rule: AccountingRule
+  message: String
+}
+
+type AccountingRuleDeleteResponse {
+  success: Boolean!
+  message: String
+}
+
+type AccountingRuleGetResponse {
+  success: Boolean!
+  rule: AccountingRule
+}
+
+type AccountingRulesGetResponse {
+  success: Boolean!
+  rules: [AccountingRule]!
+  totalCount: Int!
+}
+
+# Payment Type Types
+input PaymentTypeCreateInput {
+  name: String!
+  description: String
+  isCashPayment: Boolean!
+  position: Int
+  codeName: String
+  isEnabled: Boolean
+}
+
+input PaymentTypeUpdateInput {
+  paymentTypeId: ID!
+  name: String
+  description: String
+  isCashPayment: Boolean
+  position: Int
+  codeName: String
+  isEnabled: Boolean
+}
+
+input PaymentTypeDeleteInput {
+  paymentTypeId: ID!
+}
+
+input PaymentTypeGetInput {
+  paymentTypeId: ID!
+}
+
+input PaymentTypesGetInput {
+  onlyEnabled: Boolean
+}
+
+type PaymentType {
+  id: ID!
+  name: String!
+  description: String
+  isCashPayment: Boolean!
+  position: Int
+  codeName: String
+  isEnabled: Boolean!
+  createdAt: String
+  createdBy: String
+  updatedAt: String
+  updatedBy: String
+}
+
+type PaymentTypesResponse {
+  paymentTypes: [PaymentType]!
+  totalCount: Int!
+}
+
+type PaymentTypeCreateResponse {
+  success: Boolean!
+  paymentTypeId: ID!
+  message: String
+}
+
+type PaymentTypeUpdateResponse {
+  success: Boolean!
+  paymentType: PaymentType
+  message: String
+}
+
+type PaymentTypeDeleteResponse {
+  success: Boolean!
+  message: String
+}
+
+type PaymentTypeGetResponse {
+  success: Boolean!
+  paymentType: PaymentType
+}
+
+type PaymentTypesGetResponse {
+  success: Boolean!
+  paymentTypes: [PaymentType]!
+  totalCount: Int!
+}
+
+# Template Types
+type AccountingTemplateResponse {
+  success: Boolean!
+  template: AccountingTemplate
+}
+
+type AccountingTemplate {
+  glAccountTypes: [AccountTypeOption]
+  glAccountUsageOptions: [AccountUsageOption]
+  officeOptions: [OfficeOption]
+  paymentTypeOptions: [PaymentTypeOption]
+}
+
+type AccountTypeOption {
+  id: ID!
+  code: String!
+  value: String!
+}
+
+type AccountUsageOption {
+  id: ID!
+  code: String!
+  value: String!
+}
+
+type OfficeOption {
+  id: ID!
+  name: String!
+}
+
+type PaymentTypeOption {
+  id: ID!
+  name: String!
+  description: String
+}
+
+# Provisioning Entry Types
+enum ProvisioningEntryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+input ProvisioningCategoryCreateInput {
+  categoryName: String!
+  categoryDescription: String
+  minAge: Int!
+  maxAge: Int!
+  provisioningPercentage: Float!
+  liabilityAccountId: ID
+  expenseAccountId: ID
+}
+
+input ProvisioningCategoryUpdateInput {
+  categoryId: ID!
+  categoryName: String
+  categoryDescription: String
+  minAge: Int
+  maxAge: Int
+  provisioningPercentage: Float
+  liabilityAccountId: ID
+  expenseAccountId: ID
+}
+
+input ProvisioningCategoryDeleteInput {
+  categoryId: ID!
+}
+
+input ProvisioningCategoryGetInput {
+  categoryId: ID!
+}
+
+type ProvisioningCategory {
+  id: ID!
+  categoryName: String!
+  categoryDescription: String
+  minAge: Int!
+  maxAge: Int!
+  provisioningPercentage: Float!
+  liabilityAccount: ID
+  liabilityAccountName: String
+  expenseAccount: ID
+  expenseAccountName: String
+}
+
+type ProvisioningCategoriesResponse {
+  categories: [ProvisioningCategory]!
+}
+
+type ProvisioningCategoryCreateResponse {
+  success: Boolean!
+  categoryId: ID!
+  message: String
+}
+
+type ProvisioningCategoryUpdateResponse {
+  success: Boolean!
+  category: ProvisioningCategory
+  message: String
+}
+
+type ProvisioningCategoryDeleteResponse {
+  success: Boolean!
+  message: String
+}
+
+type ProvisioningCategoryGetResponse {
+  success: Boolean!
+  category: ProvisioningCategory
+}
+
+type ProvisioningCategoriesGetResponse {
+  success: Boolean!
+  categories: [ProvisioningCategory]!
+}
+
+input ProvisioningEntryCreateInput {
+  entryDate: String!
+  comments: String
+  createJournalEntries: Boolean
+}
+
+input ProvisioningEntryApproveInput {
+  entryId: ID!
+  createJournalEntries: Boolean
+}
+
+input ProvisioningEntryRejectInput {
+  entryId: ID!
+}
+
+input ProvisioningEntryGetInput {
+  entryId: ID!
+}
+
+input ProvisioningEntriesGetInput {
+  fromDate: String
+  toDate: String
+  offset: Int
+  limit: Int
+}
+
+type ProvisioningEntryDetail {
+  id: ID!
+  provisioningEntryId: ID!
+  officeId: ID!
+  officeName: String
+  loanProductId: ID!
+  loanProductName: String
+  currencyCode: String!
+  categoryId: ID!
+  categoryName: String
+  amountOutstanding: Float!
+  amountProvisioned: Float!
+}
+
+type ProvisioningEntry {
+  id: ID!
+  journalEntryId: ID
+  createdDate: String!
+  entryDate: String!
+  comments: String
+  provisioningAmount: Float!
+  status: ProvisioningEntryStatus!
+  createdBy: String
+  approvedBy: String
+  approvedDate: String
+  details: [ProvisioningEntryDetail]
+}
+
+type ProvisioningEntriesResponse {
+  entries: [ProvisioningEntry]!
+  totalCount: Int!
+}
+
+type ProvisioningEntryCreateResponse {
+  success: Boolean!
+  entryId: ID!
+  message: String
+}
+
+type ProvisioningEntryApproveResponse {
+  success: Boolean!
+  approved: Boolean!
+  message: String
+}
+
+type ProvisioningEntryRejectResponse {
+  success: Boolean!
+  rejected: Boolean!
+  message: String
+}
+
+type ProvisioningEntryGetResponse {
+  success: Boolean!
+  entry: ProvisioningEntry
+}
+
+type ProvisioningEntriesGetResponse {
+  success: Boolean!
+  entries: [ProvisioningEntry]!
+  totalCount: Int!
+}

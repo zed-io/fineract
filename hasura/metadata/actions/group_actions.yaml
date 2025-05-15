@@ -1,0 +1,157 @@
+- name: createGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/update"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: deleteGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/delete"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: activateGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/activate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: closeGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/close"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: searchGroups
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/search"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: addGroupMembers
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/members/add"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: removeGroupMember
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/members/remove"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: assignGroupRole
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/roles/assign"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: removeGroupRole
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/roles/remove"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: addGroupNote
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/notes/add"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: transferGroup
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/transfer"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createGroupLoan
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/loans/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getGroupLoans
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/loans/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getGroupLoanDetails
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/loans/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getGroupLoanSummary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/group/loans/summary"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service

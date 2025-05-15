@@ -1,0 +1,42 @@
+- name: generateConsolidatedReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/consolidated/generate'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getCrossModuleDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/consolidated/dashboard'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: syncDataSources
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/consolidated/sync-datasources'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+
+- name: getAnalyticsInsights
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/consolidated/insights'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user

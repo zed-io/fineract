@@ -98,6 +98,36 @@ public class SavingsAccountHelper {
     public static final String CREATED_DATE_PLUS_ONE = "09 January 2013";
     public static final String CREATED_DATE_MINUS_ONE = "07 January 2013";
     public static final String TRANSACTION_DATE = "01 March 2013";
+    
+    private String clientId;
+    private String productId;
+    
+    public SavingsAccountHelper withClientId(String clientId) {
+        this.clientId = clientId;
+        return this;
+    }
+    
+    public SavingsAccountHelper savingsProductId(String productId) {
+        this.productId = productId;
+        return this;
+    }
+    
+    public String build() {
+        final HashMap<String, String> map = new HashMap<>();
+        map.put("clientId", this.clientId);
+        map.put("productId", this.productId);
+        map.put("locale", "en");
+        map.put("dateFormat", "dd MMMM yyyy");
+        map.put("submittedOnDate", "01 January 2022");
+        map.put("nominalAnnualInterestRate", "5.0");
+        map.put("interestCompoundingPeriodType", "1");
+        map.put("interestPostingPeriodType", "4");
+        map.put("interestCalculationType", "1");
+        map.put("interestCalculationDaysInYearType", "365");
+        String savingsAccountJson = new Gson().toJson(map);
+        LOG.info("{}", savingsAccountJson);
+        return savingsAccountJson;
+    }
     public static final String TRANSACTION_DATE_PLUS_ONE = "02 March 2013";
     public static final String LAST_TRANSACTION_DATE = "01 March 2013";
     public static final String ACCOUNT_TYPE_INDIVIDUAL = "INDIVIDUAL";

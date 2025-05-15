@@ -1,0 +1,126 @@
+- name: registerWebhook
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/webhook/register"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+  
+- name: getWebhooks
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/webhook/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: testWebhook
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/webhook/test"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: registerApiClient
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/client/register"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: generateToken
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/token/generate"
+  permissions:
+    - role: admin
+    - role: user
+    - role: anonymous
+
+- name: validateToken
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/token/validate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: executeExport
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/export/execute"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: processImport
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/import/process"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: registerEventProducer
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/producer/register"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: registerEventConsumer
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/consumer/register"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: updateEventStream
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/update"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getEventStreams
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getEventStreamById
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteEventStream
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/stream/delete"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: publishEvent
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/integration/event/publish"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user

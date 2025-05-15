@@ -1,0 +1,150 @@
+"""
+Input and output types for interest calculation and batch processing
+"""
+
+# Input types for batch job configuration
+input InterestBatchConfigInput {
+  jobType: String!
+  batchSize: Int
+  maxRetries: Int
+  retryIntervalMinutes: Int
+  timeoutSeconds: Int
+  parallelThreads: Int
+  enabled: Boolean
+  description: String
+  accountTypes: [String]
+  parameters: JSON
+}
+
+# Input for updating batch job configuration
+input UpdateInterestBatchConfigInput {
+  id: UUID!
+  batchSize: Int
+  maxRetries: Int
+  retryIntervalMinutes: Int
+  timeoutSeconds: Int
+  parallelThreads: Int
+  enabled: Boolean
+  description: String
+  accountTypes: [String]
+  parameters: JSON
+}
+
+# Input for triggering a batch job execution
+input TriggerInterestBatchJobInput {
+  jobType: String!
+  parameters: JSON
+  accountIds: [UUID]
+}
+
+# Input for querying batch job executions
+input InterestBatchExecutionQueryInput {
+  jobType: String
+  dateFrom: DateTime
+  dateTo: DateTime
+  status: String
+  limit: Int
+  offset: Int
+}
+
+# Input for querying batch account results
+input InterestBatchAccountResultQueryInput {
+  batchExecutionId: UUID!
+  status: String
+  limit: Int
+  offset: Int
+}
+
+# Output types for batch job configuration
+type InterestBatchConfig {
+  id: UUID!
+  jobType: String!
+  batchSize: Int!
+  maxRetries: Int!
+  retryIntervalMinutes: Int!
+  timeoutSeconds: Int!
+  parallelThreads: Int!
+  enabled: Boolean!
+  description: String
+  accountTypes: [String]!
+  parameters: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Output type for batch job execution
+type InterestBatchExecution {
+  id: UUID!
+  jobType: String!
+  startedAt: DateTime!
+  completedAt: DateTime
+  status: String!
+  totalAccounts: Int!
+  processedAccounts: Int!
+  successfulAccounts: Int!
+  failedAccounts: Int!
+  executionTimeMs: Int
+  batchParameters: JSON
+  errorDetails: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Output type for batch account processing result
+type InterestBatchAccountResult {
+  id: UUID!
+  batchExecutionId: UUID!
+  accountId: UUID!
+  accountNumber: String
+  accountType: String!
+  interestCalculated: Float
+  interestPosted: Float
+  taxAmount: Float
+  processingTimeMs: Int
+  status: String!
+  errorMessage: String
+  errorDetails: JSON
+  createdAt: DateTime!
+}
+
+# Output type for account status
+type InterestBatchAccountStatus {
+  id: UUID!
+  accountId: UUID!
+  accountType: String!
+  accountNumber: String
+  lastAccrualDate: DateTime
+  lastPostingDate: DateTime
+  nextPostingDate: DateTime
+  accrualFrequency: String!
+  postingFrequency: String
+  status: String!
+  errorCount: Int!
+  lastErrorMessage: String
+  lastSuccessfulRun: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Pagination for batch executions
+type InterestBatchExecutionPaginated {
+  data: [InterestBatchExecution!]!
+  totalCount: Int!
+}
+
+# Pagination for batch account results
+type InterestBatchAccountResultPaginated {
+  data: [InterestBatchAccountResult!]!
+  totalCount: Int!
+}
+
+# Summary statistics for batch processing
+type InterestBatchSummary {
+  totalAccountsProcessedToday: Int!
+  totalInterestPostedToday: Float!
+  failedAccountsToday: Int!
+  avgProcessingTimeMs: Int
+  lastCompletedRun: InterestBatchExecution
+  currentRunningJobs: Int!
+  jobConfigurations: [InterestBatchConfig!]!
+}

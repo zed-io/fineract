@@ -1,0 +1,364 @@
+{
+  "relationships": [
+    {
+      "name": "clients_share_accounts",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "clients"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "mapping": {
+        "client_id": "id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "groups_share_accounts",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "groups"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "mapping": {
+        "group_id": "id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "share_product",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "mapping": {
+        "product_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "client",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "mapping": {
+        "client_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "group",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "groups"
+      },
+      "mapping": {
+        "group_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "office",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "office"
+      },
+      "mapping": {
+        "office_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "staff",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "staff"
+      },
+      "mapping": {
+        "field_officer_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "charges",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account_charge"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "purchase_requests",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_purchase_request"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "transactions",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account_transaction"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "dividends",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account_dividend"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "purchase_request",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_transaction"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_purchase_request"
+      },
+      "mapping": {
+        "purchase_request_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "account",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_transaction"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "mapping": {
+        "account_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "share_account",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_charge"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "mapping": {
+        "account_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "charge",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_charge"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "charge"
+      },
+      "mapping": {
+        "charge_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "product_charges",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product_charge"
+      },
+      "mapping": {
+        "id": "product_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "market_prices",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product_market_price"
+      },
+      "mapping": {
+        "id": "product_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "share_product_dividends",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product_dividend"
+      },
+      "mapping": {
+        "id": "product_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "share_product",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product_charge"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "mapping": {
+        "product_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "charge",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product_charge"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "charge"
+      },
+      "mapping": {
+        "charge_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "share_product",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product_market_price"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "mapping": {
+        "product_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "share_product",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_product_dividend"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product"
+      },
+      "mapping": {
+        "product_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "share_account",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_dividend"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_account"
+      },
+      "mapping": {
+        "account_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "dividend_payout",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "share_account_dividend"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "share_product_dividend"
+      },
+      "mapping": {
+        "dividend_pay_out_id": "id"
+      },
+      "relationship_type": "object"
+    }
+  ]
+}

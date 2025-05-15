@@ -1,0 +1,58 @@
+- name: getFixedDepositMaturityDetails
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/maturity/details"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getFixedDepositPrematureClosureDetails
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/premature-closure/details"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getFixedDepositMaturityHistory
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/maturity/history"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: processFixedDepositMaturity
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/maturity/process"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateFixedDepositMaturityInstructions
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/maturity/instructions"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: prematureCloseFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/premature-closure/process"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service

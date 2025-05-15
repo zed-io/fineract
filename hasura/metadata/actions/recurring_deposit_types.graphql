@@ -1,0 +1,449 @@
+type Query {
+  getRecurringDepositProduct(
+    productId: String!
+  ): RecurringDepositProductResponse
+  
+  getRecurringDepositProducts: RecurringDepositProductsResponse
+  
+  getRecurringDepositAccount(
+    accountId: String!
+  ): RecurringDepositAccountResponse
+  
+  getClientRecurringDepositAccounts(
+    clientId: String!
+  ): ClientRecurringDepositAccountsResponse
+  
+  getRecurringDepositTemplate(
+    clientId: String
+    productId: String
+  ): RecurringDepositTemplateResponse
+}
+
+type Mutation {
+  createRecurringDepositProduct(
+    name: String!
+    shortName: String!
+    description: String
+    currencyCode: String!
+    currencyDigits: Int
+    minDepositTerm: Int!
+    maxDepositTerm: Int
+    minDepositTermType: String!
+    maxDepositTermType: String
+    inMultiplesOfTerm: Int
+    inMultiplesOfTermType: String
+    isPrematureClosureAllowed: Boolean!
+    preClosurePenalApplicable: Boolean!
+    preClosurePenalInterest: Float
+    preClosurePenalInterestOnType: String
+    minDepositAmount: Float!
+    depositAmount: Float!
+    maxDepositAmount: Float
+    interestRate: Float!
+    interestCompoundingPeriodType: String!
+    interestPostingPeriodType: String!
+    interestCalculationType: String!
+    interestCalculationDaysInYearType: Int!
+    lockinPeriodFrequency: Int
+    lockinPeriodFrequencyType: String
+    accountingRule: String!
+    mandatoryDepositAmount: Float!
+    depositPeriodFrequencyType: String!
+    depositPeriodFrequency: Int!
+    charges: [String]
+    charts: [RecurringDepositInterestRateChartInput]
+  ): CreateRecurringDepositProductResponse
+  
+  createRecurringDepositAccount(
+    clientId: String
+    groupId: String
+    productId: String!
+    submittedOnDate: String!
+    fieldOfficerId: String
+    externalId: String
+    depositAmount: Float!
+    depositPeriod: Int!
+    depositPeriodFrequencyType: String!
+    expectedFirstDepositOnDate: String
+    mandatoryDepositAmount: Float!
+    depositPeriodFrequency: Int!
+    isCalendarInherited: Boolean
+    recurringFrequencyType: String!
+    recurringFrequency: Int!
+    recurringFrequencyDayOfWeek: Int
+    recurringFrequencyDayOfMonth: Int
+    linkedAccountId: String
+    transferInterestToLinkedAccount: Boolean
+    locale: String
+    charges: [RecurringDepositAccountChargeInput]
+  ): CreateRecurringDepositAccountResponse
+  
+  makeRecurringDeposit(
+    accountId: String!
+    transactionDate: String!
+    transactionAmount: Float!
+    paymentTypeId: String
+    accountNumber: String
+    checkNumber: String
+    routingCode: String
+    receiptNumber: String
+    bankNumber: String
+    note: String
+  ): MakeRecurringDepositResponse
+  
+  makeRecurringWithdrawal(
+    accountId: String!
+    transactionDate: String!
+    transactionAmount: Float!
+    paymentTypeId: String
+    accountNumber: String
+    checkNumber: String
+    routingCode: String
+    receiptNumber: String
+    bankNumber: String
+    note: String
+  ): MakeRecurringWithdrawalResponse
+  
+  approveRecurringDepositAccount(
+    accountId: String!
+    approvedOnDate: String!
+    note: String
+  ): ApproveRecurringDepositAccountResponse
+  
+  prematureCloseRecurringDepositAccount(
+    accountId: String!
+    closedOnDate: String!
+    note: String
+    onAccountClosureType: String!
+    toSavingsAccountId: String
+    transferDescription: String
+    paymentTypeId: String
+    accountNumber: String
+    checkNumber: String
+    routingCode: String
+    receiptNumber: String
+    bankNumber: String
+  ): PrematureCloseRecurringDepositAccountResponse
+  
+  updateRecurringDepositMaturityInstructions(
+    accountId: String!
+    onAccountClosureType: String!
+    transferToSavingsAccountId: String
+    transferDescription: String
+  ): UpdateRecurringDepositMaturityInstructionsResponse
+
+  trackRecurringDepositInstallments(
+    asOfDate: String
+    applyPenalties: Boolean
+  ): InstallmentTrackingSummary
+}
+
+# Common types (shared with fixed deposits)
+# Using same types as fixed deposit for consistency
+
+# Recurring Deposit Product types
+input RecurringDepositInterestRateChartInput {
+  name: String!
+  description: String
+  fromDate: String!
+  endDate: String
+  isPrimaryGroupingByAmount: Boolean!
+  chartSlabs: [RecurringDepositInterestRateSlabInput!]!
+}
+
+input RecurringDepositInterestRateSlabInput {
+  description: String
+  periodType: String!
+  fromPeriod: Int!
+  toPeriod: Int
+  amountRangeFrom: Float
+  amountRangeTo: Float
+  annualInterestRate: Float!
+  currencyCode: String!
+}
+
+type RecurringDepositInterestRateChart {
+  id: String!
+  name: String!
+  description: String
+  fromDate: String!
+  endDate: String
+  isPrimaryGroupingByAmount: Boolean!
+  chartSlabs: [RecurringDepositInterestRateSlab!]!
+}
+
+type RecurringDepositInterestRateSlab {
+  id: String!
+  description: String
+  periodType: EnumOption!
+  fromPeriod: Int!
+  toPeriod: Int
+  amountRangeFrom: Float
+  amountRangeTo: Float
+  annualInterestRate: Float!
+  currency: Currency!
+}
+
+type RecurringDepositProductResponse {
+  id: String!
+  name: String!
+  shortName: String!
+  description: String
+  currency: Currency!
+  minDepositTerm: Int!
+  maxDepositTerm: Int
+  minDepositTermType: EnumOption!
+  maxDepositTermType: EnumOption
+  inMultiplesOfTerm: Int
+  inMultiplesOfTermType: EnumOption
+  preClosurePenalApplicable: Boolean!
+  preClosurePenalInterest: Float
+  preClosurePenalInterestOnType: EnumOption
+  minDepositAmount: Float!
+  depositAmount: Float!
+  maxDepositAmount: Float
+  interestCompoundingPeriodType: EnumOption!
+  interestPostingPeriodType: EnumOption!
+  interestCalculationType: EnumOption!
+  interestCalculationDaysInYearType: EnumOption!
+  accountingRule: EnumOption!
+  mandatoryDepositAmount: Float!
+  depositPeriodFrequencyType: EnumOption!
+  depositPeriodFrequency: Int!
+  charts: [RecurringDepositInterestRateChart!]!
+}
+
+type RecurringDepositProductsResponse {
+  products: [RecurringDepositProductResponse!]!
+}
+
+type CreateRecurringDepositProductResponse {
+  productId: String!
+}
+
+# Recurring Deposit Account types
+input RecurringDepositAccountChargeInput {
+  chargeId: String!
+  amount: Float!
+  dueDate: String
+  feeOnMonthDay: String
+  feeInterval: Int
+}
+
+type RecurringDepositAccountCharge {
+  id: String!
+  chargeId: String!
+  name: String!
+  chargeTimeType: EnumOption!
+  chargeCalculationType: EnumOption!
+  percentage: Float
+  amountPercentageAppliedTo: Float
+  currency: Currency!
+  amount: Float!
+  amountPaid: Float
+  amountWaived: Float
+  amountWrittenOff: Float
+  amountOutstanding: Float
+  amountOrPercentage: Float!
+  penalty: Boolean!
+  dueDate: String
+}
+
+type RecurringDepositSchedule {
+  id: String!
+  accountId: String!
+  dueDate: String!
+  installmentNumber: Int!
+  depositAmount: Float!
+  depositCompletedOnDate: String
+  depositCompletedAmount: Float
+  isMissed: Boolean!
+  isLate: Boolean!
+}
+
+type RecurringDepositTransaction {
+  id: String!
+  transactionType: RecurringDepositTransactionType!
+  accountId: String!
+  accountNo: String!
+  date: String!
+  amount: Float!
+  currency: Currency!
+  paymentDetailData: PaymentDetail
+  runningBalance: Float
+  reversed: Boolean!
+  submittedOnDate: String!
+}
+
+type RecurringDepositTransactionType {
+  id: Int!
+  code: String!
+  value: String!
+  deposit: Boolean!
+  withdrawal: Boolean!
+  interestPosting: Boolean!
+  feeDeduction: Boolean!
+  initiateTransfer: Boolean!
+  approveTransfer: Boolean!
+  withdrawTransfer: Boolean!
+  rejectTransfer: Boolean!
+  overdraftInterest: Boolean!
+  writtenoff: Boolean!
+  overdraftFee: Boolean!
+  withholdTax: Boolean!
+}
+
+type RecurringDepositSummary {
+  totalDeposits: Float!
+  totalInterestEarned: Float!
+  totalWithdrawals: Float!
+  totalWithholdTax: Float
+  accountBalance: Float!
+  expectedMinimumBalance: Float!
+  scheduledDepositMissed: Int!
+  scheduledDepositCompleted: Int!
+  scheduledDepositRemaining: Int!
+}
+
+type RecurringDepositAccountResponse {
+  id: String!
+  accountNo: String!
+  externalId: String
+  clientId: String
+  clientName: String
+  groupId: String
+  groupName: String
+  productId: String!
+  productName: String!
+  fieldOfficerId: String
+  fieldOfficerName: String
+  status: AccountStatus!
+  timeline: Timeline!
+  currency: Currency!
+  interestCompoundingPeriodType: EnumOption!
+  interestPostingPeriodType: EnumOption!
+  interestCalculationType: EnumOption!
+  interestCalculationDaysInYearType: EnumOption!
+  depositAmount: Float!
+  mandatoryDepositAmount: Float!
+  totalDepositAmount: Float
+  maturityAmount: Float
+  maturityDate: String
+  depositPeriod: Int!
+  depositPeriodFrequencyType: EnumOption!
+  interestRate: Float!
+  interestEarned: Float
+  recurringFrequencyType: EnumOption!
+  recurringFrequency: Int!
+  recurringFrequencyDayOfWeek: Int
+  recurringFrequencyDayOfMonth: Int
+  expectedFirstDepositOnDate: String
+  preClosurePenalApplicable: Boolean!
+  preClosurePenalInterest: Float
+  preClosurePenalInterestOnType: EnumOption
+  summary: RecurringDepositSummary!
+  charges: [RecurringDepositAccountCharge!]!
+  linkedAccount: LinkedAccount
+  transferInterestToLinkedAccount: Boolean!
+  maturityInstructions: EnumOption!
+  transactions: [RecurringDepositTransaction!]
+  depositSchedule: [RecurringDepositSchedule!]
+}
+
+type CreateRecurringDepositAccountResponse {
+  accountId: String!
+}
+
+type MakeRecurringDepositResponse {
+  accountId: String!
+  transactionId: String!
+  transactionDate: String!
+  transactionAmount: Float!
+}
+
+type MakeRecurringWithdrawalResponse {
+  accountId: String!
+  transactionId: String!
+  transactionDate: String!
+  transactionAmount: Float!
+}
+
+type ApproveRecurringDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  approvedOnDate: String!
+  maturityDate: String!
+  maturityAmount: Float!
+}
+
+type PrematureCloseRecurringDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  closedOnDate: String!
+  totalAmount: Float!
+  transactionId: String!
+}
+
+type UpdateRecurringDepositMaturityInstructionsResponse {
+  accountId: String!
+  onAccountClosureType: String!
+  transferToSavingsAccountId: String
+}
+
+type ClientRecurringDepositAccountsResponse {
+  accounts: [RecurringDepositAccountResponse!]!
+}
+
+# Installment Tracking Types
+type InstallmentTrackingResult {
+  accountId: String!
+  accountNo: String!
+  overdueInstallments: Int!
+  totalOverdueAmount: Float!
+  clientId: String
+  clientName: String
+  lastCheckedDate: String!
+  penaltyApplied: Boolean
+  penaltyAmount: Float
+}
+
+type InstallmentTrackingSummary {
+  totalAccountsChecked: Int!
+  accountsWithOverdueInstallments: Int!
+  totalOverdueInstallments: Int!
+  totalOverdueAmount: Float!
+  totalPenaltiesApplied: Int!
+  totalPenaltyAmount: Float!
+  processedOn: String!
+  accounts: [InstallmentTrackingResult!]!
+}
+
+type RecurringDepositTemplateResponse {
+  productOptions: [RecurringProductOption!]!
+  interestCompoundingPeriodTypeOptions: [EnumOption!]!
+  interestPostingPeriodTypeOptions: [EnumOption!]!
+  interestCalculationTypeOptions: [EnumOption!]!
+  interestCalculationDaysInYearTypeOptions: [EnumOption!]!
+  lockinPeriodFrequencyTypeOptions: [EnumOption!]!
+  depositTermTypeOptions: [EnumOption!]!
+  inMultiplesOfDepositTermTypeOptions: [EnumOption!]!
+  preClosurePenalInterestOnTypeOptions: [EnumOption!]!
+  recurringFrequencyTypeOptions: [EnumOption!]!
+  savingsAccounts: [SavingsAccountOption!]!
+}
+
+type RecurringProductOption {
+  id: String!
+  name: String!
+  minDepositTerm: Int!
+  maxDepositTerm: Int
+  minDepositTermType: EnumOption!
+  maxDepositTermType: EnumOption
+  minDepositAmount: Float!
+  depositAmount: Float!
+  maxDepositAmount: Float
+  interestRate: Float!
+  mandatoryDepositAmount: Float!
+  depositPeriodFrequencyType: EnumOption!
+  depositPeriodFrequency: Int!
+}

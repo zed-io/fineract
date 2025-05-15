@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { approveLoan, calculateLoanSchedule, disburseLoan, makeLoanRepayment, writeOffLoan } from '../services/loanService';
+import { approveLoan, calculateLoanSchedule, disburseLoan, makeLoanRepayment, writeOffLoan, calculatePrepayment, calculatePrepaymentBenefits } from '../services/loanService';
 import { logger } from '../utils/logger';
 
 const router = Router();
@@ -80,12 +80,48 @@ router.post('/calculate-schedule', async (req, res) => {
   try {
     const { input } = req.body;
     logger.info('Calculate loan schedule request received');
-    
+
     const result = await calculateLoanSchedule(input);
-    
+
     res.json(result);
   } catch (error) {
     logger.error('Error calculating loan schedule', { error });
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+router.post('/calculate-prepayment', async (req, res) => {
+  try {
+    const { input, session_variables } = req.body;
+    logger.info('Calculate loan prepayment request received', { loanId: input.loanId });
+
+    const userId = session_variables['x-hasura-user-id'];
+    const result = await calculatePrepayment(input, userId);
+
+    res.json(result);
+  } catch (error) {
+    logger.error('Error calculating loan prepayment', { error });
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+router.post('/calculate-prepayment-benefits', async (req, res) => {
+  try {
+    const { input, session_variables } = req.body;
+    logger.info('Calculate loan prepayment benefits request received', { loanId: input.loanId });
+
+    const userId = session_variables['x-hasura-user-id'];
+    const result = await calculatePrepaymentBenefits(input, userId);
+
+    res.json(result);
+  } catch (error) {
+    logger.error('Error calculating loan prepayment benefits', { error });
     res.status(400).json({
       success: false,
       message: error.message

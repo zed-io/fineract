@@ -1,0 +1,137 @@
+- name: getInterestBatchConfigs
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/configs"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getInterestBatchConfig
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/config/:id"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createInterestBatchConfig
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/config"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  arguments:
+    - name: input
+      type: InterestBatchConfigInput!
+  type: InterestBatchConfig!
+  permissions:
+    - role: admin
+
+- name: updateInterestBatchConfig
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/config/:id"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  arguments:
+    - name: input
+      type: UpdateInterestBatchConfigInput!
+  type: InterestBatchConfig!
+  permissions:
+    - role: admin
+
+- name: triggerInterestBatchJob
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/trigger"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  arguments:
+    - name: input
+      type: TriggerInterestBatchJobInput!
+  type: InterestBatchExecution!
+  permissions:
+    - role: admin
+
+- name: getInterestBatchExecutions
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/executions"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  arguments:
+    - name: input
+      type: InterestBatchExecutionQueryInput
+  type: InterestBatchExecutionPaginated!
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getInterestBatchExecution
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/execution/:id"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getInterestBatchAccountResults
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/results"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  arguments:
+    - name: input
+      type: InterestBatchAccountResultQueryInput!
+  type: InterestBatchAccountResultPaginated!
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getInterestBatchSummary
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/summary"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  type: InterestBatchSummary!
+  permissions:
+    - role: admin
+    - role: user
+
+- name: cancelInterestBatchExecution
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/interest-batch/execution/:id/cancel"
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Role
+        value_from_env: ACTION_SECRET
+  type: InterestBatchExecution!
+  permissions:
+    - role: admin

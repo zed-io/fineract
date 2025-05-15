@@ -28,12 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import net.fortuna.ical4j.model.Recur;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.ApplicationContextHolder;
 import org.apache.fineract.organisation.holiday.domain.Holiday;
 import org.apache.fineract.organisation.holiday.service.HolidayUtil;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsDTO;
 import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.organisation.workingdays.service.WorkingDaysUtil;
+import org.apache.fineract.portfolio.loanaccount.loanschedule.service.holiday.HolidayAwareScheduleService;
 import org.apache.fineract.portfolio.calendar.data.CalendarHistoryDataWrapper;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
 import org.apache.fineract.portfolio.calendar.domain.CalendarHistory;
@@ -189,8 +191,18 @@ public class DefaultScheduledDateGenerator implements ScheduledDateGenerator {
     @Override
     public AdjustedDateDetailsDTO adjustRepaymentDate(final LocalDate dueRepaymentPeriodDate,
             final LoanApplicationTerms loanApplicationTerms, final HolidayDetailDTO holidayDetailDTO) {
-        final LocalDate adjustedDate = dueRepaymentPeriodDate;
-        return getAdjustedDateDetailsDTO(dueRepaymentPeriodDate, loanApplicationTerms, holidayDetailDTO, adjustedDate);
+        // Get the next repayment date for use by the holiday adjustment
+        final LocalDate nextRepaymentPeriodDueDate = generateNextRepaymentDate(dueRepaymentPeriodDate, loanApplicationTerms, false);
+        
+        // Use the autowired holiday aware schedule service if available, fall back to the default implementation
+        if (ApplicationContextHolder.getBean(HolidayAwareScheduleService.class) != null) {
+            HolidayAwareScheduleService holidayAwareScheduleService = ApplicationContextHolder.getBean(HolidayAwareScheduleService.class);
+            return holidayAwareScheduleService.adjustRepaymentDate(dueRepaymentPeriodDate, loanApplicationTerms, 
+                                                                 holidayDetailDTO, nextRepaymentPeriodDueDate);
+        } else {
+            // Fall back to the original implementation for backwards compatibility
+            return getAdjustedDateDetailsDTO(dueRepaymentPeriodDate, loanApplicationTerms, holidayDetailDTO, dueRepaymentPeriodDate);
+        }
     }
 
     private AdjustedDateDetailsDTO getAdjustedDateDetailsDTO(final LocalDate dueRepaymentPeriodDate,

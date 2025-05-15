@@ -58,6 +58,10 @@ public enum JobName {
     PURGE_EXTERNAL_EVENTS("Purge External Events"), //
     PURGE_PROCESSED_COMMANDS("Purge Processed Commands"), //
     ACCRUAL_ACTIVITY_POSTING("Accrual Activity Posting"), //
+    POST_INTEREST_FOR_FIXED_DEPOSIT("Post Interest For Fixed Deposit"), //
+    ACCRUE_INTEREST_FOR_FIXED_DEPOSIT("Accrue Interest For Fixed Deposit"), //
+    PROCESS_MATURED_FIXED_DEPOSITS("Process Matured Fixed Deposits"), //
+    FIXED_DEPOSIT_PRE_MATURITY_NOTIFICATION("Fixed Deposit Pre-Maturity Notification"), //
     ;
 
     private final String name;

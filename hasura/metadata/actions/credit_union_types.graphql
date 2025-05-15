@@ -1,0 +1,1192 @@
+# Credit Union Core Banking Types for GraphQL API
+
+# ==== MEMBER MANAGEMENT ====
+
+type Member {
+  id: UUID!
+  membershipNumber: String
+  externalId: String
+  status: MemberStatus!
+  firstName: String!
+  lastName: String!
+  middleName: String
+  displayName: String!
+  dateOfBirth: Date
+  gender: String
+  mobileNo: String
+  emailAddress: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+  employmentStatus: String
+  employerName: String
+  jobTitle: String
+  monthlyIncome: Float
+  annualIncome: Float
+  membershipDate: Date
+  riskRating: String
+  creditScore: Int
+  memberCategory: String
+  totalSharesValue: Float
+  totalLoanValue: Float
+  totalDepositValue: Float
+  identifications: [MemberIdentification!]
+  familyMembers: [MemberFamilyMember!]
+  notes: [MemberNote!]
+  documents: [MemberDocument!]
+  kycStatus: KycStatus!
+  isActive: Boolean!
+  isPep: Boolean
+  isFatca: Boolean
+  lastModifiedDate: DateTime
+  createdDate: DateTime!
+}
+
+enum MemberStatus {
+  PENDING
+  ACTIVE
+  DORMANT
+  SUSPENDED
+  CLOSED
+}
+
+enum KycStatus {
+  NOT_STARTED
+  PENDING
+  PARTIALLY_VERIFIED
+  FULLY_VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+type MemberIdentification {
+  id: UUID!
+  documentType: String!
+  documentNumber: String!
+  issuingAuthority: String
+  issueDate: Date
+  expiryDate: Date
+  verificationStatus: String!
+  verificationDate: DateTime
+  documentUrl: String
+  isActive: Boolean!
+}
+
+type MemberFamilyMember {
+  id: UUID!
+  firstName: String!
+  lastName: String!
+  relationship: String!
+  isJointAccount: Boolean
+  isAuthorizedSigner: Boolean
+  isBeneficiary: Boolean
+  dateOfBirth: Date
+  contactNumber: String
+  email: String
+}
+
+type MemberNote {
+  id: UUID!
+  note: String!
+  createdBy: String
+  createdDate: DateTime!
+}
+
+type MemberDocument {
+  id: UUID!
+  documentType: String!
+  documentName: String!
+  fileName: String!
+  fileSize: Int
+  mimeType: String
+  uploadDate: DateTime!
+  documentUrl: String!
+  isActive: Boolean!
+}
+
+type MemberPaginated {
+  totalCount: Int!
+  members: [Member!]!
+}
+
+input MemberSearchInput {
+  membershipNumber: String
+  name: String
+  mobileNo: String
+  emailAddress: String
+  identificationNumber: String
+  status: MemberStatus
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input MemberCreateInput {
+  firstName: String!
+  lastName: String!
+  middleName: String
+  dateOfBirth: Date!
+  gender: String
+  mobileNo: String!
+  emailAddress: String
+  employmentStatus: String
+  employerName: String
+  jobTitle: String
+  monthlyIncome: Float
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  stateProvince: String
+  country: String!
+  postalCode: String
+  membershipDate: Date
+  identifications: [MemberIdentificationInput!]
+  familyMembers: [MemberFamilyMemberInput!]
+}
+
+input MemberUpdateInput {
+  id: UUID!
+  firstName: String
+  lastName: String
+  middleName: String
+  dateOfBirth: Date
+  gender: String
+  mobileNo: String
+  emailAddress: String
+  employmentStatus: String
+  employerName: String
+  jobTitle: String
+  monthlyIncome: Float
+  addressLine1: String
+  addressLine2: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+}
+
+input MemberIdentificationInput {
+  documentType: String!
+  documentNumber: String!
+  issuingAuthority: String
+  issueDate: Date
+  expiryDate: Date
+  documentImageBase64: String
+}
+
+input MemberFamilyMemberInput {
+  firstName: String!
+  lastName: String!
+  relationship: String!
+  isJointAccount: Boolean
+  isAuthorizedSigner: Boolean
+  isBeneficiary: Boolean
+  dateOfBirth: Date
+  contactNumber: String
+  email: String
+}
+
+type MemberActionResponse {
+  success: Boolean!
+  message: String
+  memberId: UUID
+  membershipNumber: String
+  changesMade: [String!]
+}
+
+# ==== ACCOUNT MANAGEMENT ====
+
+type AccountPaginated {
+  totalCount: Int!
+  accounts: [Account!]!
+}
+
+type Account {
+  id: UUID!
+  accountNumber: String!
+  accountType: AccountType!
+  status: AccountStatus!
+  memberId: UUID!
+  memberName: String!
+  productId: UUID!
+  productName: String!
+  currencyCode: String!
+  balance: Float!
+  availableBalance: Float!
+  overdraftLimit: Float
+  minimumBalance: Float
+  annualInterestRate: Float
+  activationDate: Date
+  maturityDate: Date
+  lastActivityDate: DateTime
+  accountOfficerId: UUID
+  accountOfficerName: String
+  isJointAccount: Boolean!
+  jointHolders: [JointAccountHolder!]
+  signatories: [AccountSignatory!]
+  nomineeBeneficiaries: [NomineeBeneficiary!]
+  tags: [String!]
+  notes: [String!]
+  accountStatementFrequency: String
+  createdDate: DateTime!
+}
+
+enum AccountType {
+  SAVINGS
+  CURRENT
+  TERM_DEPOSIT
+  SHARE
+  LOAN
+  SPECIAL_DEPOSIT
+}
+
+enum AccountStatus {
+  PENDING_APPROVAL
+  ACTIVE
+  DORMANT
+  INACTIVE
+  CLOSED
+  MATURED
+  BLOCKED
+}
+
+type JointAccountHolder {
+  memberId: UUID!
+  memberName: String!
+  relationship: String
+  permissions: [String!]
+}
+
+type AccountSignatory {
+  id: UUID!
+  name: String!
+  relationship: String
+  contactNumber: String
+  email: String
+  signatureUrl: String
+  isActive: Boolean!
+}
+
+type NomineeBeneficiary {
+  id: UUID!
+  name: String!
+  relationship: String!
+  dateOfBirth: Date
+  contactNumber: String
+  email: String
+  sharePercentage: Float!
+  isActive: Boolean!
+}
+
+input AccountCreateInput {
+  memberId: UUID!
+  accountType: AccountType!
+  productId: UUID!
+  initialDeposit: Float
+  overdraftLimit: Float
+  activationDate: Date
+  maturityDate: Date
+  accountOfficerId: UUID
+  isJointAccount: Boolean
+  jointHolders: [JointAccountHolderInput!]
+  signatories: [AccountSignatoryInput!]
+  nomineeBeneficiaries: [NomineeBeneficiaryInput!]
+  tags: [String!]
+  notes: String
+  accountStatementFrequency: String
+}
+
+input JointAccountHolderInput {
+  memberId: UUID!
+  relationship: String
+  permissions: [String!]
+}
+
+input AccountSignatoryInput {
+  name: String!
+  relationship: String
+  contactNumber: String
+  email: String
+  signatureImageBase64: String
+}
+
+input NomineeBeneficiaryInput {
+  name: String!
+  relationship: String!
+  dateOfBirth: Date
+  contactNumber: String
+  email: String
+  sharePercentage: Float!
+}
+
+input AccountSearchInput {
+  memberId: UUID
+  accountNumber: String
+  accountType: AccountType
+  status: AccountStatus
+  productId: UUID
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+type AccountActionResponse {
+  success: Boolean!
+  message: String
+  accountId: UUID
+  accountNumber: String
+}
+
+# ==== TRANSACTION MANAGEMENT ====
+
+type Transaction {
+  id: UUID!
+  transactionNumber: String!
+  transactionDate: DateTime!
+  valueDate: Date!
+  accountId: UUID!
+  accountNumber: String!
+  memberId: UUID!
+  memberName: String!
+  transactionType: TransactionType!
+  amount: Float!
+  currencyCode: String!
+  runningBalance: Float!
+  description: String
+  reference: String
+  chequeNumber: String
+  transactionMode: TransactionMode!
+  reversalOfTransactionId: UUID
+  isReversed: Boolean!
+  isPending: Boolean!
+  otherPartyName: String
+  otherPartyAccount: String
+  category: String
+  tags: [String!]
+  receiptNumber: String
+  batchId: UUID
+  createdBy: String!
+  createdDate: DateTime!
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+  LOAN_DISBURSEMENT
+  LOAN_REPAYMENT
+  INTEREST_POSTING
+  FEE_CHARGE
+  DIVIDEND
+  REVERSAL
+  ADJUSTMENT
+}
+
+enum TransactionMode {
+  CASH
+  CHEQUE
+  TRANSFER
+  CARD
+  ONLINE
+  MOBILE
+  ATM
+  DIGITAL_WALLET
+}
+
+type TransactionPaginated {
+  totalCount: Int!
+  transactions: [Transaction!]!
+}
+
+input TransactionSearchInput {
+  accountId: UUID
+  memberId: UUID
+  transactionType: TransactionType
+  transactionMode: TransactionMode
+  minAmount: Float
+  maxAmount: Float
+  startDate: Date
+  endDate: Date
+  reference: String
+  description: String
+  isReversed: Boolean
+  isPending: Boolean
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input TransactionCreateInput {
+  accountId: UUID!
+  transactionType: TransactionType!
+  amount: Float!
+  valueDate: Date
+  description: String
+  reference: String
+  chequeNumber: String
+  transactionMode: TransactionMode!
+  otherPartyName: String
+  otherPartyAccount: String
+  category: String
+  tags: [String!]
+}
+
+input TransferInput {
+  fromAccountId: UUID!
+  toAccountId: UUID!
+  amount: Float!
+  valueDate: Date
+  description: String
+  reference: String
+  transactionMode: TransactionMode!
+  category: String
+  tags: [String!]
+}
+
+input BatchTransactionInput {
+  batchReference: String!
+  batchType: String!
+  transactions: [TransactionCreateInput!]!
+}
+
+type TransactionResponse {
+  success: Boolean!
+  message: String
+  transactionId: UUID
+  transactionNumber: String
+  balanceAfter: Float
+}
+
+type TransferResponse {
+  success: Boolean!
+  message: String
+  fromTransactionId: UUID
+  toTransactionId: UUID
+  fromAccountBalance: Float
+  toAccountBalance: Float
+}
+
+type BatchTransactionResponse {
+  success: Boolean!
+  message: String
+  batchId: UUID
+  totalTransactions: Int
+  processedTransactions: Int
+  failedTransactions: Int
+  details: String
+}
+
+# ==== LOAN MANAGEMENT ====
+
+type LoanApplication {
+  id: UUID!
+  memberId: UUID!
+  memberName: String!
+  productId: UUID!
+  productName: String!
+  loanPurpose: String
+  applicationDate: DateTime!
+  amount: Float!
+  term: Int!
+  interestRate: Float!
+  repaymentFrequency: String!
+  status: LoanApplicationStatus!
+  currentStage: String
+  assignedTo: String
+  expectedDisbursementDate: Date
+  collaterals: [LoanCollateral!]
+  guarantors: [LoanGuarantor!]
+  documents: [LoanDocument!]
+  rejectionReason: String
+  cancellationReason: String
+  notes: [String!]
+  createdDate: DateTime!
+  lastModifiedDate: DateTime
+}
+
+enum LoanApplicationStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_VERIFICATION
+  VERIFICATION_COMPLETE
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  CANCELLED
+  DISBURSED
+}
+
+type LoanCollateral {
+  id: UUID!
+  collateralType: String!
+  assetType: String!
+  assetDescription: String!
+  assetValue: Float!
+  valuationDate: Date
+  ownership: String
+  location: String
+  identificationNumber: String
+  collateralDocuments: [LoanDocument!]
+}
+
+type LoanGuarantor {
+  id: UUID!
+  guarantorType: String!
+  memberId: UUID
+  memberName: String
+  firstName: String
+  lastName: String
+  relationship: String
+  contactNumber: String
+  email: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+  employerName: String
+  annualIncome: Float
+  guaranteeAmount: Float!
+  guaranteePercentage: Float
+  documents: [LoanDocument!]
+}
+
+type LoanDocument {
+  id: UUID!
+  documentType: String!
+  documentName: String!
+  fileName: String!
+  fileSize: Int
+  mimeType: String
+  uploadDate: DateTime!
+  documentUrl: String!
+  verificationStatus: String
+  verifiedBy: String
+  verificationDate: DateTime
+  isActive: Boolean!
+}
+
+type LoanApplicationPaginated {
+  totalCount: Int!
+  applications: [LoanApplication!]!
+}
+
+input LoanApplicationSearchInput {
+  memberId: UUID
+  productId: UUID
+  status: LoanApplicationStatus
+  startAmount: Float
+  endAmount: Float
+  startDate: Date
+  endDate: Date
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input LoanApplicationCreateInput {
+  memberId: UUID!
+  productId: UUID!
+  loanPurpose: String!
+  amount: Float!
+  term: Int!
+  repaymentFrequency: String!
+  expectedDisbursementDate: Date
+  collaterals: [LoanCollateralInput!]
+  guarantors: [LoanGuarantorInput!]
+  documents: [LoanDocumentInput!]
+  notes: String
+}
+
+input LoanCollateralInput {
+  collateralType: String!
+  assetType: String!
+  assetDescription: String!
+  assetValue: Float!
+  valuationDate: Date
+  ownership: String
+  location: String
+  identificationNumber: String
+  documents: [LoanDocumentInput!]
+}
+
+input LoanGuarantorInput {
+  guarantorType: String!
+  memberId: UUID
+  firstName: String
+  lastName: String
+  relationship: String
+  contactNumber: String
+  email: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+  employerName: String
+  annualIncome: Float
+  guaranteeAmount: Float!
+  guaranteePercentage: Float
+  documents: [LoanDocumentInput!]
+}
+
+input LoanDocumentInput {
+  documentType: String!
+  documentName: String!
+  documentBase64: String!
+}
+
+type LoanApplicationResponse {
+  success: Boolean!
+  message: String
+  applicationId: UUID
+  applicationNumber: String
+  status: LoanApplicationStatus
+  nextStep: String
+}
+
+type Loan {
+  id: UUID!
+  loanNumber: String!
+  applicationId: UUID
+  memberId: UUID!
+  memberName: String!
+  productId: UUID!
+  productName: String!
+  status: LoanStatus!
+  principal: Float!
+  disbursedAmount: Float!
+  interestRate: Float!
+  interestType: String!
+  term: Int!
+  repaymentFrequency: String!
+  numberOfInstallments: Int!
+  outstandingPrincipal: Float!
+  outstandingInterest: Float!
+  totalOutstanding: Float!
+  totalRepaid: Float!
+  approvalDate: Date
+  disbursementDate: Date
+  maturityDate: Date
+  nextInstallmentDate: Date
+  nextInstallmentAmount: Float
+  accountOfficerId: UUID
+  accountOfficerName: String
+  daysInArrears: Int
+  totalOverdue: Float
+  loanPurpose: String
+  createdDate: DateTime!
+  closedDate: DateTime
+}
+
+enum LoanStatus {
+  PENDING_DISBURSEMENT
+  ACTIVE
+  CLOSED_OBLIGATIONS_MET
+  RESCHEDULED
+  WRITTEN_OFF
+  OVERPAID
+}
+
+type LoanPaginated {
+  totalCount: Int!
+  loans: [Loan!]!
+}
+
+input LoanSearchInput {
+  memberId: UUID
+  loanNumber: String
+  productId: UUID
+  status: LoanStatus
+  startAmount: Float
+  endAmount: Float
+  startDate: Date
+  endDate: Date
+  isInArrears: Boolean
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+type LoanSchedule {
+  id: UUID!
+  loanId: UUID!
+  installmentNumber: Int!
+  dueDate: Date!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  totalDue: Float!
+  paidPrincipal: Float!
+  paidInterest: Float!
+  paidFees: Float!
+  paidPenalties: Float!
+  totalPaid: Float!
+  outstandingPrincipal: Float!
+  outstandingTotal: Float!
+  status: String!
+  isPaid: Boolean!
+  isOverdue: Boolean!
+  overdueDays: Int
+}
+
+input LoanApprovalInput {
+  applicationId: UUID!
+  approvedAmount: Float!
+  approvedTerm: Int!
+  approvedInterestRate: Float!
+  approvalDate: Date
+  approvalNotes: String
+  expectedDisbursementDate: Date
+}
+
+input LoanDisbursementInput {
+  loanId: UUID!
+  disbursementDate: Date!
+  disbursementAmount: Float!
+  disbursementMethod: String!
+  disbursementAccount: String
+  notes: String
+}
+
+input LoanRepaymentInput {
+  loanId: UUID!
+  repaymentDate: Date!
+  amount: Float!
+  paymentMethod: String!
+  receiptNumber: String
+  notes: String
+}
+
+type LoanActionResponse {
+  success: Boolean!
+  message: String
+  loanId: UUID
+  transactionId: UUID
+  newStatus: String
+  outstandingAmount: Float
+  nextInstallmentDate: Date
+  nextInstallmentAmount: Float
+}
+
+# ==== STATEMENTS & REPORTING ====
+
+type Statement {
+  id: UUID!
+  accountId: UUID!
+  accountNumber: String!
+  accountType: String!
+  memberId: UUID!
+  memberName: String!
+  statementDate: Date!
+  periodStartDate: Date!
+  periodEndDate: Date!
+  openingBalance: Float!
+  closingBalance: Float!
+  totalDeposits: Float!
+  totalWithdrawals: Float!
+  totalFees: Float!
+  totalInterest: Float!
+  currency: String!
+  transactions: [StatementTransaction!]!
+  generatedBy: String!
+  generatedDate: DateTime!
+  deliveryStatus: String
+  documentUrl: String
+}
+
+type StatementTransaction {
+  transactionDate: DateTime!
+  valueDate: Date!
+  transactionType: String!
+  description: String
+  reference: String
+  debitAmount: Float
+  creditAmount: Float
+  runningBalance: Float!
+}
+
+input StatementGenerateInput {
+  accountId: UUID!
+  startDate: Date!
+  endDate: Date!
+  deliveryMethod: String
+  includeDetails: Boolean
+}
+
+type StatementResponse {
+  success: Boolean!
+  message: String
+  statementId: UUID
+  documentUrl: String
+}
+
+type Report {
+  id: UUID!
+  reportName: String!
+  reportType: String!
+  generatedDate: DateTime!
+  parameters: JSON!
+  columns: [ReportColumn!]!
+  data: [JSON!]!
+  totalRecords: Int!
+  format: String!
+  downloadUrl: String
+  generatedBy: String!
+}
+
+type ReportColumn {
+  name: String!
+  label: String!
+  dataType: String!
+  width: Int
+}
+
+input ReportGenerateInput {
+  reportType: String!
+  parameters: JSON!
+  format: String!
+}
+
+type ReportResponse {
+  success: Boolean!
+  message: String
+  reportId: UUID
+  downloadUrl: String
+}
+
+# ==== DOCUMENT MANAGEMENT ====
+
+type Document {
+  id: UUID!
+  documentType: String!
+  documentName: String!
+  entityType: String!
+  entityId: UUID!
+  fileName: String!
+  fileSize: Int!
+  mimeType: String!
+  storagePath: String!
+  version: Int!
+  isCurrentVersion: Boolean!
+  previousVersionId: UUID
+  description: String
+  tags: [String!]
+  metadata: JSON
+  uploadedBy: String!
+  uploadedDate: DateTime!
+}
+
+type DocumentPaginated {
+  totalCount: Int!
+  documents: [Document!]!
+}
+
+input DocumentSearchInput {
+  entityType: String
+  entityId: UUID
+  documentType: String
+  documentName: String
+  tags: [String!]
+  uploadDateStart: Date
+  uploadDateEnd: Date
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input DocumentUploadInput {
+  documentType: String!
+  documentName: String!
+  entityType: String!
+  entityId: UUID!
+  fileBase64: String!
+  mimeType: String!
+  description: String
+  tags: [String!]
+  metadata: JSON
+}
+
+type DocumentResponse {
+  success: Boolean!
+  message: String
+  documentId: UUID
+  documentUrl: String
+}
+
+# ==== NOTIFICATIONS & MESSAGING ====
+
+type Notification {
+  id: UUID!
+  memberId: UUID
+  memberName: String
+  channel: NotificationChannel!
+  recipient: String!
+  subject: String
+  body: String!
+  status: String!
+  createdDate: DateTime!
+  sentDate: DateTime
+  deliveredDate: DateTime
+  readDate: DateTime
+  referenceType: String
+  referenceId: UUID
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+}
+
+type NotificationPaginated {
+  totalCount: Int!
+  notifications: [Notification!]!
+}
+
+input NotificationSearchInput {
+  memberId: UUID
+  channel: NotificationChannel
+  status: String
+  startDate: DateTime
+  endDate: DateTime
+  referenceType: String
+  referenceId: UUID
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input NotificationSendInput {
+  memberId: UUID
+  channel: NotificationChannel!
+  recipient: String!
+  subject: String
+  body: String!
+  referenceType: String
+  referenceId: UUID
+  sendAfter: DateTime
+}
+
+input NotificationTemplateInput {
+  templateKey: String!
+  channel: NotificationChannel!
+  parameters: JSON!
+  recipientIds: [UUID!]!
+  referenceType: String
+  referenceId: UUID
+  sendAfter: DateTime
+}
+
+type NotificationResponse {
+  success: Boolean!
+  message: String
+  notificationIds: [UUID!]
+  failedRecipients: [String!]
+}
+
+# ==== AUDIT & COMPLIANCE ====
+
+type AuditLog {
+  id: UUID!
+  actionType: String!
+  entityType: String!
+  entityId: UUID!
+  userId: UUID
+  userName: String
+  actionTime: DateTime!
+  ipAddress: String
+  userAgent: String
+  oldValues: JSON
+  newValues: JSON
+  changeReason: String
+  sessionId: UUID
+  severity: String!
+}
+
+type AuditLogPaginated {
+  totalCount: Int!
+  logs: [AuditLog!]!
+}
+
+input AuditLogSearchInput {
+  entityType: String
+  entityId: UUID
+  userId: UUID
+  actionType: String
+  startTime: DateTime
+  endTime: DateTime
+  severity: String
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+type AmlAlert {
+  id: UUID!
+  transactionId: UUID!
+  memberId: UUID!
+  memberName: String!
+  accountId: UUID
+  accountNumber: String
+  detectionTime: DateTime!
+  alertType: String!
+  riskScore: Int
+  alertStatus: String!
+  description: String
+  assignedTo: String
+  resolution: String
+  resolutionNotes: String
+  resolutionTime: DateTime
+  resolvedBy: String
+  isSarFiled: Boolean!
+  sarReference: String
+  sarFiledDate: Date
+}
+
+type AmlAlertPaginated {
+  totalCount: Int!
+  alerts: [AmlAlert!]!
+}
+
+input AmlAlertSearchInput {
+  memberId: UUID
+  accountId: UUID
+  alertType: String
+  alertStatus: String
+  minRiskScore: Int
+  maxRiskScore: Int
+  startDate: DateTime
+  endDate: DateTime
+  isSarFiled: Boolean
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input AmlAlertUpdateInput {
+  alertId: UUID!
+  alertStatus: String!
+  assignedTo: UUID
+  resolution: String
+  resolutionNotes: String
+  isSarFiled: Boolean
+  sarReference: String
+  sarFiledDate: Date
+}
+
+type AmlAlertResponse {
+  success: Boolean!
+  message: String
+  alertId: UUID
+}
+
+# ==== ROOT TYPES ====
+
+type Mutation {
+  # Member Management
+  createMember(input: MemberCreateInput!): MemberActionResponse!
+  updateMember(input: MemberUpdateInput!): MemberActionResponse!
+  activateMember(id: UUID!): MemberActionResponse!
+  deactivateMember(id: UUID!, reason: String!): MemberActionResponse!
+  closeMember(id: UUID!, reason: String!): MemberActionResponse!
+  
+  # KYC Management
+  addMemberIdentification(memberId: UUID!, input: MemberIdentificationInput!): MemberActionResponse!
+  verifyMemberIdentification(identificationId: UUID!, verificationStatus: String!, reason: String): MemberActionResponse!
+  
+  # Account Management
+  createAccount(input: AccountCreateInput!): AccountActionResponse!
+  activateAccount(id: UUID!): AccountActionResponse!
+  closeAccount(id: UUID!, reason: String!): AccountActionResponse!
+  
+  # Transaction Management
+  createTransaction(input: TransactionCreateInput!): TransactionResponse!
+  transferFunds(input: TransferInput!): TransferResponse!
+  createBatchTransactions(input: BatchTransactionInput!): BatchTransactionResponse!
+  reverseTransaction(transactionId: UUID!, reason: String!): TransactionResponse!
+  
+  # Loan Management
+  createLoanApplication(input: LoanApplicationCreateInput!): LoanApplicationResponse!
+  approveLoanApplication(input: LoanApprovalInput!): LoanActionResponse!
+  rejectLoanApplication(applicationId: UUID!, reason: String!): LoanActionResponse!
+  disburseLoan(input: LoanDisbursementInput!): LoanActionResponse!
+  recordLoanRepayment(input: LoanRepaymentInput!): LoanActionResponse!
+  
+  # Statement Generation
+  generateStatement(input: StatementGenerateInput!): StatementResponse!
+  generateReport(input: ReportGenerateInput!): ReportResponse!
+  
+  # Document Management
+  uploadDocument(input: DocumentUploadInput!): DocumentResponse!
+  
+  # Notification Management
+  sendNotification(input: NotificationSendInput!): NotificationResponse!
+  sendNotificationByTemplate(input: NotificationTemplateInput!): NotificationResponse!
+  
+  # Compliance Management
+  updateAmlAlert(input: AmlAlertUpdateInput!): AmlAlertResponse!
+}
+
+type Query {
+  # Member Management
+  searchMembers(input: MemberSearchInput!): MemberPaginated!
+  getMember(id: UUID!): Member
+  
+  # Account Management
+  searchAccounts(input: AccountSearchInput!): AccountPaginated!
+  getAccount(id: UUID!): Account
+  getMemberAccounts(memberId: UUID!): [Account!]!
+  
+  # Transaction Management
+  searchTransactions(input: TransactionSearchInput!): TransactionPaginated!
+  getTransaction(id: UUID!): Transaction
+  getAccountTransactions(accountId: UUID!, limit: Int, offset: Int): TransactionPaginated!
+  
+  # Loan Management
+  searchLoanApplications(input: LoanApplicationSearchInput!): LoanApplicationPaginated!
+  getLoanApplication(id: UUID!): LoanApplication
+  searchLoans(input: LoanSearchInput!): LoanPaginated!
+  getLoan(id: UUID!): Loan
+  getLoanSchedule(loanId: UUID!): [LoanSchedule!]!
+  
+  # Statement & Reporting
+  getStatement(statementId: UUID!): Statement
+  getAccountStatements(accountId: UUID!, limit: Int, offset: Int): [Statement!]!
+  getReport(reportId: UUID!): Report
+  
+  # Document Management
+  searchDocuments(input: DocumentSearchInput!): DocumentPaginated!
+  getDocument(id: UUID!): Document
+  
+  # Notification Management
+  searchNotifications(input: NotificationSearchInput!): NotificationPaginated!
+  getMemberNotifications(memberId: UUID!, limit: Int, offset: Int): NotificationPaginated!
+  
+  # Audit & Compliance
+  searchAuditLogs(input: AuditLogSearchInput!): AuditLogPaginated!
+  searchAmlAlerts(input: AmlAlertSearchInput!): AmlAlertPaginated!
+  getAmlAlert(id: UUID!): AmlAlert
+}
+
+# Basic scalar types
+scalar UUID
+scalar Date
+scalar DateTime
+scalar JSON

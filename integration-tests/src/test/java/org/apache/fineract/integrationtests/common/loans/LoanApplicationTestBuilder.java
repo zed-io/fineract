@@ -88,11 +88,16 @@ public class LoanApplicationTestBuilder {
     private boolean enableDownPayment = false;
     private boolean enableAutoRepaymentForDownPayment = false;
     private String disbursedAmountPercentageDownPayment;
+    private List<HashMap<String, Object>> clientMembers;
 
     public String build(final String clientID, final String groupID, final String loanProductId, final String savingsID) {
         final HashMap<String, Object> map = new HashMap<>();
         map.put("groupId", groupID);
         map.put("clientId", clientID);
+        
+        if (this.clientMembers != null && "glim".equals(this.loanType)) {
+            map.put("clientMembers", this.clientMembers);
+        }
         if ("jlg".equals(this.loanType)) {
             if (this.calendarId != null) {
                 map.put("calendarId", this.calendarId);
@@ -465,6 +470,12 @@ public class LoanApplicationTestBuilder {
 
     public LoanApplicationTestBuilder withDisbursedAmountPercentageDownPayment(final String amount) {
         this.disbursedAmountPercentageDownPayment = amount;
+        return this;
+    }
+    
+    public LoanApplicationTestBuilder withGlimClientMembers(final List<HashMap> clientMembers) {
+        this.clientMembers = new ArrayList<>();
+        this.clientMembers.addAll(clientMembers);
         return this;
     }
 

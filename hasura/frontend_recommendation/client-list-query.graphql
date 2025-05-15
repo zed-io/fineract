@@ -1,0 +1,21 @@
+# Query to fetch client list with pagination and filters
+query GetClients($input: ClientListInput!) {
+  client_list(input: $input) {
+    totalCount
+    clients {
+      id
+      accountNo
+      externalId
+      status
+      officeId
+      officeName
+      submittedDate
+      mobileNo
+      emailAddress
+      firstname
+      lastname
+      fullname
+      displayName
+    }
+  }
+}

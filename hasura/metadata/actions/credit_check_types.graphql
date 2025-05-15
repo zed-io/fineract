@@ -1,0 +1,82 @@
+# Credit check types
+
+# Request for credit check
+input CreditCheckRequest {
+  clientId: String!
+  identificationNumber: String
+  identificationType: String
+  firstName: String
+  lastName: String
+  dateOfBirth: String
+  includeHistory: Boolean
+  requestSource: String
+}
+
+# Credit check result
+type CreditCheckResult {
+  requestId: String!
+  clientId: String!
+  creditScore: Int!
+  scoreDate: String!
+  reportReference: String
+  creditBureau: String!
+  riskCategory: String!
+  delinquencyStatus: Boolean!
+  activeLoans: Int!
+  totalOutstanding: Float
+  maxDaysInArrears: Int
+  bankruptcyFlag: Boolean!
+  fraudFlag: Boolean!
+  inquiryCount: Int!
+  inquiryLast90Days: Int!
+  reportContent: JSON
+  reportSummary: String
+  errors: [String!]
+}
+
+# Request to get credit check history
+input CreditCheckHistoryRequest {
+  clientId: String!
+  limit: Int
+}
+
+# Request to get credit check by ID
+input CreditCheckByIdRequest {
+  checkId: String!
+}
+
+# Credit check operation result
+type PerformCreditCheckOutput {
+  success: Boolean!
+  creditCheck: CreditCheckResult
+  message: String
+}
+
+# Credit check history result
+type CreditCheckHistoryOutput {
+  success: Boolean!
+  history: [CreditCheckResult!]
+  message: String
+}
+
+# Credit check by ID result
+type CreditCheckByIdOutput {
+  success: Boolean!
+  creditCheck: CreditCheckResult
+  message: String
+}
+
+# GraphQL Actions
+
+type Mutation {
+  # Perform a credit check for a client
+  performCreditCheck(input: CreditCheckRequest!): PerformCreditCheckOutput
+}
+
+type Query {
+  # Get credit check history for a client
+  getCreditCheckHistory(input: CreditCheckHistoryRequest!): CreditCheckHistoryOutput
+  
+  # Get a specific credit check by ID
+  getCreditCheckById(input: CreditCheckByIdRequest!): CreditCheckByIdOutput
+}

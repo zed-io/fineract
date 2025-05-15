@@ -1,0 +1,224 @@
+# Recurring Deposit Beneficiary Management GraphQL Types
+
+# ===== Input Types =====
+
+input RecurringDepositBeneficiaryInput {
+  accountId: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  address1: String
+  address2: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+  contactNumber: String
+  email: String
+  documentType: String
+  documentNumber: String
+  documentDescription: String
+  documentUrl: String
+  notes: String
+}
+
+input RecurringDepositBeneficiaryUpdateInput {
+  beneficiaryId: UUID!
+  name: String
+  relationshipType: String
+  percentageShare: Float
+  address1: String
+  address2: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+  contactNumber: String
+  email: String
+  documentType: String
+  documentNumber: String
+  documentDescription: String
+  documentUrl: String
+  notes: String
+  isActive: Boolean
+}
+
+input RecurringDepositBeneficiaryVerifyInput {
+  beneficiaryId: UUID!
+  status: String!
+  notes: String
+}
+
+input RecurringDepositBeneficiaryRemoveInput {
+  beneficiaryId: UUID!
+  softDelete: Boolean
+  reason: String
+}
+
+input RecurringDepositBeneficiaryListInput {
+  accountId: UUID!
+  includeInactive: Boolean
+}
+
+# ===== Response Types =====
+
+type RecurringDepositBeneficiary {
+  id: UUID!
+  accountId: UUID!
+  accountNo: String
+  name: String!
+  clientId: UUID
+  clientName: String
+  relationshipType: String!
+  percentageShare: Float!
+  address1: String
+  address2: String
+  city: String
+  state: String
+  country: String
+  postalCode: String
+  contactNumber: String
+  email: String
+  documentType: String
+  documentNumber: String
+  documentDescription: String
+  documentUrl: String
+  notes: String
+  verificationStatus: String!
+  isActive: Boolean!
+  createdDate: DateTime!
+}
+
+type RecurringDepositBeneficiaryResponse {
+  success: Boolean!
+  beneficiaryId: UUID!
+  accountId: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  message: String!
+}
+
+type RecurringDepositBeneficiaryVerifyResponse {
+  success: Boolean!
+  beneficiaryId: UUID!
+  accountId: UUID!
+  verificationStatus: String!
+  message: String!
+}
+
+type RecurringDepositBeneficiaryListResponse {
+  totalCount: Int!
+  totalPercentage: Float!
+  beneficiaries: [RecurringDepositBeneficiary!]!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  expectedMaturityDate: DateTime
+  expectedMaturityAmount: Float
+}
+
+# ===== Notification Types =====
+
+type RecurringDepositBeneficiaryNotification {
+  id: UUID!
+  beneficiaryId: UUID!
+  beneficiary: RecurringDepositBeneficiary
+  accountId: UUID!
+  templateId: UUID
+  notificationType: String!
+  recipient: String!
+  subject: String
+  message: String!
+  status: String!
+  errorMessage: String
+  eventType: String!
+  triggeredBy: String
+  sentDate: DateTime
+  deliveryDate: DateTime
+  createdDate: DateTime!
+}
+
+type RecurringDepositBeneficiaryNotificationPreference {
+  id: UUID!
+  beneficiaryId: UUID!
+  beneficiary: RecurringDepositBeneficiary
+  notificationType: String!
+  eventType: String!
+  isEnabled: Boolean!
+  createdDate: DateTime!
+}
+
+input GetRecurringDepositBeneficiaryNotificationsInput {
+  beneficiaryId: UUID
+  accountId: UUID
+  status: String
+  notificationType: String
+  eventType: String
+  fromDate: DateTime
+  toDate: DateTime
+  limit: Int
+  offset: Int
+}
+
+input SendRecurringDepositBeneficiaryNotificationInput {
+  beneficiaryId: UUID!
+  templateCode: String!
+}
+
+input UpdateRecurringDepositBeneficiaryNotificationPreferenceInput {
+  beneficiaryId: UUID!
+  notificationType: String!
+  eventType: String!
+  isEnabled: Boolean!
+}
+
+type RecurringDepositBeneficiaryNotificationsResponse {
+  notifications: [RecurringDepositBeneficiaryNotification!]!
+  totalCount: Int!
+}
+
+type RecurringDepositBeneficiaryNotificationPreferencesResponse {
+  preferences: [RecurringDepositBeneficiaryNotificationPreference!]!
+  totalCount: Int!
+}
+
+type SendRecurringDepositBeneficiaryNotificationResponse {
+  success: Boolean!
+  message: String!
+  notificationId: UUID
+}
+
+type UpdateRecurringDepositBeneficiaryNotificationPreferenceResponse {
+  success: Boolean!
+  message: String!
+  preference: RecurringDepositBeneficiaryNotificationPreference
+}
+
+# ===== Extend Query and Mutation types =====
+
+extend type Query {
+  # Beneficiary queries
+  getRecurringDepositBeneficiaries(input: RecurringDepositBeneficiaryListInput!): RecurringDepositBeneficiaryListResponse!
+  getRecurringDepositBeneficiary(id: UUID!): RecurringDepositBeneficiary
+  
+  # Notification queries
+  getRecurringDepositBeneficiaryNotifications(input: GetRecurringDepositBeneficiaryNotificationsInput!): RecurringDepositBeneficiaryNotificationsResponse!
+  getRecurringDepositBeneficiaryNotificationPreferences(beneficiaryId: UUID!): RecurringDepositBeneficiaryNotificationPreferencesResponse!
+}
+
+extend type Mutation {
+  # Beneficiary management
+  addRecurringDepositBeneficiary(input: RecurringDepositBeneficiaryInput!): RecurringDepositBeneficiaryResponse!
+  updateRecurringDepositBeneficiary(input: RecurringDepositBeneficiaryUpdateInput!): RecurringDepositBeneficiaryResponse!
+  verifyRecurringDepositBeneficiary(input: RecurringDepositBeneficiaryVerifyInput!): RecurringDepositBeneficiaryVerifyResponse!
+  removeRecurringDepositBeneficiary(input: RecurringDepositBeneficiaryRemoveInput!): RecurringDepositBeneficiaryResponse!
+  
+  # Notification management
+  sendRecurringDepositBeneficiaryNotification(input: SendRecurringDepositBeneficiaryNotificationInput!): SendRecurringDepositBeneficiaryNotificationResponse!
+  updateRecurringDepositBeneficiaryNotificationPreference(input: UpdateRecurringDepositBeneficiaryNotificationPreferenceInput!): UpdateRecurringDepositBeneficiaryNotificationPreferenceResponse!
+}
+
+# Required scalar types
+scalar UUID
+scalar DateTime

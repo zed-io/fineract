@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["integration/config/*"],
+      "@utils/*": ["integration/utils/*"],
+      "@graphql/*": ["integration/graphql/*"],
+      "@fixtures/*": ["integration/fixtures/*"],
+      "@helpers/*": ["integration/helpers/*"]
+    }
+  },
+  "include": ["integration/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

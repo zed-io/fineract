@@ -1,0 +1,172 @@
+- name: client_list
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/list'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+    - role: user
+
+- name: client_get
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/get'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+    - role: user
+    - role: client_self_service
+      
+- name: client_create
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/create'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_update
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/update'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_activate
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/activate'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_close
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/close'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_reject
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/reject'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_withdraw
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/withdraw'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_reactivate
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/reactivate'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_add_identifier
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/identifier/create'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_accounts
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/accounts'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+    - role: user
+    - role: client_self_service
+
+- name: client_add_address
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/address/create'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_add_family_member
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/family-member/create'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager
+
+- name: client_add_document
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/client/document/create'
+    forward_client_headers: true
+    headers:
+      - name: x-hasura-tenant-id
+        value_from_env: HASURA_TENANT_ID
+  permissions:
+    - role: admin
+    - role: manager

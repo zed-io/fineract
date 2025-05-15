@@ -1,0 +1,215 @@
+# Enums for Regulatory Reporting
+
+enum ReportFrequency {
+  daily
+  weekly
+  monthly
+  quarterly
+  semi_annually
+  annually
+  on_demand
+}
+
+enum ReportFormat {
+  pdf
+  excel
+  csv
+  json
+  xml
+}
+
+enum ReportStatus {
+  pending
+  processing
+  completed
+  failed
+  approved
+  submitted
+  rejected
+}
+
+enum RegulatoryReportType {
+  suspicious_transaction_report
+  large_cash_transaction_report
+  terrorist_property_report
+  quarterly_return
+  annual_compliance_report
+  risk_assessment_report
+  anti_money_laundering_report
+  credit_union_monthly_statement
+  financial_condition_report
+  member_statistics_report
+  loan_portfolio_report
+  delinquency_report
+}
+
+# Input Types
+
+input RegReportGenerationRequest {
+  reportType: RegulatoryReportType!
+  startDate: String!
+  endDate: String!
+  format: ReportFormat
+  parameters: JSON
+  notes: String
+}
+
+input UpdateReportStatusInput {
+  reportId: ID!
+  status: ReportStatus!
+  notes: String
+}
+
+input ReportScheduleParams {
+  dayOfMonth: Int
+  dayOfWeek: Int
+  month: Int
+  hour: Int
+  minute: Int
+}
+
+input CreateReportScheduleInput {
+  definitionId: ID!
+  frequency: ReportFrequency!
+  scheduleParams: ReportScheduleParams!
+  reportParams: JSON
+}
+
+# Output Types
+
+type RegReportDefinition {
+  id: ID!
+  name: String!
+  description: String
+  reportType: RegulatoryReportType!
+  frequency: ReportFrequency!
+  regulator: String!
+  formatOptions: [ReportFormat!]!
+  requiredParameters: [String!]
+  deadline: String
+  isActive: Boolean!
+  templateUrl: String
+  instructions: String
+}
+
+type RegReportInstance {
+  id: ID!
+  definitionId: ID!
+  name: String!
+  reportType: RegulatoryReportType!
+  startDate: String!
+  endDate: String!
+  dueDate: String
+  submissionDate: String
+  status: ReportStatus!
+  format: ReportFormat!
+  parameters: JSON
+  fileUrl: String
+  fileSize: Int
+  generatedBy: String
+  generatedAt: String
+  approvedBy: String
+  approvedAt: String
+  submittedBy: String
+  submittedAt: String
+  notes: String
+  metadata: JSON
+}
+
+type RegReportSchedule {
+  id: ID!
+  definitionId: ID!
+  name: String
+  reportType: String
+  frequency: ReportFrequency!
+  dayOfMonth: Int
+  dayOfWeek: Int
+  month: Int
+  hour: Int
+  minute: Int
+  parameters: JSON
+  isActive: Boolean!
+  lastRun: String
+  nextRun: String
+}
+
+type UpcomingDeadline {
+  id: ID!
+  name: String!
+  reportType: RegulatoryReportType!
+  dueDate: String!
+  status: ReportStatus!
+  startDate: String!
+  endDate: String!
+  daysUntilDue: Int!
+}
+
+type RegReportGenerationResult {
+  success: Boolean!
+  reportInstance: RegReportInstance
+  message: String
+  errors: [String!]
+}
+
+# Response Types
+
+type GetReportDefinitionsResponse {
+  success: Boolean!
+  definitions: [RegReportDefinition!]
+  message: String
+}
+
+type GetReportDefinitionResponse {
+  success: Boolean!
+  definition: RegReportDefinition
+  message: String
+}
+
+type GenerateReportResponse {
+  success: Boolean!
+  reportInstance: RegReportInstance
+  message: String
+  errors: [String!]
+}
+
+type GetReportInstancesResponse {
+  success: Boolean!
+  instances: [RegReportInstance!]
+  message: String
+}
+
+type GetReportInstanceResponse {
+  success: Boolean!
+  instance: RegReportInstance
+  message: String
+}
+
+type UpdateReportStatusResponse {
+  success: Boolean!
+  instance: RegReportInstance
+  message: String
+}
+
+type GetUpcomingDeadlinesResponse {
+  success: Boolean!
+  deadlines: [UpcomingDeadline!]
+  message: String
+}
+
+type GetReportSchedulesResponse {
+  success: Boolean!
+  schedules: [RegReportSchedule!]
+  message: String
+}
+
+type CreateReportScheduleResponse {
+  success: Boolean!
+  schedule: RegReportSchedule
+  message: String
+}
+
+type RunScheduledReportsResponse {
+  success: Boolean!
+  results: [RegReportGenerationResult!]
+  message: String
+}

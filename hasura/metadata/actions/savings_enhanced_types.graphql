@@ -1,0 +1,428 @@
+# Enhanced Savings Types for Credit Union Hasura GraphQL API
+
+# ===== Query Types =====
+
+type SavingsAccount {
+  id: UUID!
+  accountNo: String!
+  externalId: String
+  clientId: UUID!
+  clientName: String!
+  productId: UUID!
+  productName: String!
+  status: SavingsAccountStatus!
+  subStatus: SavingsAccountSubStatus!
+  currency: String!
+  accountBalance: Float!
+  nominalAnnualInterestRate: Float!
+  interestCompoundingPeriodType: String!
+  interestPostingPeriodType: String!
+  interestCalculationType: String!
+  minRequiredOpeningBalance: Float
+  overdraftLimit: Float
+  allowOverdraft: Boolean!
+  enforceMinRequiredBalance: Boolean!
+  minRequiredBalance: Float
+  accountType: String!
+  fieldOfficerId: UUID
+  fieldOfficerName: String
+  submittedOnDate: Date!
+  approvedOnDate: Date
+  approvedByName: String
+  activatedOnDate: Date
+  activatedByName: String
+  closedOnDate: Date
+  closedByName: String
+  withdrawalFeeForTransfers: Boolean!
+  accountPurpose: String
+  lastInterestCalculationDate: Date
+  lastTransactionDate: Date
+  totalDeposits: Float!
+  totalWithdrawals: Float!
+  totalInterestEarned: Float!
+  totalFeesCharged: Float!
+  overdraftInterestRate: Float
+  jointHolders: [JointHolder!]
+  beneficiaries: [Beneficiary!]
+  recentTransactions: [SavingsTransaction!]
+  notes: [AccountNote!]
+  additionalProperties: JSONObject
+  createdDate: Date!
+}
+
+type SavingsAccountSummary {
+  id: UUID!
+  accountNo: String!
+  clientId: UUID!
+  clientName: String!
+  productName: String!
+  status: SavingsAccountStatus!
+  accountBalance: Float!
+  currency: String!
+  lastTransactionDate: Date
+  openedDate: Date
+  accountType: String!
+  overdraftAllowed: Boolean
+  dormant: Boolean
+}
+
+type JointHolder {
+  clientId: UUID!
+  clientName: String!
+  relationshipType: String!
+  isAuthorizedSigner: Boolean!
+}
+
+type Beneficiary {
+  id: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  address: String
+  contactNumber: String
+  email: String
+  isActive: Boolean!
+}
+
+type AccountNote {
+  id: UUID!
+  note: String!
+  createdDate: Date!
+  createdByName: String
+}
+
+type SavingsTransaction {
+  id: UUID!
+  accountId: UUID!
+  transactionType: String!
+  amount: Float!
+  transactionDate: Date!
+  runningBalance: Float!
+  description: String
+  isReversed: Boolean!
+  receiptNumber: String
+  checkNumber: String
+  createdDate: Date!
+}
+
+type SavingsStatement {
+  id: UUID!
+  accountId: UUID!
+  accountNo: String!
+  accountType: String!
+  clientId: UUID!
+  clientName: String!
+  productName: String!
+  currencyCode: String!
+  statementDate: Date!
+  periodStartDate: Date!
+  periodEndDate: Date!
+  openingBalance: Float!
+  closingBalance: Float!
+  totalDeposits: Float!
+  totalWithdrawals: Float!
+  totalInterest: Float!
+  totalFees: Float!
+  transactions: [StatementTransaction!]
+}
+
+type StatementTransaction {
+  transactionId: UUID!
+  transactionDate: Date!
+  valueDate: Date!
+  transactionType: String!
+  description: String
+  debitAmount: Float
+  creditAmount: Float
+  runningBalance: Float!
+}
+
+type InterestCalculation {
+  interestCalculatedFrom: Date!
+  interestCalculatedTo: Date!
+  interestAmount: Float!
+  averageBalance: Float
+  daysInPeriod: Int!
+  annualInterestRate: Float
+  calculationMethod: String
+}
+
+enum SavingsAccountStatus {
+  SUBMITTED_AND_PENDING_APPROVAL
+  APPROVED
+  ACTIVE
+  CLOSED
+  REJECTED
+  WITHDRAWN_BY_CLIENT
+  DORMANT
+  ESCHEAT
+}
+
+enum SavingsAccountSubStatus {
+  NONE
+  INACTIVE
+  DORMANT
+  ESCHEAT
+  BLOCK
+  BLOCK_CREDIT
+  BLOCK_DEBIT
+}
+
+# ===== Input Types =====
+
+input SavingsAccountCreateInput {
+  clientId: UUID!
+  productId: UUID!
+  currencyCode: String
+  submittedOnDate: Date!
+  externalId: String
+  fieldOfficerId: UUID
+  nominalAnnualInterestRate: Float
+  interestCompoundingPeriodType: String
+  interestPostingPeriodType: String
+  interestCalculationType: String
+  interestCalculationDaysInYearType: Int
+  minRequiredOpeningBalance: Float
+  lockinPeriodFrequency: Int
+  lockinPeriodFrequencyType: String
+  withdrawalFeeForTransfers: Boolean
+  allowOverdraft: Boolean
+  overdraftLimit: Float
+  minRequiredBalance: Float
+  enforceMinRequiredBalance: Boolean
+  accountPurpose: String
+  jointHolders: [JointHolderInput!]
+  beneficiaries: [BeneficiaryInput!]
+  additionalProperties: JSONObject
+}
+
+input JointHolderInput {
+  clientId: UUID!
+  relationshipType: String!
+  isAuthorizedSigner: Boolean
+}
+
+input BeneficiaryInput {
+  name: String!
+  relationshipType: String!
+  percentageShare: Float
+  address: String
+  contactNumber: String
+  email: String
+}
+
+input SavingsAccountApproveInput {
+  accountId: UUID!
+  approvedOnDate: Date!
+  note: String
+}
+
+input SavingsAccountActivateInput {
+  accountId: UUID!
+  activatedOnDate: Date!
+  note: String
+}
+
+input SavingsDepositInput {
+  accountId: UUID!
+  transactionDate: Date!
+  transactionAmount: Float!
+  paymentTypeId: UUID
+  note: String
+  receiptNumber: String
+  checkNumber: String
+  routingCode: String
+  bankNumber: String
+  accountNumber: String
+}
+
+input SavingsWithdrawalInput {
+  accountId: UUID!
+  transactionDate: Date!
+  transactionAmount: Float!
+  paymentTypeId: UUID
+  note: String
+  receiptNumber: String
+  checkNumber: String
+  routingCode: String
+  bankNumber: String
+  accountNumber: String
+}
+
+input SavingsCloseInput {
+  accountId: UUID!
+  closedOnDate: Date!
+  note: String
+  transferAccountId: UUID
+}
+
+input InterestCalculationInput {
+  accountId: UUID!
+  calculateAsOf: Date
+}
+
+input PostInterestInput {
+  postingDate: Date!
+  accountIds: [UUID!]
+}
+
+input StatementGenerateInput {
+  accountId: UUID!
+  fromDate: Date!
+  toDate: Date!
+  includeDetails: Boolean
+}
+
+input SavingsSearchInput {
+  clientId: UUID
+  accountNo: String
+  externalId: String
+  status: SavingsAccountStatus
+  productId: UUID
+  fieldOfficerId: UUID
+  minBalance: Float
+  maxBalance: Float
+  includeJointAccounts: Boolean
+  includeInactive: Boolean
+  dateFrom: Date
+  dateTo: Date
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input SavingsTransactionSearchInput {
+  accountId: UUID!
+  transactionType: String
+  fromDate: Date
+  toDate: Date
+  minAmount: Float
+  maxAmount: Float
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+# ===== Response Types =====
+
+type SavingsAccountCreateResponse {
+  success: Boolean!
+  savingsId: UUID!
+  accountNo: String!
+  clientId: UUID!
+  clientName: String!
+  productName: String!
+  message: String!
+  status: String!
+}
+
+type SavingsAccountApproveResponse {
+  success: Boolean!
+  accountId: UUID!
+  message: String!
+  approvedOnDate: Date!
+}
+
+type SavingsAccountActivateResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  productName: String!
+  message: String!
+  activatedOnDate: Date!
+  openingBalance: Float
+  openingBalanceTransactionId: UUID
+}
+
+type SavingsTransactionResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  message: String!
+  transactionId: UUID!
+  transactionDate: Date!
+  amount: Float!
+  runningBalance: Float!
+  previousBalance: Float!
+  currencyCode: String!
+  transactionType: String!
+  receiptNumber: String
+}
+
+type SavingsCloseResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  message: String!
+  closedOnDate: Date!
+  balanceTransferred: Boolean!
+  transferAmount: Float!
+  transferAccountId: UUID
+}
+
+type PostInterestResponse {
+  success: Boolean!
+  message: String!
+  accountsProcessed: Int!
+  failedAccounts: Int!
+  totalInterestPosted: Float!
+  postingDate: Date!
+}
+
+type SavingsTransactionListResponse {
+  totalCount: Int!
+  transactions: [SavingsTransaction!]!
+}
+
+type SavingsAccountListResponse {
+  totalCount: Int!
+  accounts: [SavingsAccountSummary!]!
+}
+
+# ===== Mutation Types =====
+
+type Mutation {
+  # Account management
+  createSavingsAccount(input: SavingsAccountCreateInput!): SavingsAccountCreateResponse!
+  approveSavingsAccount(input: SavingsAccountApproveInput!): SavingsAccountApproveResponse!
+  activateSavingsAccount(input: SavingsAccountActivateInput!): SavingsAccountActivateResponse!
+  closeSavingsAccount(input: SavingsCloseInput!): SavingsCloseResponse!
+  
+  # Transaction processing
+  depositToSavings(input: SavingsDepositInput!): SavingsTransactionResponse!
+  withdrawFromSavings(input: SavingsWithdrawalInput!): SavingsTransactionResponse!
+  
+  # Interest processing
+  calculateSavingsInterest(input: InterestCalculationInput!): InterestCalculation!
+  postInterestToSavings(input: PostInterestInput!): PostInterestResponse!
+  
+  # Statement generation
+  generateSavingsStatement(input: StatementGenerateInput!): SavingsStatement!
+}
+
+# ===== Query Type =====
+
+type Query {
+  # Account queries
+  getSavingsAccount(id: UUID!): SavingsAccount
+  searchSavingsAccounts(input: SavingsSearchInput!): SavingsAccountListResponse!
+  getClientSavingsAccounts(clientId: UUID!): [SavingsAccountSummary!]!
+  
+  # Transaction queries
+  getSavingsTransaction(id: UUID!): SavingsTransaction
+  searchSavingsTransactions(input: SavingsTransactionSearchInput!): SavingsTransactionListResponse!
+  
+  # Statement queries
+  getSavingsStatement(id: UUID!): SavingsStatement
+  getSavingsStatements(accountId: UUID!, limit: Int, offset: Int): [SavingsStatement!]!
+}
+
+# Required scalar types
+scalar UUID
+scalar Date
+scalar JSONObject

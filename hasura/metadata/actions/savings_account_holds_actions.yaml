@@ -1,0 +1,304 @@
+actions:
+  - name: createSavingsAccountHold
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/holds/create"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to create a hold on a savings account
+
+  - name: releaseSavingsAccountHold
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/holds/release"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to release a hold on a savings account
+
+  - name: updateSavingsAccountHold
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/holds/update"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to update a hold on a savings account
+
+  - name: getSavingsAccountHolds
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/holds/get"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+      - role: client_self_service
+    comment: Action to get holds on a savings account
+
+custom_types:
+  enums:
+    - name: SavingsHoldType
+      values:
+        - legal
+        - administrative
+        - customer_requested
+        - fraud_prevention
+        - debt_recovery
+        - tax_lien
+        - loan_collateral
+        - regulatory
+        - system
+    
+    - name: SavingsHoldStatus
+      values:
+        - active
+        - expired
+        - released
+        - cancelled
+    
+    - name: SavingsHoldReleaseMode
+      values:
+        - automatic
+        - manual
+
+  input_objects:
+    - name: SavingsAccountHoldCreateInput
+      fields:
+        - name: savingsAccountId
+          type: uuid!
+        - name: amount
+          type: numeric!
+        - name: holdType
+          type: SavingsHoldType!
+        - name: holdReasonCode
+          type: String!
+        - name: holdReasonDescription
+          type: String
+        - name: holdStartDate
+          type: timestamptz!
+        - name: holdEndDate
+          type: timestamptz
+        - name: releaseMode
+          type: SavingsHoldReleaseMode
+        - name: externalReferenceId
+          type: String
+        - name: enforcingEntity
+          type: String
+        - name: enforcingPerson
+          type: String
+        - name: isFullAccountBlock
+          type: Boolean
+        - name: isCreditBlock
+          type: Boolean
+        - name: isDebitBlock
+          type: Boolean
+    
+    - name: SavingsAccountHoldReleaseInput
+      fields:
+        - name: holdId
+          type: uuid!
+        - name: releaseNotes
+          type: String
+        - name: transactionReference
+          type: String
+    
+    - name: SavingsAccountHoldUpdateInput
+      fields:
+        - name: holdId
+          type: uuid!
+        - name: amount
+          type: numeric
+        - name: holdType
+          type: SavingsHoldType
+        - name: holdReasonCode
+          type: String
+        - name: holdReasonDescription
+          type: String
+        - name: holdEndDate
+          type: timestamptz
+        - name: releaseMode
+          type: SavingsHoldReleaseMode
+        - name: externalReferenceId
+          type: String
+        - name: enforcingEntity
+          type: String
+        - name: enforcingPerson
+          type: String
+        - name: isFullAccountBlock
+          type: Boolean
+        - name: isCreditBlock
+          type: Boolean
+        - name: isDebitBlock
+          type: Boolean
+    
+    - name: SavingsAccountHoldsGetInput
+      fields:
+        - name: savingsAccountId
+          type: uuid!
+        - name: status
+          type: [SavingsHoldStatus!]
+        - name: holdType
+          type: [SavingsHoldType!]
+        - name: fromDate
+          type: timestamptz
+        - name: toDate
+          type: timestamptz
+        - name: includeExpired
+          type: Boolean
+        - name: includeReleased
+          type: Boolean
+        - name: sortBy
+          type: String
+        - name: sortOrder
+          type: String
+
+  objects:
+    - name: SavingsAccountHold
+      fields:
+        - name: id
+          type: uuid!
+        - name: savingsAccountId
+          type: uuid!
+        - name: amount
+          type: numeric!
+        - name: holdType
+          type: SavingsHoldType!
+        - name: holdReasonCode
+          type: String!
+        - name: holdReasonDescription
+          type: String
+        - name: holdStartDate
+          type: timestamptz!
+        - name: holdEndDate
+          type: timestamptz
+        - name: releaseMode
+          type: SavingsHoldReleaseMode!
+        - name: status
+          type: SavingsHoldStatus!
+        - name: externalReferenceId
+          type: String
+        - name: enforcingEntity
+          type: String
+        - name: enforcingPerson
+          type: String
+        - name: releaseNotes
+          type: String
+        - name: releasedByUserId
+          type: uuid
+        - name: releasedOnDate
+          type: timestamptz
+        - name: transactionReference
+          type: String
+        - name: isFullAccountBlock
+          type: Boolean!
+        - name: isCreditBlock
+          type: Boolean!
+        - name: isDebitBlock
+          type: Boolean!
+        - name: createdDate
+          type: timestamptz
+        - name: lastModifiedDate
+          type: timestamptz
+    
+    - name: SavingsAccountHoldCreateResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: holdId
+          type: uuid!
+        - name: savingsAccountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: amount
+          type: numeric!
+        - name: holdType
+          type: SavingsHoldType!
+        - name: status
+          type: SavingsHoldStatus!
+        - name: accountSubStatus
+          type: String!
+        - name: availableBalance
+          type: numeric!
+    
+    - name: SavingsAccountHoldReleaseResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: holdId
+          type: uuid!
+        - name: savingsAccountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: releasedAmount
+          type: numeric!
+        - name: releasedOnDate
+          type: timestamptz!
+        - name: accountSubStatus
+          type: String!
+        - name: availableBalance
+          type: numeric!
+    
+    - name: SavingsAccountHoldUpdateResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: holdId
+          type: uuid!
+        - name: savingsAccountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: amount
+          type: numeric!
+        - name: holdType
+          type: SavingsHoldType!
+        - name: status
+          type: SavingsHoldStatus!
+        - name: accountSubStatus
+          type: String!
+        - name: availableBalance
+          type: numeric!
+    
+    - name: SavingsAccountHoldsGetResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String
+        - name: savingsAccountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: accountBalance
+          type: numeric!
+        - name: totalHoldAmount
+          type: numeric!
+        - name: availableBalance
+          type: numeric!
+        - name: holds
+          type: [SavingsAccountHold!]!

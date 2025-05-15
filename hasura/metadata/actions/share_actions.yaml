@@ -1,0 +1,322 @@
+- name: createShareProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/product/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getShareProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/product/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getShareProducts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/products"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: createShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: approveShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/approve"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: rejectShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/reject"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: activateShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/activate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: closeShareAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/account/close"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getClientShareAccounts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/client/accounts"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getGroupShareAccounts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/group/accounts"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getShareTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/template"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: submitSharePurchaseRequest
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/purchase/submit"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: approveSharePurchaseRequest
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/purchase/approve"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: rejectSharePurchaseRequest
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/purchase/reject"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: redeemShares
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/redeem"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: declareShareProductDividend
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/dividend/declare"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: processShareDividend
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/dividend/process"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+# Share Certificate Template Actions
+- name: getShareCertificateTemplates
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/templates"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getShareCertificateTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/template/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createShareCertificateTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/template/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: updateShareCertificateTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/template/update"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+# Share Certificate Series Actions
+- name: getShareCertificateSeries
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/series/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createShareCertificateSeries
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/series/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: updateShareCertificateSeries
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/series/update"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+# Share Certificate Actions
+- name: getShareCertificateById
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getShareCertificates
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificates"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: generateShareCertificate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/generate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: revokeShareCertificate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/revoke"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: regenerateShareCertificate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/regenerate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: downloadShareCertificate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/download"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: verifyShareCertificate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/verify"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+# Share Certificate Batch Actions
+- name: getShareCertificateBatches
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/batches"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getShareCertificateBatch
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/batch/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: startShareCertificateBatch
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/share/certificate/batch/start"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user

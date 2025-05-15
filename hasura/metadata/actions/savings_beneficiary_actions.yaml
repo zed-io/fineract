@@ -1,0 +1,72 @@
+# Savings Beneficiary Management Actions for Hasura Backend
+
+actions:
+  # Beneficiary Management Actions
+  - name: addSavingsBeneficiary
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/beneficiary/add"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to add a beneficiary to a savings account
+
+  - name: updateSavingsBeneficiary
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/beneficiary/update"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to update a savings account beneficiary
+
+  - name: removeSavingsBeneficiary
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/beneficiary/remove"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to remove a beneficiary from a savings account
+
+  - name: getSavingsBeneficiaries
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/beneficiary/list"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to list beneficiaries for a savings account
+
+# Custom types definitions
+custom_types:
+  input_objects:
+    - name: SavingsBeneficiaryInput
+    - name: SavingsBeneficiaryUpdateInput
+    - name: SavingsBeneficiaryRemoveInput
+    - name: SavingsBeneficiaryListInput
+    
+  objects:
+    - name: SavingsBeneficiaryResponse
+    - name: SavingsBeneficiaryListResponse

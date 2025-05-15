@@ -1,0 +1,164 @@
+- name: getPaymentGatewayProviders
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/provider/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getPaymentGatewayProviderById
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/provider/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: registerPaymentGatewayProvider
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/provider/register"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: updatePaymentGatewayProvider
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/provider/update"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: deletePaymentGatewayProvider
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/provider/delete"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getPaymentGatewayTransactions
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getPaymentGatewayTransactionById
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createPaymentTransaction
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: executePayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/execute"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: checkPaymentStatus
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/status"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: refundPayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/transaction/refund"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getClientPaymentMethods
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/payment-method/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: savePaymentMethod
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/payment-method/save"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: deletePaymentMethod
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/payment-method/delete"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getRecurringPaymentConfigurations
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/recurring/list"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: createRecurringPaymentConfiguration
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/recurring/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: updateRecurringPaymentStatus
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/recurring/update-status"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: processPaymentWebhook
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/payment-gateway/webhook/process"
+  permissions:
+    - role: admin
+    - role: anonymous

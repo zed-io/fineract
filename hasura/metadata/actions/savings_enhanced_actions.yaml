@@ -1,0 +1,256 @@
+# Enhanced Savings Actions Configuration for Credit Union Hasura Backend
+
+actions:
+  # Account Management Actions
+  - name: createSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/create"
+      timeout: 60
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to create a new savings account
+
+  - name: approveSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/approve"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to approve a savings account application
+
+  - name: activateSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/activate"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to activate an approved savings account
+
+  - name: closeSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/close"
+      timeout: 60
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to close a savings account
+
+  # Transaction Processing Actions
+  - name: depositToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/deposit"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to make a deposit to a savings account
+
+  - name: withdrawFromSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/withdraw"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to make a withdrawal from a savings account
+
+  # Interest Processing Actions
+  - name: calculateSavingsInterest
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/calculate-interest"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to calculate interest for a savings account
+
+  - name: postInterestToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/post-interest"
+      timeout: 120
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+    comment: Action to post interest to savings accounts
+
+  # Statement Generation Actions
+  - name: generateSavingsStatement
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/statement"
+      timeout: 60
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to generate a statement for a savings account
+
+  # Query Actions for Complex Data Retrieval
+  - name: getSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/get"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to get detailed savings account information
+
+  - name: searchSavingsAccounts
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/search"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+    comment: Action to search for savings accounts based on criteria
+
+  - name: getClientSavingsAccounts
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/client-accounts"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to get all savings accounts for a client
+
+  - name: searchSavingsTransactions
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/v1/savings/transactions"
+      timeout: 30
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: credit_union_staff
+      - role: member
+    comment: Action to search for savings transactions based on criteria
+
+# Custom types definitions
+custom_types:
+  enums:
+    - name: SavingsAccountStatus
+      values:
+        - SUBMITTED_AND_PENDING_APPROVAL
+        - APPROVED
+        - ACTIVE
+        - CLOSED
+        - REJECTED
+        - WITHDRAWN_BY_CLIENT
+        - DORMANT
+        - ESCHEAT
+        
+    - name: SavingsAccountSubStatus
+      values:
+        - NONE
+        - INACTIVE
+        - DORMANT
+        - ESCHEAT
+        - BLOCK
+        - BLOCK_CREDIT
+        - BLOCK_DEBIT
+        
+  input_objects:
+    - name: SavingsAccountCreateInput
+    - name: JointHolderInput
+    - name: BeneficiaryInput
+    - name: SavingsAccountApproveInput
+    - name: SavingsAccountActivateInput
+    - name: SavingsDepositInput
+    - name: SavingsWithdrawalInput
+    - name: SavingsCloseInput
+    - name: InterestCalculationInput
+    - name: PostInterestInput
+    - name: StatementGenerateInput
+    - name: SavingsSearchInput
+    - name: SavingsTransactionSearchInput
+    
+  objects:
+    - name: SavingsAccount
+    - name: SavingsAccountSummary
+    - name: JointHolder
+    - name: Beneficiary
+    - name: AccountNote
+    - name: SavingsTransaction
+    - name: SavingsStatement
+    - name: StatementTransaction
+    - name: InterestCalculation
+    - name: SavingsAccountCreateResponse
+    - name: SavingsAccountApproveResponse
+    - name: SavingsAccountActivateResponse
+    - name: SavingsTransactionResponse
+    - name: SavingsCloseResponse
+    - name: PostInterestResponse
+    - name: SavingsTransactionListResponse
+    - name: SavingsAccountListResponse
+    
+  scalars:
+    - name: UUID
+    - name: Date
+    - name: JSONObject

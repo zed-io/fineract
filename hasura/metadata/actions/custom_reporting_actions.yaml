@@ -1,0 +1,468 @@
+# Custom Report Template Actions
+- name: createCustomReportTemplate
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/templates/create'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateCustomReportTemplate
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/templates/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getCustomReportTemplate
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/templates/get'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: listCustomReportTemplates
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/templates/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteCustomReportTemplate
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/templates/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Custom Report Parameter Actions
+- name: addCustomReportParameter
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/parameters/add'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateCustomReportParameter
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/parameters/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteCustomReportParameter
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/parameters/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Custom Report Execution Actions
+- name: executeCustomReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/execute'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getCustomReportExecutionHistory
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/executions/history'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Custom Report Saved Query Actions
+- name: saveCustomReportQuery
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/queries/save'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getSavedCustomReportQueries
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/queries/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteSavedCustomReportQuery
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/queries/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Visualization Component Actions
+- name: createVisualizationComponent
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/create'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateVisualizationComponent
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getVisualizationComponent
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/get'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: listVisualizationComponents
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteVisualizationComponent
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: renderVisualization
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/visualization/components/render'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Dashboard Actions
+- name: createDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/create'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/get'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: listDashboards
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getDashboardWithData
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/data'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Dashboard Panel Actions
+- name: addDashboardPanel
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/panels/add'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateDashboardPanel
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/panels/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteDashboardPanel
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/panels/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# User Dashboard Preferences Actions
+- name: setUserDashboardPreference
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/preferences/set'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getUserDashboardPreferences
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/preferences/get'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Scheduled Dashboard Actions
+- name: scheduleReportDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/schedule/create'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateScheduledDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/schedule/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getScheduledDashboards
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/schedule/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: deleteScheduledDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/schedule/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+# Data Mart Actions
+- name: createDataMart
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/create'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+
+- name: updateDataMart
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/update'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+
+- name: getDataMart
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/get'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: listDataMarts
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/list'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: refreshDataMart
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/refresh'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+
+- name: deleteDataMart
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/datamarts/delete'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+
+# Export Actions
+- name: exportCustomReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/custom/export'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: exportDashboard
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/dashboards/export'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user

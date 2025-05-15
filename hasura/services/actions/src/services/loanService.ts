@@ -3,6 +3,10 @@ import Decimal from 'decimal.js';
 import { db } from '../utils/db';
 import { logger } from '../utils/logger';
 import { getLoanById, updateLoanStatus, createLoanTransaction, createPaymentDetail, updateLoanBalances } from '../repositories/loanRepository';
+import { LoanCalculationService } from './loanCalculationService';
+
+// Initialize the loan calculation service
+const loanCalculationService = new LoanCalculationService();
 
 export async function approveLoan(input, userId) {
   const { loanId, approvedOnDate, approvedAmount, note } = input;
@@ -298,7 +302,7 @@ export async function writeOffLoan(input, userId) {
 }
 
 export async function calculateLoanSchedule(input) {
-  const { 
+  const {
     productId,
     principalAmount,
     numberOfRepayments,
@@ -311,13 +315,15 @@ export async function calculateLoanSchedule(input) {
     termFrequency,
     termFrequencyType,
     graceOnPrincipal,
-    graceOnInterest
+    graceOnInterest,
+    graceOnInterestCharged,
+    submittedOnDate
   } = input;
-  
-  logger.info('Calculating loan schedule', { 
-    productId, 
-    principalAmount, 
-    numberOfRepayments 
+
+  logger.info('Calculating loan schedule', {
+    productId,
+    principalAmount,
+    numberOfRepayments
   });
 
   try {
@@ -326,43 +332,62 @@ export async function calculateLoanSchedule(input) {
       'SELECT currency_code FROM fineract_default.loan_product WHERE id = $1',
       [productId]
     );
-    
+
     if (productQuery.rows.length === 0) {
       throw new Error('Loan product not found');
     }
-    
+
     const currency = productQuery.rows[0].currency_code;
-    
-    // Generate schedule periods
-    const periods = generateLoanSchedule(
-      principalAmount,
-      numberOfRepayments,
-      interestRatePerPeriod,
-      disbursementDate,
-      repaymentEvery,
-      repaymentFrequencyType,
-      interestType,
-      amortizationType,
-      graceOnPrincipal,
-      graceOnInterest
-    );
-    
-    // Calculate totals
-    const totalPrincipal = periods.reduce((sum, period) => sum + period.principalAmount, 0);
-    const totalInterest = periods.reduce((sum, period) => sum + period.interestAmount, 0);
-    const totalFees = periods.reduce((sum, period) => sum + period.feeAmount, 0);
-    const totalRepayment = totalPrincipal + totalInterest + totalFees;
-    
+
+    // Create loan application terms
+    const loanApplicationTerms = {
+      principalAmount: principalAmount,
+      currency: currency,
+      loanTermFrequency: termFrequency,
+      loanTermFrequencyType: termFrequencyType,
+      numberOfRepayments: numberOfRepayments,
+      repaymentEvery: repaymentEvery,
+      repaymentFrequencyType: repaymentFrequencyType,
+      interestRatePerPeriod: interestRatePerPeriod,
+      interestMethod: interestType,
+      amortizationMethod: amortizationType,
+      expectedDisbursementDate: disbursementDate,
+      submittedOnDate: submittedOnDate || new Date().toISOString().split('T')[0],
+      graceOnPrincipalPayment: graceOnPrincipal || 0,
+      graceOnInterestPayment: graceOnInterest || 0,
+      graceOnInterestCharged: graceOnInterestCharged || 0
+    };
+
+    // Generate schedule using the calculation service
+    const schedule = await loanCalculationService.generateRepaymentSchedule(loanApplicationTerms);
+
+    // Format for compatibility with existing callers
+    const periods = schedule.periods
+      .filter(period => period.periodType === 'repayment')
+      .map(period => ({
+        periodNumber: period.periodNumber,
+        fromDate: period.fromDate,
+        dueDate: period.dueDate,
+        principalAmount: period.principalOriginalDue,
+        interestAmount: period.interestOriginalDue,
+        feeAmount: period.feeChargesDue,
+        penaltyAmount: period.penaltyChargesDue,
+        totalDue: period.totalOriginalDueForPeriod,
+        outstandingBalance: period.principalLoanBalanceOutstanding
+      }));
+
     return {
       success: true,
       currency,
+      loanTermInDays: schedule.loanTermInDays,
       periods,
-      totalPrincipal,
-      totalInterest,
-      totalFees,
-      totalRepayment
+      totalPrincipal: schedule.totalPrincipal,
+      totalInterest: schedule.totalInterest,
+      totalFees: schedule.totalFeeCharges,
+      totalPenalties: schedule.totalPenaltyCharges,
+      totalRepayment: schedule.totalRepaymentExpected
     };
-    
+
   } catch (error) {
     logger.error('Error calculating loan schedule', { error });
     return {
@@ -436,12 +461,149 @@ function calculateOutstandingBalance(loan, principalPaid, interestPaid, feesPaid
   const interestOutstanding = new Decimal(loan.interest_outstanding_derived).minus(interestPaid);
   const feesOutstanding = new Decimal(loan.fee_charges_outstanding_derived).minus(feesPaid);
   const penaltiesOutstanding = new Decimal(loan.penalty_charges_outstanding_derived).minus(penaltiesPaid);
-  
+
   return principalOutstanding
     .plus(interestOutstanding)
     .plus(feesOutstanding)
     .plus(penaltiesOutstanding)
     .toNumber();
+}
+
+/**
+ * Calculate prepayment amount for a loan
+ * Uses the loan calculation service to determine the full prepayment amount
+ *
+ * @param input The input containing loanId and prepayment date
+ * @param userId The ID of the user making the request
+ * @returns Prepayment details including breakdown of payment portions
+ */
+export async function calculatePrepayment(input, userId) {
+  const { loanId, transactionDate, paymentAmount, includeEarlyPaymentPenalty = true } = input;
+  logger.info('Calculating prepayment amount', { loanId, transactionDate, userId });
+
+  try {
+    // Fetch loan details
+    const loanQuery = await db.query(
+      `SELECT
+        l.*,
+        lp.early_repayment_penalty_applicable,
+        lp.early_repayment_penalty_percentage
+      FROM
+        fineract_default.loan l
+      JOIN
+        fineract_default.loan_product lp ON l.product_id = lp.id
+      WHERE
+        l.id = $1`,
+      [loanId]
+    );
+
+    if (loanQuery.rows.length === 0) {
+      throw new Error('Loan not found');
+    }
+
+    const loan = loanQuery.rows[0];
+
+    // Validate loan status
+    if (loan.loan_status !== 'active') {
+      throw new Error(`Cannot calculate prepayment for loan with status ${loan.loan_status}`);
+    }
+
+    // Calculate prepayment using the loan calculation service
+    const prepayment = await loanCalculationService.calculatePrepaymentAmount(
+      loan,
+      transactionDate,
+      paymentAmount,
+      includeEarlyPaymentPenalty
+    );
+
+    return {
+      success: true,
+      loanId,
+      prepaymentBreakdown: {
+        principalPortion: prepayment.principalPortion,
+        interestPortion: prepayment.interestPortion,
+        feeChargesPortion: prepayment.feeChargesPortion,
+        penaltyChargesPortion: prepayment.penaltyChargesPortion,
+        totalPrepaymentAmount: prepayment.totalPrepaymentAmount,
+        transactionDate: prepayment.transactionDate,
+        additionalPrincipalRequired: prepayment.additionalPrincipalRequired || 0
+      }
+    };
+  } catch (error) {
+    logger.error('Error calculating prepayment amount', { error, loanId });
+    return {
+      success: false,
+      message: error.message
+    };
+  }
+}
+
+/**
+ * Calculate the benefits of early repayment
+ * Helps borrowers understand potential interest savings
+ *
+ * @param input The input containing loanId and prepayment date
+ * @param userId The ID of the user making the request
+ * @returns Details of potential interest savings and time savings
+ */
+export async function calculatePrepaymentBenefits(input, userId) {
+  const { loanId, transactionDate } = input;
+  logger.info('Calculating prepayment benefits', { loanId, transactionDate, userId });
+
+  try {
+    // Fetch loan details
+    const loanQuery = await db.query(
+      `SELECT
+        l.*,
+        lp.early_repayment_penalty_applicable,
+        lp.early_repayment_penalty_percentage
+      FROM
+        fineract_default.loan l
+      JOIN
+        fineract_default.loan_product lp ON l.product_id = lp.id
+      WHERE
+        l.id = $1`,
+      [loanId]
+    );
+
+    if (loanQuery.rows.length === 0) {
+      throw new Error('Loan not found');
+    }
+
+    const loan = loanQuery.rows[0];
+
+    // Validate loan status
+    if (loan.loan_status !== 'active') {
+      throw new Error(`Cannot calculate prepayment benefits for loan with status ${loan.loan_status}`);
+    }
+
+    // Calculate benefits using the loan calculation service
+    const benefits = await loanCalculationService.calculateEarlyRepaymentBenefits(
+      loan,
+      transactionDate
+    );
+
+    return {
+      success: true,
+      loanId,
+      benefits: {
+        originalLoanEndDate: benefits.originalLoanEndDate,
+        proposedPrepaymentDate: benefits.proposedPrepaymentDate,
+        totalScheduledInterest: benefits.totalScheduledInterest,
+        interestPaidToDate: benefits.interestPaidToDate,
+        remainingInterestToPay: benefits.remainingInterestToPay,
+        interestSavings: benefits.interestSavings,
+        daysSaved: benefits.daysSaved,
+        paymentsRemaining: benefits.paymentsRemaining
+      }
+    };
+  } catch (error) {
+    logger.error('Error calculating prepayment benefits', { error, loanId });
+    return {
+      success: false,
+      message: error.message
+    };
+  }
 }
 
 function generateLoanSchedule(
@@ -574,4 +736,121 @@ function calculatePmt(rate, nper, pv, fv = 0, type = 0) {
   }
   
   return pmt;
+}
+
+/**
+ * Processes down payment for a loan
+ * Can be used when down payment wasn't processed at disbursement time
+ *
+ * @param input The input containing loanId and payment details
+ * @param userId The ID of the user making the request
+ * @returns Details of the processed down payment
+ */
+export async function processDownPayment(input, userId) {
+  const { 
+    loanId, 
+    transactionDate,
+    paymentTypeId,
+    note,
+    receiptNumber,
+    checkNumber, 
+    routingCode,
+    bankNumber,
+    accountNumber
+  } = input;
+  logger.info('Processing down payment', { loanId, transactionDate, userId });
+
+  return db.transaction(async (client) => {
+    // Get loan details
+    const loan = await getLoanById(client, loanId);
+    if (!loan) {
+      throw new Error('Loan not found');
+    }
+
+    // Validate loan status
+    if (loan.loan_status !== 'active') {
+      throw new Error(`Cannot process down payment for loan with status ${loan.loan_status}`);
+    }
+
+    // Validate down payment is enabled and not yet processed
+    if (!loan.enable_down_payment) {
+      throw new Error('Down payment is not enabled for this loan');
+    }
+
+    if (loan.down_payment_transaction_id) {
+      throw new Error('Down payment has already been processed for this loan');
+    }
+
+    // Calculate down payment amount
+    let downPaymentAmount = 0;
+    if (loan.down_payment_type === DownPaymentType.FIXED_AMOUNT) {
+      downPaymentAmount = loan.down_payment_amount;
+    } else if (loan.down_payment_type === DownPaymentType.PERCENTAGE) {
+      downPaymentAmount = (loan.down_payment_percentage / 100) * loan.principal_amount;
+      // Round to 2 decimal places
+      downPaymentAmount = Math.round(downPaymentAmount * 100) / 100;
+    } else {
+      throw new Error(`Invalid down payment type: ${loan.down_payment_type}`);
+    }
+
+    if (downPaymentAmount <= 0) {
+      throw new Error('Down payment amount must be greater than zero');
+    }
+
+    // Create payment details if provided
+    let paymentDetailId = null;
+    if (paymentTypeId) {
+      paymentDetailId = await createPaymentDetail(client, {
+        paymentTypeId,
+        accountNumber,
+        checkNumber,
+        routingCode,
+        receiptNumber,
+        bankNumber
+      });
+    }
+
+    // Create down payment transaction
+    const transactionId = await createLoanTransaction(client, {
+      loanId,
+      paymentDetailId,
+      transactionType: LoanTransactionType.DOWN_PAYMENT,
+      transactionDate: transactionDate || new Date().toISOString().split('T')[0],
+      amount: downPaymentAmount,
+      principalPortion: downPaymentAmount, // All principal for down payment
+      interestPortion: 0,
+      feeChargesPortion: 0,
+      penaltyChargesPortion: 0,
+      submittedOnDate: transactionDate || new Date().toISOString().split('T')[0],
+      submittedByUserId: userId,
+      note: note || 'Down payment processed'
+    });
+
+    // Update loan balances
+    const principalOutstanding = new Decimal(loan.principal_outstanding_derived).minus(downPaymentAmount).toNumber();
+    await updateLoanBalances(client, loanId, {
+      principalPaid: downPaymentAmount,
+      interestPaid: 0,
+      feesPaid: 0,
+      penaltiesPaid: 0,
+      outstandingBalance: principalOutstanding
+    });
+
+    // Update loan with down payment transaction ID
+    await client.query(
+      'UPDATE fineract_default.loan SET down_payment_transaction_id = $1 WHERE id = $2',
+      [transactionId, loanId]
+    );
+
+    // Return success response
+    return {
+      success: true,
+      loanId,
+      message: 'Down payment processed successfully',
+      transactionId,
+      transactionDate: transactionDate || new Date().toISOString().split('T')[0],
+      downPaymentAmount,
+      outstandingBalance: principalOutstanding
+    };
+  });
 }

@@ -1,0 +1,110 @@
+type ConsolidatedReport {
+  id: String!
+  name: String!
+  description: String
+  reportType: String!
+  generatedOn: String!
+  data: JSON!
+  metadata: JSON
+  format: String!
+}
+
+type CrossModuleMetric {
+  id: String!
+  name: String!
+  value: Float!
+  previousValue: Float
+  changePercentage: Float
+  trend: String
+  category: String!
+  subCategory: String
+  metadata: JSON
+}
+
+type DataSource {
+  id: String!
+  name: String!
+  moduleType: String!
+  status: String!
+  lastSyncTime: String
+  recordCount: Int
+}
+
+type CrossModuleDashboard {
+  id: String!
+  name: String!
+  description: String
+  generatedOn: String!
+  metrics: [CrossModuleMetric!]!
+  dataSources: [DataSource!]!
+  visualizationData: JSON!
+}
+
+input ConsolidatedReportInput {
+  name: String!
+  description: String
+  reportType: String!
+  modules: [String!]!
+  filters: JSON
+  parameters: JSON
+  format: String!
+  includeMetadata: Boolean
+}
+
+type ConsolidatedReportResponse {
+  success: Boolean!
+  report: ConsolidatedReport
+  message: String
+}
+
+input CrossModuleDashboardInput {
+  name: String!
+  description: String
+  modules: [String!]!
+  metrics: [String!]!
+  dateRange: JSON
+  filters: JSON
+  parameters: JSON
+}
+
+type CrossModuleDashboardResponse {
+  success: Boolean!
+  dashboard: CrossModuleDashboard
+  message: String
+}
+
+input DataSourceSyncInput {
+  moduleTypes: [String!]!
+  fullSync: Boolean
+}
+
+type DataSourceSyncResponse {
+  success: Boolean!
+  dataSources: [DataSource!]!
+  message: String
+}
+
+# Analytics insights types
+type InsightRecommendation {
+  id: String!
+  title: String!
+  description: String!
+  insightType: String!
+  relevanceScore: Float!
+  metrics: [CrossModuleMetric!]!
+  generatedOn: String!
+  metadata: JSON
+}
+
+input AnalyticsInsightsInput {
+  modules: [String!]!
+  insightTypes: [String!]
+  limit: Int
+  minRelevanceScore: Float
+}
+
+type AnalyticsInsightsResponse {
+  success: Boolean!
+  insights: [InsightRecommendation!]!
+  message: String
+}

@@ -1,0 +1,36 @@
+actions:
+- name: calculatePrematureClosure
+  definition:
+    kind: synchronous
+    handler: '{{ACTIONS_BASE_URL}}/recurring-deposit/premature-closure/calculate'
+    forward_client_headers: true
+    headers:
+    - name: x-hasura-user-id
+      value_from_env: HASURA_ADMIN_SECRET
+  permissions:
+  - role: user
+  - role: admin
+
+- name: processPrematureClosure
+  definition:
+    kind: synchronous
+    handler: '{{ACTIONS_BASE_URL}}/recurring-deposit/premature-closure/process'
+    forward_client_headers: true
+    headers:
+    - name: x-hasura-user-id
+      value_from_env: HASURA_ADMIN_SECRET
+  permissions:
+  - role: user
+  - role: admin
+
+- name: getPrematureClosureHistory
+  definition:
+    kind: synchronous
+    handler: '{{ACTIONS_BASE_URL}}/recurring-deposit/premature-closure/history'
+    forward_client_headers: true
+    headers:
+    - name: x-hasura-user-id
+      value_from_env: HASURA_ADMIN_SECRET
+  permissions:
+  - role: user
+  - role: admin

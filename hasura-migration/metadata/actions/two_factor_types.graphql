@@ -1,0 +1,156 @@
+# Two-Factor Authentication GraphQL Types
+
+# OTP Delivery Method
+type OTPDeliveryMethod {
+  name: String!
+  target: String!
+}
+
+# OTP Request Metadata
+type OTPMetadata {
+  deliveryMethod: OTPDeliveryMethod!
+  tokenLiveTimeInSec: Int!
+  extendedAccessToken: Boolean!
+}
+
+# Two-Factor Access Token Response
+type TwoFactorAccessToken {
+  token: String!
+  validFrom: String!
+  validTo: String!
+}
+
+# TOTP Configuration Response
+type TOTPConfiguration {
+  secretKey: String!
+  qrCodeUrl: String!
+  enabled: Boolean!
+  verified: Boolean!
+}
+
+# Trusted Device
+type TrustedDevice {
+  id: Int!
+  deviceId: String!
+  deviceName: String!
+  deviceType: String
+  lastIp: String
+  lastUsed: String!
+  expiresAt: String!
+  trusted: Boolean!
+}
+
+# Two-Factor Configuration Item
+type TwoFactorConfigItem {
+  name: String!
+  value: String!
+}
+
+# Two-Factor Configuration
+type TwoFactorConfig {
+  emailEnabled: Boolean!
+  smsEnabled: Boolean!
+  totpEnabled: Boolean!
+  trustedDevicesEnabled: Boolean!
+  otpTokenLength: Int!
+  otpTokenLiveTime: Int!
+  accessTokenLiveTime: Int!
+  accessTokenLiveTimeExtended: Int!
+  trustedDeviceLiveTime: Int!
+  configItems: [TwoFactorConfigItem!]!
+}
+
+# Input Types
+
+input RequestOTPInput {
+  deliveryMethod: String!
+  extendedToken: Boolean
+}
+
+input ValidateOTPInput {
+  token: String!
+  deviceInfo: DeviceInfoInput
+}
+
+input DeviceInfoInput {
+  deviceId: String!
+  deviceName: String!
+  deviceType: String
+  trustDevice: Boolean
+}
+
+input ValidateTOTPInput {
+  token: String!
+  deviceInfo: DeviceInfoInput
+}
+
+input SetupTOTPInput {
+  secretKey: String!
+  token: String!
+}
+
+input UpdateTrustedDeviceInput {
+  deviceId: String!
+  trusted: Boolean!
+}
+
+input TwoFactorConfigUpdateInput {
+  emailEnabled: Boolean
+  smsEnabled: Boolean
+  totpEnabled: Boolean
+  trustedDevicesEnabled: Boolean
+  otpTokenLength: Int
+  otpTokenLiveTime: Int
+  accessTokenLiveTime: Int
+  accessTokenLiveTimeExtended: Int
+  trustedDeviceLiveTime: Int
+  emailSubject: String
+  emailBody: String
+  smsProviderId: Int
+  smsText: String
+}
+
+# Queries
+type Query {
+  # Get available 2FA delivery methods for current user
+  twoFactorDeliveryMethods: [OTPDeliveryMethod!]!
+  
+  # Get TOTP configuration for current user
+  totpConfiguration: TOTPConfiguration
+  
+  # Get trusted devices for current user
+  trustedDevices: [TrustedDevice!]!
+  
+  # Get 2FA configuration (admin only)
+  twoFactorConfiguration: TwoFactorConfig!
+}
+
+# Mutations
+type Mutation {
+  # Request OTP via delivery method
+  requestOTP(input: RequestOTPInput!): OTPMetadata!
+  
+  # Validate OTP and get access token
+  validateOTP(input: ValidateOTPInput!): TwoFactorAccessToken!
+  
+  # Invalidate access token
+  invalidateAccessToken(token: String!): Boolean!
+  
+  # Setup TOTP for current user
+  setupTOTP: TOTPConfiguration!
+  
+  # Verify TOTP setup with a token
+  verifyTOTPSetup(input: SetupTOTPInput!): Boolean!
+  
+  # Validate TOTP and get access token
+  validateTOTP(input: ValidateTOTPInput!): TwoFactorAccessToken!
+  
+  # Disable TOTP for current user
+  disableTOTP(token: String!): Boolean!
+  
+  # Update trusted device status
+  updateTrustedDevice(input: UpdateTrustedDeviceInput!): Boolean!
+  
+  # Update 2FA configuration (admin only)
+  updateTwoFactorConfiguration(input: TwoFactorConfigUpdateInput!): TwoFactorConfig!
+}

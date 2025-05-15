@@ -1,0 +1,324 @@
+= Loan Calculation
+
+== Overview
+
+Apache Fineract provides advanced loan calculation capabilities that offer flexibility and accuracy in handling various loan scenarios. The loan calculation module handles key processes including installment calculation, schedule generation, repayment processing, and special loan features like down payments and multi-disbursements.
+
+The system is designed with a modular approach, allowing for different calculation strategies and extensive configuration options to meet diverse lending requirements across different financial institutions.
+
+== Core Components
+
+The loan calculation functionality consists of several key components:
+
+1. *Loan Calculation Engines*: Specialized calculation implementations for different loan types
+2. *Down Payment Handler*: Processes down payment requirements at disbursement
+3. *Multi-Disbursement Handler*: Manages loans with multiple disbursements
+4. *Holiday-Aware Scheduling*: Adjusts repayment dates based on holidays and working days
+5. *Transaction Processing*: Handles all loan transaction types and their impact on the loan schedule
+
+== Loan Calculation Engines
+
+Fineract offers different calculation engines for various loan types:
+
+* `DecliningBalanceEqualInstallmentsCalculationEngine`: Calculates installments with equal total amounts (principal + interest)
+* `DecliningBalanceEqualPrincipalCalculationEngine`: Calculates installments with equal principal portions
+* `AbstractLoanCalculationEngine`: Base class with shared functionality for loan calculation
+
+=== Factory Pattern
+
+The `LoanCalculationEngineFactory` creates and manages calculation engines based on:
+
+* Interest calculation method (Declining Balance, Flat, etc.)
+* Amortization method (Equal Installments, Equal Principal)
+
+[source,java]
+----
+public LoanCalculationEngine getEngine(InterestMethod interestMethod, AmortizationMethod amortizationMethod) {
+    CombinedMethodKey key = new CombinedMethodKey(interestMethod, amortizationMethod);
+    return enginesByMethod.get(key);
+}
+----
+
+=== Implementing Custom Calculation Engines
+
+To implement a new calculation engine:
+
+1. Create a class that implements `LoanCalculationEngine` or extends `AbstractLoanCalculationEngine`
+2. Define calculation logic for:
+   * `calculateLoanSchedule()`
+   * `calculateInstallmentAmount()`
+   * `calculateInterestForPeriod()`
+   * `calculatePrincipalForPeriod()`
+3. Assign a unique `LoanCalculationEngineType` for your engine
+4. Register the engine with Spring so it can be discovered by the factory
+
+== Down Payment Handling
+
+The down payment feature allows for an initial payment at the time of loan disbursement.
+
+=== Configuration
+
+Down payments are configured at the product level:
+
+* `enableDownPayment`: Enables/disables the down payment feature
+* `disbursedAmountPercentageForDownPayment`: Percentage of the disbursed amount to be paid as down payment
+* `enableAutoRepaymentForDownPayment`: Automatically creates the down payment transaction
+
+=== Down Payment Processing
+
+When a loan with down payment is disbursed:
+
+1. The system calculates the down payment amount based on the configured percentage
+2. It checks if the loan already has overpayments that can cover the down payment
+3. For any remaining down payment amount, it creates a down payment transaction
+4. The transaction is processed as a repayment, reducing the outstanding principal
+
+=== Code Example
+
+[source,java]
+----
+Money downPaymentMoney = Money.of(loan.getCurrency(),
+        MathUtil.percentageOf(disbursementTransaction.getAmount(), 
+        disbursedAmountPercentageForDownPayment, 19));
+
+// Round to multiples if configured
+if (loan.getLoanProduct().getInstallmentAmountInMultiplesOf() != null) {
+    downPaymentMoney = Money.roundToMultiplesOf(downPaymentMoney, 
+        loan.getLoanProduct().getInstallmentAmountInMultiplesOf());
+}
+----
+
+== Holiday-Aware Schedule Generation
+
+Fineract adjusts loan schedules to account for holidays and non-working days, ensuring that repayments are scheduled appropriately.
+
+=== Configuration
+
+The system supports several strategies for handling holidays:
+
+* `RESCHEDULE_NEXT_WORKING_DAY`: Move repayment to the next working day
+* `RESCHEDULE_NEXT_REPAYMENT_MEETING_DAY`: Reschedule to the next meeting day
+* `RESCHEDULE_MOVE_TO_PREVIOUS_WORKING_DAY`: Move repayment to the previous working day
+* `RESCHEDULE_EXTEND_TERM`: Extend the loan term
+
+=== Implementation
+
+The `HolidayAwareScheduleService` provides methods to:
+
+1. Adjust repayment dates based on holidays and working days
+2. Check if a date is a holiday or non-working day
+3. Determine if interest should be recalculated after date adjustments
+
+[source,java]
+----
+public AdjustedDateDetailsDTO adjustRepaymentDate(LocalDate repaymentDate, 
+                                              LoanApplicationTerms loanApplicationTerms,
+                                              HolidayDetailDTO holidayDetailDTO, 
+                                              LocalDate nextRepaymentDate) {
+    // Select the appropriate strategy based on configuration
+    HolidayStrategy strategy = holidayStrategyFactory.createStrategy(rescheduleType);
+    
+    // Adjust the date using the selected strategy
+    return strategy.adjustRepaymentDate(repaymentDate, holidayDetailDTO.getHolidays(), 
+                                       holidayDetailDTO.getWorkingDays(), 
+                                       nextRepaymentDate, loanApplicationTerms);
+}
+----
+
+== Multi-Disbursement Handling
+
+Multi-disbursement loans allow for multiple tranches to be disbursed over time, providing flexibility for projects with phased funding needs.
+
+=== Configuration
+
+Multi-disbursement is configured at the product level:
+
+* `multiDisburseLoan`: Enables/disables multi-disbursement
+* `maxTrancheCount`: Maximum number of disbursement tranches allowed
+* `disallowExpectedDisbursements`: Controls whether expected disbursements can be modified
+
+=== Core Functionality
+
+The `MultiDisbursementHandler` manages:
+
+1. Validation of disbursement eligibility
+2. Calculation of loan principal based on disbursed tranches
+3. Tracking of planned and actual disbursement dates
+4. Processing new disbursements
+5. Reversing disbursements if needed
+
+=== Schedule Generation for Multi-Disbursement Loans
+
+For multi-disbursement loans, the schedule is regenerated after each disbursement:
+
+1. The system recalculates the loan principal based on all disbursed tranches
+2. For fixed EMI loans, it keeps the installment amount constant and adjusts the term
+3. For fixed term loans, it keeps the number of installments constant and adjusts the amounts
+
+[source,java]
+----
+public BigDecimal recalculateLoanPrincipal(Loan loan) {
+    BigDecimal totalDisbursed = BigDecimal.ZERO;
+    
+    // Calculate the total amount already disbursed
+    for (LoanDisbursementDetails disbursementDetail : loan.getDisbursementDetails()) {
+        if (disbursementDetail.actualDisbursementDate() != null && !disbursementDetail.isReversed()) {
+            totalDisbursed = totalDisbursed.add(disbursementDetail.principal());
+        }
+    }
+    
+    return totalDisbursed;
+}
+----
+
+== Enhanced Transaction Processing
+
+The transaction processing system handles various transaction types and their impact on the loan schedule.
+
+=== Transaction Types
+
+* Standard repayments
+* Down payments
+* Prepayments
+* Partial or full waivers
+* Charge payments
+* Multi-disbursements
+
+=== Processing Strategy
+
+The system uses configurable repayment strategies to determine how payments are allocated:
+
+* Principal, Interest, Penalties, Fees order
+* Interest, Principal, Penalties, Fees order
+* Early Payment Strategy
+* Final Payment Strategy
+* Advanced Payment Allocation
+
+=== Code Example
+
+[source,java]
+----
+// Process a transaction using the loan's configured strategy
+loanTransactionProcessingService.processTransaction(
+    loan.getTransactionProcessingStrategyCode(),
+    loanTransaction,
+    new TransactionCtx(
+        loan.getCurrency(),
+        loan.getRepaymentScheduleInstallments(),
+        loan.getActiveCharges(),
+        new MoneyHolder(loan.getTotalOverpaidAsMoney()),
+        null
+    )
+);
+----
+
+== Configuration Options
+
+=== Calculation-Related Settings
+
+[options="header"]
+|===
+|Setting Name |Description |Default Value
+|interestCalculationPeriodType |Method for interest calculation period |Same as Repayment Period
+|allowPartialPeriodInterestCalculation |Allow interest calculation for partial periods |True
+|interestType |Interest method (Declining Balance or Flat) |Declining Balance
+|amortizationType |How installments are calculated (Equal Installments or Equal Principal) |Equal Installments
+|interestRecalculationEnabled |Enable interest recalculation |False
+|===
+
+=== Down Payment Settings
+
+[options="header"]
+|===
+|Setting Name |Description |Default Value
+|enableDownPayment |Enable down payment feature |False
+|disbursedAmountPercentageForDownPayment |Percentage of disbursed amount for down payment |0
+|enableAutoRepaymentForDownPayment |Automatically create down payment transaction |True
+|===
+
+=== Multi-Disbursement Settings
+
+[options="header"]
+|===
+|Setting Name |Description |Default Value
+|multiDisburseLoan |Enable multi-disbursement feature |False
+|maxTrancheCount |Maximum number of tranches allowed |0
+|disallowExpectedDisbursements |Disallow modification of expected disbursements |False
+|===
+
+== Integration with Other Modules
+
+The loan calculation functionality integrates with several other modules:
+
+=== Core Module Integration
+
+* *Product Definition*: Sources configuration from product setup
+* *Accounting*: Generates accounting entries based on calculation results
+* *Calendar/Holiday*: Uses calendar data for schedule adjustments
+
+=== Business Event Integration
+
+The calculation module fires events that can be used by other modules:
+
+* `LoanTransactionDownPaymentPostBusinessEvent`: Triggered after a down payment transaction
+* `LoanBalanceChangedBusinessEvent`: Triggered when a transaction changes the loan balance
+* `LoanScheduleRecalculatedBusinessEvent`: Triggered when the loan schedule is recalculated
+
+== Examples
+
+=== Example 1: Basic Loan with Down Payment
+
+For a loan with:
+* Principal: $10,000
+* Term: 12 months
+* Interest Rate: 12% per annum
+* Down Payment: 10%
+
+1. Down payment amount: $1,000
+2. Remaining principal for installments: $9,000
+3. Monthly installment: $798.10
+4. Total repayment: $10,577.20 (includes $1,000 down payment + 12 x $798.10)
+
+=== Example 2: Multi-Disbursement Loan
+
+For a loan with:
+* Approved Principal: $50,000
+* First Disbursement: $20,000 on January 1
+* Second Disbursement: $30,000 on April 1
+* Term: 24 months from first disbursement
+* Interest Rate: 10% per annum
+
+1. Initial schedule based on $20,000 (January 1 to December 31 of next year)
+2. After second disbursement, schedule recalculated for total $50,000
+3. Remaining term adjusted to 21 months (April 1 to December 31 of next year)
+4. Installment amounts increase after the second disbursement
+
+=== Example 3: Holiday-Adjusted Schedule
+
+For a loan with weekly repayments, when a repayment falls on a holiday:
+
+1. System detects the holiday
+2. Applies configured strategy (e.g., reschedule to next working day)
+3. Adjusts repayment dates in the schedule
+4. Updates interest calculation if configured to do so
+
+== Troubleshooting
+
+=== Common Issues and Solutions
+
+* *Incorrect installment amounts*: Check the calculation method configured in the product
+* *Missing down payment*: Verify down payment percentage and auto-repayment setting
+* *Schedule not accounting for holidays*: Check holiday configuration and reschedule strategy
+* *Disbursement failing for multi-disbursement loan*: Verify that maxTrancheCount has not been exceeded
+
+=== Validation Messages
+
+* `loan.disbursement.exceeds.maximum.tranches`: The number of disbursements exceeds the configured maximum
+* `loan.down.payment.not.required`: Down payment is not required for this loan product
+* `error.msg.loan.disbursal.missing.down.payment`: Down payment transaction is missing
+
+== References
+
+* See the https://fineract.apache.org/docs/latest/[Apache Fineract Documentation] for more information
+* API specifications for loan-related endpoints are available in Swagger
+* View the `LoanCalculationEngine` interface for extension points

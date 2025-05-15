@@ -1,0 +1,93 @@
+# Savings Beneficiary Management GraphQL Types
+
+# ===== Input Types =====
+
+input SavingsBeneficiaryInput {
+  accountId: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  address: String
+  contactNumber: String
+  email: String
+  identificationType: String
+  identificationNumber: String
+}
+
+input SavingsBeneficiaryUpdateInput {
+  beneficiaryId: UUID!
+  name: String
+  relationshipType: String
+  percentageShare: Float
+  address: String
+  contactNumber: String
+  email: String
+  identificationType: String
+  identificationNumber: String
+  isActive: Boolean
+}
+
+input SavingsBeneficiaryRemoveInput {
+  beneficiaryId: UUID!
+  softDelete: Boolean
+}
+
+input SavingsBeneficiaryListInput {
+  accountId: UUID!
+  includeInactive: Boolean
+}
+
+# ===== Response Types =====
+
+type Beneficiary {
+  id: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  address: String
+  contactNumber: String
+  email: String
+  identificationType: String
+  identificationNumber: String
+  isActive: Boolean!
+  createdDate: Date!
+}
+
+type SavingsBeneficiaryResponse {
+  success: Boolean!
+  beneficiaryId: UUID!
+  accountId: UUID!
+  name: String!
+  relationshipType: String!
+  percentageShare: Float!
+  message: String!
+}
+
+type SavingsBeneficiaryListResponse {
+  totalCount: Int!
+  totalPercentage: Float!
+  beneficiaries: [Beneficiary!]!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+}
+
+# ===== Mutation Types =====
+
+type Mutation {
+  # Beneficiary management
+  addSavingsBeneficiary(input: SavingsBeneficiaryInput!): SavingsBeneficiaryResponse!
+  updateSavingsBeneficiary(input: SavingsBeneficiaryUpdateInput!): SavingsBeneficiaryResponse!
+  removeSavingsBeneficiary(input: SavingsBeneficiaryRemoveInput!): SavingsBeneficiaryResponse!
+}
+
+# ===== Query Type =====
+
+type Query {
+  # Beneficiary queries
+  getSavingsBeneficiaries(input: SavingsBeneficiaryListInput!): SavingsBeneficiaryListResponse!
+}
+
+# Required scalar types
+scalar UUID
+scalar Date

@@ -224,6 +224,25 @@ CREATE TRIGGER savings_account_charge_audit BEFORE INSERT OR UPDATE ON savings_a
 CREATE TRIGGER savings_account_transaction_audit BEFORE INSERT OR UPDATE ON savings_account_transaction FOR EACH ROW EXECUTE FUNCTION audit_fields();
 CREATE TRIGGER savings_officer_assignment_audit BEFORE INSERT OR UPDATE ON savings_officer_assignment FOR EACH ROW EXECUTE FUNCTION audit_fields();
 
+-- Notes for savings accounts
+CREATE TABLE note (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    entity_id UUID NOT NULL,
+    entity_type VARCHAR(50) NOT NULL,
+    note TEXT NOT NULL,
+    created_date TIMESTAMP,
+    created_by UUID,
+    last_modified_date TIMESTAMP,
+    last_modified_by UUID
+);
+
+-- Create audit trigger for the note table
+CREATE TRIGGER note_audit BEFORE INSERT OR UPDATE ON note FOR EACH ROW EXECUTE FUNCTION audit_fields();
+
+-- Create index for note table
+CREATE INDEX idx_note_entity_id ON note(entity_id);
+CREATE INDEX idx_note_entity_type ON note(entity_type);
+
 -- Create indexes for better query performance
 CREATE INDEX idx_savings_account_client_id ON savings_account(client_id);
 CREATE INDEX idx_savings_account_group_id ON savings_account(group_id);

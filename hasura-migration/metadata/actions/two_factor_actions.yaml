@@ -1,0 +1,106 @@
+# Two-Factor Authentication Actions
+
+actions:
+  - name: twoFactorDeliveryMethods
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/delivery-methods'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: requestOTP
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/request-otp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: validateOTP
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/validate-otp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: invalidateAccessToken
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/invalidate-token'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: totpConfiguration
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/totp-config'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: setupTOTP
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/setup-totp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: verifyTOTPSetup
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/verify-totp-setup'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: validateTOTP
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/validate-totp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: disableTOTP
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/disable-totp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: trustedDevices
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/trusted-devices'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: updateTrustedDevice
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/update-trusted-device'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  
+  - name: twoFactorConfiguration
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/configuration'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+  
+  - name: updateTwoFactorConfiguration
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/actions/auth/two-factor/update-configuration'
+      forward_client_headers: true
+    permissions:
+      - role: admin

@@ -1,0 +1,48 @@
+- name: assessLoanApplication
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan-decision/assess"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: assessLoanApplication
+  
+- name: makeLoanDecision
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan-decision/decide"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: makeLoanDecision
+  
+- name: overrideLoanDecision
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan-decision/override"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+  type_name: overrideLoanDecision
+  
+- name: getLoanDecisionHistory
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan-decision/history"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getLoanDecisionHistory
+  
+- name: evaluateRuleset
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan-decision/evaluate-ruleset"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: evaluateRuleset

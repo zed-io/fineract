@@ -1,0 +1,193 @@
+actions:
+  - !include actions/client_actions.yaml
+  - !include actions/loan_actions.yaml
+  - !include actions/loan_decision_actions.yaml
+  - !include actions/credit_check_actions.yaml
+  - !include actions/fraud_detection_actions.yaml
+  - !include actions/regulatory_reporting_actions.yaml
+  - !include actions/savings_actions.yaml
+  - !include actions/savings_mobile_actions.yaml
+  - !include actions/savings_beneficiary_actions.yaml
+  - !include actions/savings_dormancy_actions.yaml
+  - !include actions/savings_account_holds_actions.yaml
+  - !include actions/reporting_actions.yaml
+  - !include actions/consolidated_reporting_actions.yaml
+  - !include actions/savings_reporting_actions.yaml
+  - !include actions/auth_actions.yaml
+  - !include actions/loan_advanced_actions.yaml
+  - !include actions/loan_down_payment_actions.yaml
+  - !include actions/group_actions.yaml
+  - !include actions/fixed_deposit_actions.yaml
+  - !include actions/fixed_deposit_maturity_actions.yaml
+  - !include actions/recurring_deposit_actions.yaml
+  - !include actions/recurring_deposit_beneficiary_actions.yaml
+  - !include actions/integration_actions.yaml
+  - !include actions/share_actions.yaml
+  - !include actions/accounting_actions.yaml
+  - !include actions/trinidad_digital_banking_actions.yaml
+  - !include actions/interest_calculation_actions.yaml
+  - !include actions/interest_batch_actions.yaml
+  - !include actions/payment_gateway_actions.yaml
+
+custom_types:
+  enums: []
+  input_objects: []
+  objects: []
+  scalars: []
+
+  # Import GraphQL types for reporting
+  # To be used in the GraphQL schema
+  input_object_relationships: []
+  object_relationships:
+    - !include relationships/savings_holds_relationships.json
+    - !include relationships/recurring_deposit_beneficiary_relationships.json
+  type_defs: |
+    # Import common types
+    scalar JSON
+
+    # Include loan decision type definitions
+    !include actions/loan_decision_types.graphql
+    
+    # Include regulatory reporting type definitions
+    !include actions/regulatory_reporting_types.graphql
+    
+    # Include Trinidad digital banking type definitions
+    !include actions/trinidad_digital_banking_types.graphql
+    
+    # Include savings beneficiary type definitions
+    !include actions/savings_beneficiary_types.graphql
+    
+    # Include interest calculation type definitions
+    !include actions/interest_calculation_types.graphql
+    
+    # Include interest batch processing type definitions
+    !include actions/interest_batch_types.graphql
+    
+    # Include fixed deposit maturity processing type definitions
+    !include actions/fixed_deposit_maturity_types.graphql
+    
+    # Include loan down payment type definitions
+    !include actions/loan_down_payment_types.graphql
+    
+    # Include consolidated reporting type definitions
+    !include actions/consolidated_reporting_types.graphql
+    
+    # Include recurring deposit beneficiary type definitions
+    !include actions/recurring_deposit_beneficiary_types.graphql
+    
+    # Include payment gateway type definitions
+    !include actions/payment_gateway_types.graphql
+
+    # Report Execution
+    type ReportColumn {
+      name: String!
+      displayName: String!
+      dataType: String!
+      isVisible: Boolean!
+    }
+
+    type ReportPaging {
+      pageSize: Int!
+      pageNumber: Int!
+      totalRecords: Int!
+      totalPages: Int!
+    }
+
+    type ReportExecutionResult {
+      reportId: String!
+      reportName: String!
+      executionDate: String!
+      columns: [ReportColumn!]!
+      data: [JSON!]!
+      totals: JSON
+      paging: ReportPaging
+      executionTimeMs: Int!
+    }
+
+    input ReportExecutionInput {
+      reportId: String!
+      parameters: JSON!
+      pagination: JSON
+      sorting: JSON
+      filters: JSON
+    }
+
+    type ReportExecutionResponse {
+      success: Boolean!
+      report: ReportExecutionResult
+      message: String
+    }
+
+    input ReportExportInput {
+      reportId: String!
+      parameters: JSON!
+      format: String!
+      pagination: JSON
+      sorting: JSON
+      filters: JSON
+    }
+
+    # Portfolio Reports
+    input PortfolioAtRiskInput {
+      asOfDate: String!
+      officeId: String
+      currencyCode: String
+      includeDetails: Boolean
+    }
+
+    input CollectionReportInput {
+      fromDate: String!
+      toDate: String!
+      officeId: String
+      loanOfficerId: String
+      currencyCode: String
+    }
+
+    input LoanPortfolioSummaryInput {
+      asOfDate: String!
+      officeId: String
+      currencyCode: String
+    }
+
+    input ExpectedRepaymentsInput {
+      fromDate: String!
+      toDate: String!
+      officeId: String
+      loanOfficerId: String
+      currencyCode: String
+    }
+
+    # Financial Reports
+    input IncomeStatementInput {
+      fromDate: String!
+      toDate: String!
+      officeId: String
+      currencyCode: String
+      includeComparative: Boolean
+    }
+
+    input BalanceSheetInput {
+      asOfDate: String!
+      officeId: String
+      currencyCode: String
+      includeComparative: Boolean
+    }
+
+    input FinancialRatiosInput {
+      asOfDate: String!
+      officeId: String
+    }
+
+    input InterestIncomeInput {
+      fromDate: String!
+      toDate: String!
+      officeId: String
+      currencyCode: String
+    }
+
+    input FeeIncomeInput {
+      fromDate: String!
+      toDate: String!
+      officeId: String
+      currencyCode: String
+    }

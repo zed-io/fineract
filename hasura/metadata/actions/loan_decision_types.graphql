@@ -1,0 +1,267 @@
+# Loan decisioning types
+
+enum DecisionResult {
+  APPROVED
+  CONDITIONALLY_APPROVED
+  DECLINED
+  MANUAL_REVIEW
+}
+
+enum DecisionFactorType {
+  CREDIT_SCORE
+  INCOME
+  DEBT_RATIO
+  EMPLOYMENT
+  COLLATERAL
+  SAVINGS_HISTORY
+  REPAYMENT_CAPACITY
+  CUSTOM
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ApprovalConditionStatus {
+  PENDING
+  MET
+  WAIVED
+}
+
+# Decision factor used in the decision process
+type DecisionFactor {
+  type: DecisionFactorType!
+  name: String!
+  value: String!
+  threshold: String
+  impact: String!
+  weight: Float
+  details: String
+}
+
+# Approval condition for conditional approvals
+type ApprovalCondition {
+  id: String!
+  description: String!
+  type: String!
+  requiredBy: String!
+  isMandatory: Boolean!
+  status: String!
+  satisfiedOn: String
+  satisfiedBy: String
+  notes: String
+}
+
+# Request for loan application assessment
+input LoanAssessmentRequest {
+  loanId: String!
+  assessmentDate: String!
+  includeDocumentVerification: Boolean
+  includeEmploymentVerification: Boolean
+  includeCreditCheck: Boolean
+  forceReevaluation: Boolean
+}
+
+# Response from loan assessment
+type LoanAssessmentResponse {
+  loanId: String!
+  decisionId: String!
+  result: DecisionResult!
+  riskScore: Float
+  riskLevel: RiskLevel
+  factors: [DecisionFactor!]!
+  conditions: [ApprovalCondition!]
+  isFinal: Boolean!
+  nextApprovalLevel: Int
+  assessmentDate: String!
+  assessedBy: String
+  notes: String
+}
+
+# Request to make a loan decision
+input MakeLoanDecisionRequest {
+  loanId: String!
+  decisionResult: DecisionResult!
+  riskScore: Float
+  riskLevel: RiskLevel
+  factors: [LoanDecisionFactorInput!]
+  conditions: [LoanApprovalConditionInput!]
+  notes: String
+  approvalLevel: Int
+  isFinal: Boolean
+  expiryDate: String
+  manualOverride: Boolean
+  overrideReason: String
+}
+
+# Response from making a loan decision
+type MakeLoanDecisionResponse {
+  decisionId: String!
+  loanId: String!
+  result: DecisionResult!
+  timestamp: String!
+  decisionBy: String!
+  isFinal: Boolean!
+}
+
+# Decision factor input
+input LoanDecisionFactorInput {
+  type: DecisionFactorType!
+  name: String!
+  value: String!
+  threshold: String
+  impact: String!
+  weight: Float
+  details: String
+}
+
+# Approval condition input
+input LoanApprovalConditionInput {
+  id: String!
+  description: String!
+  type: String!
+  requiredBy: String!
+  isMandatory: Boolean!
+  status: String!
+  satisfiedOn: String
+  satisfiedBy: String
+  notes: String
+}
+
+# Request to override a loan decision
+input OverrideLoanDecisionRequest {
+  decisionId: String!
+  newResult: DecisionResult!
+  overrideReason: String!
+  conditions: [LoanApprovalConditionInput!]
+  notes: String
+}
+
+# Response from overriding a loan decision
+type OverrideLoanDecisionResponse {
+  newDecisionId: String!
+  previousDecisionId: String!
+  loanId: String!
+  result: DecisionResult!
+  overrideTimestamp: String!
+  overrideBy: String!
+}
+
+# Request to get decision history for a loan
+input GetLoanDecisionHistoryRequest {
+  loanId: String!
+  includeDetails: Boolean
+}
+
+# Individual loan decision in history
+type LoanDecision {
+  id: String!
+  loanId: String!
+  decisionTimestamp: String!
+  decisionResult: DecisionResult!
+  decisionSource: String!
+  decisionBy: String
+  riskScore: Float
+  riskLevel: RiskLevel
+  decisionFactors: String
+  notes: String
+  approvalLevel: Int!
+  nextApprovalLevel: Int
+  isFinal: Boolean!
+  approvalConditions: String
+  expiryDate: String
+  manualOverride: Boolean!
+  overrideReason: String
+  previousDecisionId: String
+}
+
+# Response with loan decision history
+type LoanDecisionHistoryResponse {
+  loanId: String!
+  decisions: [LoanDecision!]!
+  count: Int!
+}
+
+# Request to evaluate a ruleset against loan data
+input EvaluateRulesetRequest {
+  rulesetId: String!
+  loanData: JSON!
+}
+
+# Response from ruleset evaluation
+type RulesetEvaluationResponse {
+  rulesetId: String!
+  result: DecisionResult!
+  riskScore: Float!
+  riskLevel: RiskLevel!
+  triggeredRules: [TriggeredRule!]!
+  conditions: [ApprovalCondition!]
+}
+
+# Triggered rule from evaluation
+type TriggeredRule {
+  ruleId: String!
+  ruleName: String!
+  action: String!
+}
+
+# Assessment operation result
+type AssessLoanApplicationOutput {
+  success: Boolean!
+  assessment: LoanAssessmentResponse
+  message: String
+}
+
+# Decision operation result
+type MakeLoanDecisionOutput {
+  success: Boolean!
+  decision: MakeLoanDecisionResponse
+  message: String
+}
+
+# Override operation result
+type OverrideLoanDecisionOutput {
+  success: Boolean!
+  override: OverrideLoanDecisionResponse
+  message: String
+}
+
+# History operation result
+type GetLoanDecisionHistoryOutput {
+  success: Boolean!
+  history: LoanDecisionHistoryResponse
+  message: String
+}
+
+# Ruleset evaluation result
+type EvaluateRulesetOutput {
+  success: Boolean!
+  evaluation: RulesetEvaluationResponse
+  message: String
+}
+
+# GraphQL Actions
+
+type Mutation {
+  # Assess a loan application using decision rules
+  assessLoanApplication(input: LoanAssessmentRequest!): AssessLoanApplicationOutput
+  
+  # Make a manual loan decision
+  makeLoanDecision(input: MakeLoanDecisionRequest!): MakeLoanDecisionOutput
+  
+  # Override a previous loan decision
+  overrideLoanDecision(input: OverrideLoanDecisionRequest!): OverrideLoanDecisionOutput
+  
+  # Evaluate a ruleset against loan data
+  evaluateRuleset(input: EvaluateRulesetRequest!): EvaluateRulesetOutput
+}
+
+type Query {
+  # Get decision history for a loan
+  getLoanDecisionHistory(input: GetLoanDecisionHistoryRequest!): GetLoanDecisionHistoryOutput
+}
+
+# JSON scalar type
+scalar JSON

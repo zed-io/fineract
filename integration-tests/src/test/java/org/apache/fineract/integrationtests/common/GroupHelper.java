@@ -421,6 +421,17 @@ public class GroupHelper {
     public static String randomNameGenerator(final String prefix, final int lenOfRandomSuffix) {
         return Utils.uniqueRandomStringGenerator(prefix, lenOfRandomSuffix);
     }
+    
+    // TODO: Rewrite to use fineract-client instead!
+    // Example: org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper.disburseLoan(java.lang.Long,
+    // org.apache.fineract.client.models.PostLoansLoanIdRequest)
+    @Deprecated(forRemoval = true)
+    public static List<HashMap> getAllGroupClients(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
+            final String groupId) {
+        LOG.info("------------------------------GET GROUP CLIENTS------------------------------------\n");
+        final String GROUP_URL = "/fineract-provider/api/v1/groups/" + groupId + "?associations=clientMembers&" + Utils.TENANT_IDENTIFIER;
+        return Utils.performServerGet(requestSpec, responseSpec, GROUP_URL, "clientMembers");
+    }
 
     // TODO: Rewrite to use fineract-client instead!
     // Example: org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper.disburseLoan(java.lang.Long,

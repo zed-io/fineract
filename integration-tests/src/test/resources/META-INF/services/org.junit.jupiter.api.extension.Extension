@@ -1,0 +1,2 @@
+org.apache.fineract.integrationtests.support.TestEnvironmentSetup
+org.apache.fineract.integrationtests.support.TestExecutionExtension

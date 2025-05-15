@@ -56,6 +56,8 @@ include::chapters/release/index.adoc[leveloffset=+1]
 
 include::chapters/sdk/index.adoc[leveloffset=+1]
 
+include::chapters/loan-calculation.adoc[leveloffset=+1]
+
 // Broken: asciidoc is only partially rendered.
 //include::fineract-client.adoc[leveloffset=+1]
 

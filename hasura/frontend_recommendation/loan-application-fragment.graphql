@@ -1,0 +1,23 @@
+# Fragment for loan application basic information
+fragment LoanApplicationBasicInfo on LoanApplication {
+  id
+  applicantId
+  loanTypeId
+  principal
+  startDate
+  status
+  applicationDate
+  tenor
+  applicant {
+    id
+    displayName
+    mobileNo
+    emailAddress
+  }
+  loanType {
+    id
+    loanName
+    shortName
+    currencyCode
+  }
+}

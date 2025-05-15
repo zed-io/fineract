@@ -1,0 +1,103 @@
+== Payment Allocation Strategies
+
+=== Overview
+
+Payment allocation strategies determine how loan repayments are applied to different components of the loan:
+
+* Principal
+* Interest
+* Fees
+* Penalties
+
+Fineract supports multiple built-in allocation strategies and also allows for custom strategies to be implemented.
+
+=== Default Allocation Strategies
+
+Fineract provides several default allocation strategies:
+
+1. *Penalties, Fees, Interest, Principal order* - The standard strategy that applies payments first to penalties, then fees, then interest, and finally principal.
+
+2. *Interest, Principal, Penalties, Fees order* - Prioritizes interest and principal payments before penalties and fees.
+
+3. *Principal, Interest, Penalties, Fees order* - Prioritizes principal repayment first, followed by interest, penalties, and fees.
+
+4. *Early Payment Strategy* - Special handling for early repayments.
+
+5. *RBI (India) Strategy* - Follows regulatory requirements for the Reserve Bank of India.
+
+=== Flexible Payment Allocation Strategy
+
+The Flexible Payment Allocation Strategy is an enhanced strategy that provides configurable allocation rules:
+
+==== Features
+
+* *Custom allocation order* - Configure the order in which payments are applied to different components.
+* *Overpayment handling* - Configure how excess payments are handled (applied to future installments or treated as advance payments).
+* *Installment processing order* - Process installments in chronological order or based on specific rules.
+* *Partial payments* - Proper handling of partial payments based on the configured allocation order.
+
+==== Configuration
+
+The Flexible Payment Allocation Strategy can be configured with the following parameters:
+
+1. *allocationOrder* - The order in which to apply payments to components (PENALTY, FEE, INTEREST, PRINCIPAL).
+2. *applyExcessToNextInstallment* - Whether to apply excess payments to future installments.
+3. *applyPaymentInChronologicalOrder* - Whether to process installments in chronological order.
+4. *treatOverpaymentAsAdvancePayment* - Whether to treat overpayments as advance payments.
+
+==== Example Configurations
+
+===== Principal First (Reducing Balance Method)
+
+This configuration prioritizes principal repayment to reduce the overall interest on the loan:
+
+[source,java]
+----
+List<PaymentAllocationOrder> principalFirstOrder = Arrays.asList(
+    PaymentAllocationOrder.PRINCIPAL,
+    PaymentAllocationOrder.INTEREST,
+    PaymentAllocationOrder.FEE,
+    PaymentAllocationOrder.PENALTY
+);
+----
+
+===== Interest First (Flat Interest Method)
+
+This configuration ensures interest is paid first:
+
+[source,java]
+----
+List<PaymentAllocationOrder> interestFirstOrder = Arrays.asList(
+    PaymentAllocationOrder.INTEREST,
+    PaymentAllocationOrder.PRINCIPAL,
+    PaymentAllocationOrder.FEE,
+    PaymentAllocationOrder.PENALTY
+);
+----
+
+=== Implementation
+
+To use the Flexible Payment Allocation Strategy in loan products:
+
+1. Enable the strategy in your Spring configuration
+2. Configure the allocation rules as needed
+3. Set the loan product's transaction processing strategy to "flexible-allocation-strategy"
+
+=== Advanced Payment Scenarios
+
+The Flexible Payment Allocation Strategy properly handles:
+
+* *Partial payments* - Applied according to the defined allocation order
+* *Overpayments* - Can be applied to future installments or treated as advance payments
+* *Late payments* - Processed according to the configured allocation rules
+* *Refunds* - Applied in reverse order of the allocation strategy
+* *Multiple installment payments* - Excess can cascade to future installments
+
+=== Custom Strategies
+
+For even more customized behavior, you can implement your own allocation strategy by:
+
+1. Extending `AbstractLoanRepaymentScheduleTransactionProcessor`
+2. Implementing the required methods
+3. Creating a condition class to determine when to use the strategy
+4. Registering your strategy in the Spring configuration

@@ -1,0 +1,328 @@
+type Query {
+  getWebhooks(
+    eventType: String
+    isActive: Boolean
+    limit: Int
+    offset: Int
+  ): WebhookListResponse
+  
+  getEventStreams(
+    eventType: String
+    streamType: StreamType
+    isActive: Boolean
+    limit: Int
+    offset: Int
+  ): EventStreamListResponse
+  
+  getEventStreamById(
+    streamId: String!
+  ): EventStreamConfig
+}
+
+type Mutation {
+  registerWebhook(
+    name: String!
+    description: String
+    eventType: String!
+    url: String!
+    httpMethod: WebhookHttpMethod
+    contentType: WebhookContentType
+    headers: JSON
+    payloadTemplate: String
+    isActive: Boolean
+    retryCount: Int
+    retryInterval: Int
+    timeout: Int
+    secretKey: String
+  ): RegisterWebhookResponse
+  
+  testWebhook(
+    webhookId: String!
+    eventData: JSON!
+  ): WebhookExecutionResult
+  
+  registerApiClient(
+    name: String!
+    description: String
+    redirectUris: [String]
+    grantTypes: [String]
+    scope: [String]
+    tokenValidity: Int
+    refreshTokenValidity: Int
+    autoApprove: Boolean
+  ): ApiClientRegistrationResponse
+  
+  generateToken(
+    clientId: String!
+    clientSecret: String!
+    grantType: String!
+    username: String
+    password: String
+    refreshToken: String
+    scope: [String]
+  ): TokenResponse
+  
+  validateToken(
+    token: String!
+  ): TokenValidationResponse
+  
+  executeExport(
+    entityType: String!
+    format: String!
+    filters: JSON
+    configId: String
+  ): ExportResult
+  
+  processImport(
+    entityType: String!
+    format: String!
+    data: String!
+    configId: String
+    fileType: String
+  ): ImportResult
+  
+  registerEventProducer(
+    name: String!
+    description: String
+    eventTypes: [String!]!
+    streamType: StreamType!
+    config: JSON!
+    filterCriteria: JSON
+  ): EventProducerRegistrationResponse
+  
+  registerEventConsumer(
+    name: String!
+    description: String
+    eventTypes: [String!]!
+    streamType: StreamType!
+    config: JSON!
+    filterCriteria: JSON
+    callbackUrl: String
+  ): EventConsumerRegistrationResponse
+  
+  updateEventStream(
+    streamId: String!
+    updates: EventStreamUpdates!
+  ): EventStreamConfig
+  
+  deleteEventStream(
+    streamId: String!
+  ): DeleteResponse
+  
+  publishEvent(
+    eventType: String!
+    eventData: JSON!
+    streamIds: [String]
+  ): EventPublishResponse
+}
+
+# Common types
+scalar JSON
+
+# Webhook types
+enum WebhookHttpMethod {
+  GET
+  POST
+  PUT
+  PATCH
+  DELETE
+}
+
+enum WebhookContentType {
+  application_json
+  application_xml
+  application_x_www_form_urlencoded
+  text_plain
+}
+
+enum WebhookStatus {
+  success
+  failed
+  pending
+  retrying
+}
+
+type WebhookConfig {
+  id: String!
+  name: String!
+  description: String
+  eventType: String!
+  url: String!
+  httpMethod: WebhookHttpMethod!
+  contentType: WebhookContentType!
+  headers: JSON
+  payloadTemplate: String
+  isActive: Boolean!
+  retryCount: Int!
+  retryInterval: Int!
+  timeout: Int!
+  secretKey: String
+  createdBy: String
+  createdDate: String!
+  updatedBy: String
+  updatedDate: String
+}
+
+type WebhookHistory {
+  id: String!
+  webhookId: String!
+  eventType: String!
+  eventData: JSON!
+  payload: JSON!
+  responseStatus: Int
+  responseBody: String
+  executionTimeMs: Int
+  status: WebhookStatus!
+  errorMessage: String
+  retryCount: Int!
+  nextRetryTime: String
+  createdDate: String!
+  updatedDate: String
+}
+
+type RegisterWebhookResponse {
+  id: String!
+}
+
+type WebhookExecutionResult {
+  success: Boolean!
+  webhookId: String!
+  eventType: String!
+  responseStatus: Int
+  responseBody: String
+  executionTimeMs: Int!
+  errorMessage: String
+}
+
+type WebhookListResponse {
+  webhooks: [WebhookConfig!]!
+  total: Int!
+}
+
+type WebhookHistoryListResponse {
+  history: [WebhookHistory!]!
+  total: Int!
+}
+
+# API Client types
+type ApiClientRegistrationResponse {
+  clientId: String!
+  clientSecret: String!
+  name: String!
+  redirectUris: [String]
+  grantTypes: [String!]!
+  scope: [String!]!
+  tokenValidity: Int!
+  refreshTokenValidity: Int!
+}
+
+type TokenResponse {
+  accessToken: String!
+  tokenType: String!
+  expiresIn: Int!
+  refreshToken: String
+  scope: [String!]
+}
+
+type TokenValidationResponse {
+  valid: Boolean!
+  clientId: String
+  userId: String
+  scope: [String]
+  expiresAt: String
+}
+
+# Data Exchange types
+type ExportResult {
+  success: Boolean!
+  fileUrl: String
+  recordCount: Int
+  format: String!
+  message: String
+}
+
+type ImportResult {
+  success: Boolean!
+  totalRecords: Int!
+  successCount: Int!
+  errorCount: Int!
+  errors: [ImportError]
+  message: String
+}
+
+type ImportError {
+  row: Int
+  field: String
+  message: String
+}
+
+# Event Stream types
+enum StreamType {
+  kafka
+  rabbitmq
+  awssqs
+  azure_servicebus
+  google_pubsub
+  webhook
+  custom
+}
+
+type EventStreamConfig {
+  id: String!
+  name: String!
+  description: String
+  eventTypes: [String!]!
+  streamType: StreamType!
+  config: JSON!
+  filterCriteria: JSON
+  isActive: Boolean!
+  createdBy: String
+  createdDate: String!
+  updatedBy: String
+  updatedDate: String
+}
+
+input EventStreamUpdates {
+  name: String
+  description: String
+  eventTypes: [String!]
+  streamType: StreamType
+  config: JSON
+  filterCriteria: JSON
+  isActive: Boolean
+}
+
+type EventProducerRegistrationResponse {
+  id: String!
+  name: String!
+  eventTypes: [String!]!
+  streamType: StreamType!
+  isActive: Boolean!
+  createdDate: String!
+}
+
+type EventConsumerRegistrationResponse {
+  id: String!
+  name: String!
+  eventTypes: [String!]!
+  streamType: StreamType!
+  isActive: Boolean!
+  createdDate: String!
+}
+
+type EventPublishResponse {
+  success: Boolean!
+  eventId: String!
+  publishedStreams: Int!
+  failedStreams: Int!
+  message: String
+}
+
+type EventStreamListResponse {
+  streams: [EventStreamConfig!]!
+  total: Int!
+}
+
+type DeleteResponse {
+  success: Boolean!
+}

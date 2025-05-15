@@ -1,0 +1,100 @@
+- name: createFixedDepositProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/product/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getFixedDepositProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/product/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getFixedDepositProducts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/products"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: createFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: approveFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/approve"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: activateFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/activate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getClientFixedDepositAccounts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/client/accounts"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getFixedDepositTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/template"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: prematureCloseFixedDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/premature-close"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateFixedDepositMaturityInstructions
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/fixed-deposit/account/update-maturity-instructions"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user

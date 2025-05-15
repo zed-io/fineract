@@ -1,0 +1,270 @@
+# Trinidad and Tobago Credit Union digital banking GraphQL types
+
+# Digital onboarding related types
+type DigitalOnboardingResponse {
+  success: Boolean!
+  message: String
+  clientId: String
+  applicationId: String
+  requiredDocuments: [String!]
+  nextStep: String
+}
+
+input DigitalOnboardingInput {
+  firstName: String!
+  lastName: String!
+  middleName: String
+  dateOfBirth: String!
+  gender: String!
+  email: String!
+  mobileNo: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  stateProvince: String
+  country: String!
+  postalCode: String
+  identificationType: String!
+  identificationNumber: String!
+  employmentStatus: String
+  monthlyIncome: Float
+  deviceInfo: DeviceInfoInput
+}
+
+input DeviceInfoInput {
+  deviceId: String!
+  deviceType: String!
+  deviceModel: String
+  osVersion: String
+  appVersion: String
+}
+
+# KYC document verification types
+type DocumentVerificationResponse {
+  success: Boolean!
+  message: String
+  verificationId: String
+  status: String
+  nextStep: String
+}
+
+input DocumentUploadInput {
+  clientId: String!
+  documentType: String!
+  documentNumber: String!
+  issuingAuthority: String
+  issueDate: String
+  expiryDate: String
+  documentImageBase64: String!
+  deviceInfo: DeviceInfoInput
+}
+
+# Digital loan application types
+type LoanDigitalApplicationResponse {
+  success: Boolean!
+  message: String
+  loanApplicationId: String
+  loanId: String
+  status: String
+  nextStep: String
+  estimatedApprovalTime: String
+  requiredDocuments: [String!]
+}
+
+input LoanDigitalApplicationInput {
+  clientId: String!
+  productId: String!
+  principal: Float!
+  term: Int!
+  purpose: String
+  repaymentMethod: String
+  preferredDisbursementDate: String
+  preferredRepaymentDay: Int
+  collateralDetails: [CollateralDetailInput!]
+  employmentDetails: EmploymentDetailInput
+  deviceInfo: DeviceInfoInput
+}
+
+input CollateralDetailInput {
+  type: String!
+  value: Float!
+  description: String
+  documentProofBase64: String
+}
+
+input EmploymentDetailInput {
+  employerName: String
+  position: String
+  yearsEmployed: Float
+  monthlyIncome: Float
+  payslipDocumentBase64: String
+}
+
+# Mobile banking types
+type MobileBankingSetupResponse {
+  success: Boolean!
+  message: String
+  profileId: String
+  securityQuestionsRequired: Boolean
+  biometricSetupRequired: Boolean
+  mfaRequired: Boolean
+}
+
+input MobileBankingSetupInput {
+  clientId: String!
+  deviceId: String!
+  deviceType: String!
+  deviceModel: String
+  osVersion: String
+  appVersion: String
+  enableBiometric: Boolean
+  pushNotificationToken: String
+}
+
+# Security question types
+type SecurityQuestionResponse {
+  success: Boolean!
+  message: String
+  questions: [SecurityQuestion!]
+}
+
+type SecurityQuestion {
+  id: String!
+  questionText: String!
+}
+
+input SecurityAnswerSetupInput {
+  clientId: String!
+  answers: [SecurityAnswerInput!]!
+}
+
+input SecurityAnswerInput {
+  questionId: String!
+  answer: String!
+}
+
+# Digital wallet integration
+type DigitalWalletResponse {
+  success: Boolean!
+  message: String
+  walletId: String
+  status: String
+}
+
+input DigitalWalletLinkInput {
+  clientId: String!
+  walletProvider: String!
+  providerAccountId: String!
+  walletToken: String
+  isPrimary: Boolean
+}
+
+# Loan repayment with digital methods
+type LoanDigitalRepaymentResponse {
+  success: Boolean!
+  message: String
+  transactionId: String
+  receiptNumber: String
+  appliedAmount: Float
+  remainingBalance: Float
+  nextPaymentDue: String
+  nextPaymentAmount: Float
+}
+
+input LoanDigitalRepaymentInput {
+  loanId: String!
+  amount: Float!
+  paymentMethod: String!
+  paymentDetails: PaymentDetailsInput
+  deviceInfo: DeviceInfoInput
+}
+
+input PaymentDetailsInput {
+  walletId: String
+  cardNumber: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardCvv: String
+  bankAccountNumber: String
+  bankRoutingNumber: String
+  bankName: String
+}
+
+# Multi-factor authentication
+type MfaSetupResponse {
+  success: Boolean!
+  message: String
+  mfaId: String
+  secret: String
+  qrCodeUrl: String
+  backupCodes: [String!]
+}
+
+input MfaSetupInput {
+  userId: String!
+  mfaType: String!
+  phoneNumber: String
+  email: String
+}
+
+# Action queries and mutations
+type Mutation {
+  # Digital onboarding
+  digitalClientOnboarding(input: DigitalOnboardingInput!): DigitalOnboardingResponse!
+  uploadKycDocument(input: DocumentUploadInput!): DocumentVerificationResponse!
+  
+  # Loan application
+  submitDigitalLoanApplication(input: LoanDigitalApplicationInput!): LoanDigitalApplicationResponse!
+  
+  # Mobile banking
+  setupMobileBankingProfile(input: MobileBankingSetupInput!): MobileBankingSetupResponse!
+  setupSecurityQuestions(input: SecurityAnswerSetupInput!): SecurityQuestionResponse!
+  
+  # Digital wallet
+  linkDigitalWallet(input: DigitalWalletLinkInput!): DigitalWalletResponse!
+  
+  # Loan repayment
+  processDigitalLoanRepayment(input: LoanDigitalRepaymentInput!): LoanDigitalRepaymentResponse!
+  
+  # Multi-factor authentication
+  setupMfaAuthentication(input: MfaSetupInput!): MfaSetupResponse!
+}
+
+type Query {
+  # Security questions
+  getSecurityQuestions: [SecurityQuestion!]!
+  
+  # Digital wallet
+  getLinkedDigitalWallets(clientId: String!): [DigitalWallet!]!
+  
+  # KYC verification status
+  getClientVerificationStatus(clientId: String!): VerificationStatusResponse!
+}
+
+type DigitalWallet {
+  id: String!
+  clientId: String!
+  walletProvider: String!
+  providerAccountId: String!
+  isPrimary: Boolean!
+  isActive: Boolean!
+  createdDate: String!
+}
+
+type VerificationStatusResponse {
+  clientId: String!
+  isFullyVerified: Boolean!
+  pendingDocuments: [String!]
+  verifiedDocuments: [DocumentVerification!]
+  rejectedDocuments: [DocumentVerification!]
+}
+
+type DocumentVerification {
+  id: String!
+  documentType: String!
+  documentNumber: String!
+  verificationStatus: String!
+  verificationDate: String
+  expiryDate: String
+  rejectionReason: String
+}

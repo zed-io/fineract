@@ -1,0 +1,288 @@
+table:
+  schema: fineract_default
+  name: app_user
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - username
+        - email
+        - firstname
+        - lastname
+        - is_deleted
+        - is_locked
+        - is_enabled
+        - requires_password_reset
+        - failed_attempt_count
+        - last_login
+        - office_id
+        - staff_id
+        - is_self_service_user
+        - created_date
+        - last_modified_date
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - username
+        - email
+        - firstname
+        - lastname
+        - is_deleted
+        - is_locked
+        - is_enabled
+        - office_id
+        - staff_id
+        - is_self_service_user
+        - created_date
+        - last_modified_date
+      filter:
+        id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: app_user_client_mapping
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - app_user_id
+        - client_id
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - app_user_id
+        - client_id
+      filter:
+        app_user_id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: app_user_role
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - app_user_id
+        - role_id
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - app_user_id
+        - role_id
+      filter:
+        app_user_id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: client
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - account_no
+        - status
+        - firstname
+        - lastname
+        - display_name
+        - mobile_no
+        - email_address
+        - office_id
+        - staff_id
+        - activation_date
+        - created_date
+        - last_modified_date
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - account_no
+        - status
+        - firstname
+        - lastname
+        - display_name
+        - mobile_no
+        - email_address
+        - office_id
+        - staff_id
+        - activation_date
+        - created_date
+        - last_modified_date
+      filter:
+        office_id: X-Hasura-Office-Id
+  - role: client_self_service
+    permission:
+      columns:
+        - id
+        - account_no
+        - status
+        - firstname
+        - lastname
+        - display_name
+        - mobile_no
+        - email_address
+        - office_id
+        - staff_id
+        - activation_date
+      filter:
+        id:
+          _in:
+            $query:
+              table: 
+                schema: fineract_default
+                name: app_user_client_mapping
+              columns:
+                - client_id
+              where:
+                app_user_id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: office
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - name
+        - parent_id
+        - hierarchy
+        - opening_date
+        - external_id
+        - created_date
+        - last_modified_date
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - parent_id
+        - hierarchy
+        - opening_date
+        - external_id
+      filter:
+        _or:
+          - id: X-Hasura-Office-Id
+          - hierarchy:
+              _like: X-Hasura-Office-Hierarchy-%
+---
+table:
+  schema: fineract_default
+  name: permission
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - grouping
+        - code
+        - entity_name
+        - action_name
+        - can_maker_checker
+        - description
+      filter: {}
+---
+table:
+  schema: fineract_default
+  name: role
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - is_disabled
+        - is_self_service_role
+        - created_date
+        - last_modified_date
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - description
+        - is_disabled
+        - is_self_service_role
+      filter:
+        id:
+          _in:
+            $query:
+              table:
+                schema: fineract_default
+                name: app_user_role
+              columns:
+                - role_id
+              where:
+                app_user_id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: role_permission
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - role_id
+        - permission_id
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - role_id
+        - permission_id
+      filter:
+        role_id:
+          _in:
+            $query:
+              table:
+                schema: fineract_default
+                name: app_user_role
+              columns:
+                - role_id
+              where:
+                app_user_id: X-Hasura-User-Id
+---
+table:
+  schema: fineract_default
+  name: staff
+select_permissions:
+  - role: admin
+    permission:
+      columns:
+        - id
+        - office_id
+        - firstname
+        - lastname
+        - display_name
+        - is_loan_officer
+        - is_active
+        - mobile_no
+        - email_address
+        - created_date
+        - last_modified_date
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - office_id
+        - firstname
+        - lastname
+        - display_name
+        - is_loan_officer
+        - is_active
+        - mobile_no
+        - email_address
+      filter:
+        office_id: X-Hasura-Office-Id

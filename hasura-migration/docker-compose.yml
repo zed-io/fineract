@@ -1,0 +1,116 @@
+version: '3.6'
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: fineractpassword
+      POSTGRES_USER: fineract
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fineract"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hasura:
+    image: hasura/graphql-engine:v2.33.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://fineract:fineractpassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: fineract_hasura_secret
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256", "key":"your-jwt-secret-key-min-32-chars-long"}'
+      HASURA_GRAPHQL_ACTIONS_URL: http://actions-server:3000
+      HASURA_GRAPHQL_CORS_DOMAIN: "*"
+      FINERACT_DEFAULT_ADMIN_PASSWORD: password
+    volumes:
+      - ./migrations:/hasura-migrations
+      - ./metadata:/hasura-metadata
+
+  actions-server:
+    build:
+      context: ./services/actions
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./services/actions:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: postgres://fineract:fineractpassword@postgres:5432/postgres
+      NODE_ENV: development
+      HASURA_GRAPHQL_ADMIN_SECRET: fineract_hasura_secret
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      JWT_SECRET: your-jwt-secret-key-min-32-chars-long
+      LOG_LEVEL: debug
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - hasura
+
+  event-handlers:
+    build:
+      context: ./services/event-handlers
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./services/event-handlers:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: postgres://fineract:fineractpassword@postgres:5432/postgres
+      NODE_ENV: development
+      HASURA_GRAPHQL_ADMIN_SECRET: fineract_hasura_secret
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      JWT_SECRET: your-jwt-secret-key-min-32-chars-long
+      LOG_LEVEL: debug
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - hasura
+
+  scheduled-jobs:
+    build:
+      context: ./services/scheduled-jobs
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./services/scheduled-jobs:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: postgres://fineract:fineractpassword@postgres:5432/postgres
+      NODE_ENV: development
+      HASURA_GRAPHQL_ADMIN_SECRET: fineract_hasura_secret
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      JWT_SECRET: your-jwt-secret-key-min-32-chars-long
+      LOG_LEVEL: debug
+    depends_on:
+      - postgres
+      - hasura
+
+  # pgadmin for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@fineract.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

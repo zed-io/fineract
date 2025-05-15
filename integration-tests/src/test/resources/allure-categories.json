@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Failed tests",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "Broken tests",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Skipped tests",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "Passed tests",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "API Tests",
+    "messageRegex": ".*API.*"
+  },
+  {
+    "name": "Loan Tests",
+    "messageRegex": ".*Loan.*"
+  },
+  {
+    "name": "Database Tests",
+    "messageRegex": ".*DB.*|.*Database.*"
+  },
+  {
+    "name": "Performance Issues",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Timeout.*|.*Performance.*|.*took too long.*"
+  }
+]

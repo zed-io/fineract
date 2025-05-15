@@ -1,0 +1,171 @@
+# GraphQL schema for beneficiary notification operations
+
+# Types for notification templates
+type BeneficiaryNotificationTemplate {
+  id: UUID!
+  templateName: String!
+  templateCode: String!
+  subject: String
+  messageTemplate: String!
+  templateType: String!
+  eventType: String!
+  description: String
+  isActive: Boolean!
+  createdDate: DateTime!
+}
+
+# Types for notification records
+type BeneficiaryNotification {
+  id: UUID!
+  beneficiaryId: UUID!
+  beneficiary: Beneficiary
+  savingsAccountId: UUID!
+  templateId: UUID
+  template: BeneficiaryNotificationTemplate
+  notificationType: String!
+  recipient: String!
+  subject: String
+  message: String!
+  status: String!
+  errorMessage: String
+  eventType: String!
+  triggeredBy: User
+  sentDate: DateTime
+  deliveryDate: DateTime
+  createdDate: DateTime!
+}
+
+# Types for notification preferences
+type BeneficiaryNotificationPreference {
+  id: UUID!
+  beneficiaryId: UUID!
+  beneficiary: Beneficiary
+  notificationType: String!
+  eventType: String!
+  isEnabled: Boolean!
+  createdDate: DateTime!
+}
+
+# Inputs for queries
+input GetBeneficiaryNotificationsInput {
+  beneficiaryId: UUID
+  savingsAccountId: UUID
+  status: String
+  notificationType: String
+  eventType: String
+  fromDate: DateTime
+  toDate: DateTime
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input GetBeneficiaryNotificationTemplatesInput {
+  templateType: String
+  eventType: String
+  isActive: Boolean
+}
+
+input GetBeneficiaryNotificationPreferencesInput {
+  beneficiaryId: UUID!
+}
+
+# Inputs for mutations
+input SendBeneficiaryNotificationInput {
+  beneficiaryId: UUID!
+  templateCode: String!
+}
+
+input UpdateBeneficiaryNotificationStatusInput {
+  notificationId: UUID!
+  status: String!
+  errorMessage: String
+}
+
+input UpdateBeneficiaryNotificationPreferenceInput {
+  beneficiaryId: UUID!
+  notificationType: String!
+  eventType: String!
+  isEnabled: Boolean!
+}
+
+input CreateBeneficiaryNotificationTemplateInput {
+  templateName: String!
+  templateCode: String!
+  subject: String
+  messageTemplate: String!
+  templateType: String!
+  eventType: String!
+  description: String
+  isActive: Boolean!
+}
+
+input UpdateBeneficiaryNotificationTemplateInput {
+  templateId: UUID!
+  templateName: String
+  subject: String
+  messageTemplate: String
+  description: String
+  isActive: Boolean
+}
+
+# Response types
+type BeneficiaryNotificationsResponse {
+  notifications: [BeneficiaryNotification!]!
+  totalCount: Int!
+}
+
+type BeneficiaryNotificationTemplatesResponse {
+  templates: [BeneficiaryNotificationTemplate!]!
+  totalCount: Int!
+}
+
+type BeneficiaryNotificationPreferencesResponse {
+  preferences: [BeneficiaryNotificationPreference!]!
+  totalCount: Int!
+}
+
+type SendBeneficiaryNotificationResponse {
+  success: Boolean!
+  message: String!
+  notificationId: UUID
+}
+
+type UpdateBeneficiaryNotificationStatusResponse {
+  success: Boolean!
+  message: String!
+}
+
+type UpdateBeneficiaryNotificationPreferenceResponse {
+  success: Boolean!
+  message: String!
+  preference: BeneficiaryNotificationPreference
+}
+
+type BeneficiaryNotificationTemplateResponse {
+  success: Boolean!
+  message: String!
+  template: BeneficiaryNotificationTemplate
+}
+
+# Query and Mutation types to be added to the schema
+type Query {
+  getBeneficiaryNotifications(input: GetBeneficiaryNotificationsInput!): BeneficiaryNotificationsResponse!
+  getBeneficiaryNotification(id: UUID!): BeneficiaryNotification
+  getBeneficiaryNotificationTemplates(input: GetBeneficiaryNotificationTemplatesInput): BeneficiaryNotificationTemplatesResponse!
+  getBeneficiaryNotificationTemplate(id: UUID!): BeneficiaryNotificationTemplate
+  getBeneficiaryNotificationPreferences(input: GetBeneficiaryNotificationPreferencesInput!): BeneficiaryNotificationPreferencesResponse!
+}
+
+type Mutation {
+  sendBeneficiaryNotification(input: SendBeneficiaryNotificationInput!): SendBeneficiaryNotificationResponse!
+  updateBeneficiaryNotificationStatus(input: UpdateBeneficiaryNotificationStatusInput!): UpdateBeneficiaryNotificationStatusResponse!
+  updateBeneficiaryNotificationPreference(input: UpdateBeneficiaryNotificationPreferenceInput!): UpdateBeneficiaryNotificationPreferenceResponse!
+  createBeneficiaryNotificationTemplate(input: CreateBeneficiaryNotificationTemplateInput!): BeneficiaryNotificationTemplateResponse!
+  updateBeneficiaryNotificationTemplate(input: UpdateBeneficiaryNotificationTemplateInput!): BeneficiaryNotificationTemplateResponse!
+}
+
+# Scalar definitions
+scalar UUID
+scalar DateTime

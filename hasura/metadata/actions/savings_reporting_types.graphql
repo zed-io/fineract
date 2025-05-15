@@ -1,0 +1,374 @@
+# Savings Reporting Types
+
+# Common Types
+type ReportPagination {
+  pageSize: Int!
+  pageNumber: Int!
+  totalRecords: Int!
+  totalPages: Int!
+}
+
+type ReportDateRange {
+  fromDate: String!
+  toDate: String!
+}
+
+# Product Performance Report Types
+type ProductPerformanceMetrics {
+  totalAccounts: Int!
+  activeAccounts: Int!
+  dormantAccounts: Int!
+  totalBalance: Float!
+  averageBalance: Float!
+  totalInterestPaid: Float!
+  totalTransactions: Int!
+  totalDepositValue: Float!
+  totalWithdrawalValue: Float!
+  netDepositValue: Float!
+  averageLifetimeMonths: Float
+  customerRetentionRate: Float
+  dormancyRate: Float!
+  averageTransactionSize: Float!
+  effectiveInterestPercentage: Float!
+  profitMargin: Float
+}
+
+type ProductPerformanceTrend {
+  period: String!
+  totalAccounts: Int!
+  activeAccounts: Int!
+  dormantAccounts: Int!
+  totalBalance: Float!
+  netFlows: Float!
+  interestPaid: Float!
+}
+
+type SavingsProductPerformance {
+  id: String!
+  name: String!
+  shortName: String!
+  description: String
+  currencyCode: String!
+  interestRate: Float!
+  currentMetrics: ProductPerformanceMetrics!
+  historicalTrends: [ProductPerformanceTrend!]
+  comparisonMetrics: [ProductComparisonMetric!]
+}
+
+type ProductComparisonMetric {
+  metricName: String!
+  metricValue: Float!
+  industryAverage: Float
+  percentileRank: Int
+  trend: String! # "increasing", "decreasing", "stable"
+}
+
+# Dormancy Analysis Report Types
+type DormancyRiskBand {
+  daysInactive: String! # "30-60", "61-90", "90+"
+  accountCount: Int!
+  totalBalance: Float!
+  percentageOfAccounts: Float!
+  percentageOfPortfolio: Float!
+}
+
+type DormancyTrend {
+  period: String!
+  dormantAccounts: Int!
+  dormancyRate: Float!
+  reactivatedAccounts: Int!
+  newDormantAccounts: Int!
+}
+
+type DormancyDemographic {
+  demographicType: String! # "age", "gender", "income_level", "occupation"
+  segment: String!
+  accountCount: Int!
+  dormancyRate: Float!
+  averageDaysToDormancy: Int!
+}
+
+type GeographicalDormancyPattern {
+  region: String!
+  accountCount: Int!
+  dormantAccounts: Int!
+  dormancyRate: Float!
+  riskScore: Float!
+}
+
+type SavingsDormancyAnalysis {
+  asOfDate: String!
+  productId: String
+  productName: String
+  currencyCode: String!
+  totalAccounts: Int!
+  dormantAccounts: Int!
+  dormancyRate: Float!
+  averageDaysToDormancy: Int!
+  reactivationRate: Float!
+  atRiskAccounts: [DormancyRiskBand!]!
+  dormancyTrends: [DormancyTrend!]!
+  demographicAnalysis: [DormancyDemographic!]
+  geographicalAnalysis: [GeographicalDormancyPattern!]
+  seasonalPatterns: [DormancyTrend!]
+  predictedDormancyRate: Float
+  recommendedActions: [String!]
+}
+
+# Interest Distribution Report Types
+type InterestRateTier {
+  tierRate: Float!
+  accountCount: Int!
+  totalBalance: Float!
+  totalInterestPaid: Float!
+  averageInterestPaid: Float!
+  portfolioPercentage: Float!
+  costPercentage: Float!
+}
+
+type BalanceRangeTier {
+  range: String! # "0-1000", "1001-5000", etc.
+  accountCount: Int!
+  totalBalance: Float!
+  totalInterestPaid: Float!
+  averageBalance: Float!
+  averageInterestRate: Float!
+}
+
+type InterestDistributionByOffice {
+  officeId: String!
+  officeName: String!
+  accountCount: Int!
+  totalBalance: Float!
+  totalInterestPaid: Float!
+  averageInterestRate: Float!
+  costOfFundsRatio: Float!
+}
+
+type InterestPaymentTrend {
+  period: String!
+  totalInterestPaid: Float!
+  effectiveRate: Float!
+  costOfFunds: Float!
+  interestMargin: Float!
+}
+
+type SavingsInterestDistribution {
+  asOfDate: String!
+  productId: String
+  productName: String
+  currencyCode: String!
+  totalAccounts: Int!
+  totalBalance: Float!
+  totalInterestPaid: Float!
+  averageInterestRate: Float!
+  effectivePortfolioYield: Float!
+  totalCostOfFunds: Float!
+  interestMargin: Float!
+  interestByRateTier: [InterestRateTier!]!
+  interestByBalanceTier: [BalanceRangeTier!]!
+  interestByOffice: [InterestDistributionByOffice!]
+  interestTrends: [InterestPaymentTrend!]!
+}
+
+# Account Activity Report Types
+type TransactionPattern {
+  transactionType: String!
+  frequency: Float! # average transactions per month
+  averageAmount: Float!
+  largestAmount: Float!
+  smallestAmount: Float!
+  mostCommonDayOfMonth: Int
+  mostCommonDayOfWeek: String
+}
+
+type AccountActivityMetrics {
+  currentBalance: Float!
+  averageDailyBalance: Float!
+  minimumBalance: Float!
+  maximumBalance: Float!
+  daysActiveInPeriod: Int!
+  daysInactive: Int!
+  depositCount: Int!
+  withdrawalCount: Int!
+  depositAmount: Float!
+  withdrawalAmount: Float!
+  netTransactionAmount: Float!
+  interestEarned: Float!
+  feesCharged: Float!
+  balanceVolatility: Float!
+  minimumBalanceBreach: Boolean!
+  dormancyRisk: Float! # 0 to 1 scale
+}
+
+type AccountActivityTrend {
+  period: String!
+  endingBalance: Float!
+  depositFrequency: Float!
+  withdrawalFrequency: Float!
+  averageTransactionSize: Float!
+  netFlow: Float!
+}
+
+type SavingsAccountActivity {
+  accountId: String!
+  accountNumber: String!
+  accountName: String!
+  clientId: String
+  clientName: String
+  groupId: String
+  groupName: String
+  productId: String!
+  productName: String!
+  currencyCode: String!
+  status: String!
+  subStatus: String!
+  dateRange: ReportDateRange!
+  activityMetrics: AccountActivityMetrics!
+  transactionPatterns: [TransactionPattern!]!
+  activityTrends: [AccountActivityTrend!]!
+  isActive: Boolean!
+  lastActiveDate: String
+  daysSinceLastActivity: Int
+}
+
+type SavingsAccountActivityReport {
+  reportName: String!
+  generatedDate: String!
+  dateRange: ReportDateRange!
+  totalAccounts: Int!
+  activeAccounts: Int!
+  inactiveAccounts: Int!
+  totalBalance: Float!
+  averageBalance: Float!
+  accounts: [SavingsAccountActivity!]!
+  pagination: ReportPagination
+}
+
+# Financial Projection Report Types
+type ProjectionScenario {
+  scenarioType: String! # "baseline", "optimistic", "pessimistic"
+  accountGrowth: Int!
+  balanceGrowth: Float!
+  interestExpense: Float!
+  feeIncome: Float!
+  netIncome: Float!
+  projectedDormancyRate: Float!
+  projectedAttritionRate: Float!
+  growthRate: Float!
+  confidenceLevel: Float!
+}
+
+type ProjectionPeriod {
+  period: String! # "1M", "3M", "6M", "1Y", "3Y", "5Y"
+  baseline: ProjectionScenario!
+  optimistic: ProjectionScenario
+  pessimistic: ProjectionScenario
+}
+
+type ProjectionAssumption {
+  name: String!
+  value: String!
+  description: String
+  impact: String # "high", "medium", "low"
+}
+
+type SavingsFinancialProjection {
+  productId: String!
+  productName: String!
+  currencyCode: String!
+  asOfDate: String!
+  projectedPeriodsAhead: [ProjectionPeriod!]!
+  currentMetrics: ProductPerformanceMetrics!
+  assumptions: [ProjectionAssumption!]!
+  sensitivityAnalysis: JSON
+  recommendedActions: [String!]
+}
+
+# Input Types for Reports
+input ProductPerformanceReportInput {
+  startDate: String!
+  endDate: String!
+  productId: String
+  currencyCode: String
+  includeTrends: Boolean
+  includeComparison: Boolean
+}
+
+input DormancyAnalysisReportInput {
+  asOfDate: String!
+  productId: String
+  riskThresholdDays: Int! # Default to 60 if not provided
+  includeGeographical: Boolean
+  includeDemographic: Boolean
+  includeSeasonalAnalysis: Boolean
+  projectionMonths: Int
+}
+
+input InterestDistributionReportInput {
+  asOfDate: String!
+  productId: String
+  includeOfficeBreakdown: Boolean
+  includeTrends: Boolean
+  monthsForTrend: Int
+}
+
+input AccountActivityReportInput {
+  startDate: String!
+  endDate: String!
+  productId: String
+  clientId: String
+  groupId: String
+  officeId: String
+  status: String
+  subStatus: String
+  minBalance: Float
+  maxBalance: Float
+  sortBy: String
+  sortOrder: String
+  page: Int
+  pageSize: Int
+}
+
+input FinancialProjectionReportInput {
+  asOfDate: String!
+  productId: String!
+  includeOptimistic: Boolean
+  includePessimistic: Boolean
+  customAssumptions: JSON
+  projectionPeriods: [String!]
+}
+
+# Response Types
+type ProductPerformanceReportResponse {
+  success: Boolean!
+  generatedDate: String!
+  dateRange: ReportDateRange!
+  currencyCode: String!
+  products: [SavingsProductPerformance!]!
+  message: String
+}
+
+type DormancyAnalysisReportResponse {
+  success: Boolean!
+  report: SavingsDormancyAnalysis
+  message: String
+}
+
+type InterestDistributionReportResponse {
+  success: Boolean!
+  report: SavingsInterestDistribution
+  message: String
+}
+
+type AccountActivityReportResponse {
+  success: Boolean!
+  report: SavingsAccountActivityReport
+  message: String
+}
+
+type FinancialProjectionReportResponse {
+  success: Boolean!
+  report: SavingsFinancialProjection
+  message: String
+}

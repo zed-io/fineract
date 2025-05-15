@@ -1,0 +1,750 @@
+actions:
+  - name: getRepaymentStrategies
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/repayment-strategies"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Get available loan repayment strategies
+
+  - name: addLoanCharge
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/charges/add"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Add a charge to a loan
+
+  - name: waiveLoanCharge
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/charges/waive"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Waive a loan charge
+
+  - name: writeLoanOff
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/write-off"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Write off a loan
+
+  - name: undoLoanWriteOff
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/undo-write-off"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Undo a loan write-off
+
+  - name: getLoanWriteOffHistory
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/write-off-history"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Get loan write-off history
+
+  - name: processLoanDelinquency
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/process-delinquency"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Process loan delinquency
+
+  - name: getLoanDelinquencyHistory
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/delinquency-history"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Get loan delinquency history
+
+  - name: createLoanRestructure
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/restructure/create"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Create a loan restructure request
+
+  - name: approveLoanRestructure
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/restructure/approve"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Approve a loan restructure request
+
+  - name: rejectLoanRestructure
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/restructure/reject"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Reject a loan restructure request
+
+  - name: getLoanRestructureHistory
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/restructure/history"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Get loan restructure history
+
+  - name: createInterestPause
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/interest-pause/create"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Create an interest pause period for a loan
+
+  - name: cancelInterestPause
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/interest-pause/cancel"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Cancel an interest pause period
+
+  - name: getInterestPausePeriods
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/interest-pause/list"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Get interest pause periods for a loan
+
+  - name: calculateInterestFreeDays
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/interest-pause/total-days"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Calculate total interest-free days for a loan
+
+  - name: applyPaymentAllocation
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/loan-advanced/payment-allocation"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Apply a payment allocation strategy to a loan repayment
+
+# Custom types
+custom_types:
+  enums:
+    - name: LoanRepaymentStrategy
+      values:
+        - principal_interest_penalties_fees
+        - heaviness_principal_interest_penalties_fees
+        - interest_principal_penalties_fees
+        - principal_interest_fees_penalties
+        - due_date_principal_interest_penalties_fees
+        - interest_principal_fees_penalties_overdue_due
+        - overdue_due_interest_principal_penalties_fees
+
+    - name: WriteOffStrategy
+      values:
+        - full_outstanding
+        - principal_only
+        - partial_amount
+
+    - name: LoanChargeTimeType
+      values:
+        - disbursement
+        - specified_due_date
+        - installment_fee
+        - overdue_installment
+        - overdue_maturity
+        - overdue_on_loan_maturity
+        - tranche_disbursement
+
+    - name: LoanChargeCalculationType
+      values:
+        - flat
+        - percent_of_amount
+        - percent_of_amount_and_interest
+        - percent_of_interest
+        - percent_of_disbursement_amount
+        - percent_of_total_outstanding
+
+    - name: DelinquencyClassification
+      values:
+        - no_delinquency
+        - delinquent_30
+        - delinquent_60
+        - delinquent_90
+        - delinquent_120
+        - delinquent_150
+        - delinquent_180
+
+    - name: RestructureType
+      values:
+        - reschedule
+        - refinance
+        - restructure
+
+  input_objects:
+    - name: AddLoanChargeInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: chargeId
+          type: String!
+        - name: name
+          type: String
+        - name: amount
+          type: Float!
+        - name: currencyCode
+          type: String
+        - name: dueDate
+          type: String
+        - name: chargeTimeType
+          type: LoanChargeTimeType
+        - name: chargeCalculationType
+          type: LoanChargeCalculationType
+        - name: isPenalty
+          type: Boolean
+        - name: percentage
+          type: Float
+
+    - name: WaiveLoanChargeInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: chargeId
+          type: String!
+
+    - name: WriteLoanOffInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: writeOffDate
+          type: String!
+        - name: writeOffStrategy
+          type: WriteOffStrategy!
+        - name: writeOffAmount
+          type: Float
+        - name: writeOffReasonId
+          type: String
+        - name: writeOffReasonComment
+          type: String
+        - name: reference
+          type: String
+
+    - name: UndoLoanWriteOffInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: transactionId
+          type: String!
+        - name: note
+          type: String
+
+    - name: ProcessLoanDelinquencyInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: force
+          type: Boolean
+
+    - name: CreateLoanRestructureInput
+      fields:
+        - name: sourceLoanId
+          type: String!
+        - name: restructureType
+          type: RestructureType!
+        - name: rescheduleFromDate
+          type: String!
+        - name: submittedOnDate
+          type: String!
+        - name: adjustedDueDate
+          type: String
+        - name: graceOnPrincipal
+          type: Int
+        - name: graceOnInterest
+          type: Int
+        - name: extraTerms
+          type: Int
+        - name: newInterestRate
+          type: Float
+        - name: interestRateFrequencyType
+          type: String
+        - name: changedEMI
+          type: Float
+        - name: reasonForReschedule
+          type: String!
+        - name: rescheduleReasonComment
+          type: String
+        - name: interestAccruedTillRescheduledDate
+          type: Float
+
+    - name: ApproveLoanRestructureInput
+      fields:
+        - name: restructureId
+          type: String!
+        - name: approvalDate
+          type: String!
+
+    - name: RejectLoanRestructureInput
+      fields:
+        - name: restructureId
+          type: String!
+        - name: rejectionReason
+          type: String!
+
+    - name: CreateInterestPauseInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: startDate
+          type: String!
+        - name: endDate
+          type: String!
+        - name: reasonId
+          type: String
+        - name: reasonComment
+          type: String
+
+    - name: CancelInterestPauseInput
+      fields:
+        - name: pauseId
+          type: String!
+        - name: cancellationReason
+          type: String
+
+    - name: ApplyPaymentAllocationInput
+      fields:
+        - name: loanId
+          type: String!
+        - name: paymentAmount
+          type: Float!
+        - name: currency
+          type: String
+        - name: repaymentStrategy
+          type: LoanRepaymentStrategy!
+
+  objects:
+    - name: RepaymentStrategy
+      fields:
+        - name: code
+          type: String!
+        - name: name
+          type: String!
+        - name: description
+          type: String!
+        - name: isDefault
+          type: Boolean
+
+    - name: RepaymentStrategiesResponse
+      fields:
+        - name: strategies
+          type: [RepaymentStrategy!]!
+        - name: defaultStrategy
+          type: String!
+
+    - name: AddLoanChargeResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: chargeId
+          type: String
+
+    - name: WaiveLoanChargeResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: WriteLoanOffResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: String
+
+    - name: UndoLoanWriteOffResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: WriteOffHistoryResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: history
+          type: [WriteOffDetail!]
+
+    - name: WriteOffDetail
+      fields:
+        - name: id
+          type: String!
+        - name: loanId
+          type: String!
+        - name: writeOffDate
+          type: String!
+        - name: writeOffStrategy
+          type: String!
+        - name: writeOffAmount
+          type: Float!
+        - name: writeOffReasonId
+          type: String
+        - name: writeOffReasonCode
+          type: String
+        - name: writeOffReasonName
+          type: String
+        - name: writeOffReasonComment
+          type: String
+        - name: submittedByUserId
+          type: String!
+        - name: submittedByUsername
+          type: String
+        - name: transactionId
+          type: String!
+        - name: outstandingPrincipal
+          type: Float!
+        - name: outstandingInterest
+          type: Float!
+        - name: outstandingFees
+          type: Float!
+        - name: outstandingPenalties
+          type: Float!
+        - name: reference
+          type: String
+        - name: isReversed
+          type: Boolean
+        - name: reversedOnDate
+          type: String
+        - name: reversedByUserId
+          type: String
+        - name: reversedByUsername
+          type: String
+        - name: reversalNote
+          type: String
+        - name: createdDate
+          type: String!
+
+    - name: DelinquencyResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: isDelinquent
+          type: Boolean!
+        - name: delinquency
+          type: DelinquencyDetail
+
+    - name: DelinquencyHistoryResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: history
+          type: [DelinquencyDetail!]
+
+    - name: DelinquencyDetail
+      fields:
+        - name: id
+          type: String
+        - name: loanId
+          type: String!
+        - name: classification
+          type: String!
+        - name: delinquentDays
+          type: Int!
+        - name: delinquentAmount
+          type: Float!
+        - name: delinquentDate
+          type: String!
+        - name: lastDelinquentDate
+          type: String
+        - name: oldestUnpaidInstallmentDate
+          type: String
+        - name: isActive
+          type: Boolean!
+        - name: previousClassification
+          type: String
+        - name: classificationChangedDate
+          type: String
+        - name: resolvedDate
+          type: String
+        - name: createdDate
+          type: String
+
+    - name: CreateLoanRestructureResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: restructureId
+          type: String
+
+    - name: ApproveLoanRestructureResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: RejectLoanRestructureResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: LoanRestructureHistoryResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: history
+          type: [LoanRestructureDetail!]
+
+    - name: LoanRestructureDetail
+      fields:
+        - name: id
+          type: String!
+        - name: sourceLoanId
+          type: String!
+        - name: restructureType
+          type: String!
+        - name: rescheduleFromDate
+          type: String!
+        - name: submittedOnDate
+          type: String!
+        - name: adjustedDueDate
+          type: String
+        - name: graceOnPrincipal
+          type: Int
+        - name: graceOnInterest
+          type: Int
+        - name: extraTerms
+          type: Int
+        - name: newInterestRate
+          type: Float
+        - name: interestRateFrequencyType
+          type: String
+        - name: changedEMI
+          type: Float
+        - name: reasonForReschedule
+          type: String!
+        - name: rescheduleReasonComment
+          type: String
+        - name: status
+          type: String!
+        - name: newLoanId
+          type: String
+        - name: oldMaturityDate
+          type: String
+        - name: newMaturityDate
+          type: String
+        - name: approvalDate
+          type: String
+        - name: approvedByUserId
+          type: String
+        - name: approvedByUsername
+          type: String
+        - name: rejectionReason
+          type: String
+        - name: createdBy
+          type: String!
+        - name: createdByUsername
+          type: String
+        - name: createdDate
+          type: String!
+
+    - name: CreateInterestPauseResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: pauseId
+          type: String
+
+    - name: CancelInterestPauseResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: InterestPausePeriodsResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: periods
+          type: [InterestPausePeriod!]
+
+    - name: InterestPausePeriod
+      fields:
+        - name: id
+          type: String!
+        - name: loanId
+          type: String!
+        - name: startDate
+          type: String!
+        - name: endDate
+          type: String!
+        - name: reasonId
+          type: String
+        - name: reasonCode
+          type: String
+        - name: reasonName
+          type: String
+        - name: reasonComment
+          type: String
+        - name: isActive
+          type: Boolean!
+        - name: isPeriodActive
+          type: Boolean!
+        - name: createdByUserId
+          type: String!
+        - name: createdByUsername
+          type: String
+        - name: createdDate
+          type: String!
+        - name: cancelledByUserId
+          type: String
+        - name: cancelledByUsername
+          type: String
+        - name: cancelledDate
+          type: String
+        - name: cancellationReason
+          type: String
+
+    - name: InterestFreeDaysResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: totalDays
+          type: Int!
+
+    - name: PaymentAllocationResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: allocation
+          type: PaymentAllocation
+
+    - name: PaymentAllocation
+      fields:
+        - name: loanId
+          type: String!
+        - name: paymentAmount
+          type: Float!
+        - name: currency
+          type: String!
+        - name: strategy
+          type: String!
+        - name: periodAllocations
+          type: [PeriodAllocation!]!
+        - name: totalPrincipalAllocated
+          type: Float!
+        - name: totalInterestAllocated
+          type: Float!
+        - name: totalFeeChargesAllocated
+          type: Float!
+        - name: totalPenaltyChargesAllocated
+          type: Float!
+        - name: unallocatedAmount
+          type: Float!
+
+    - name: PeriodAllocation
+      fields:
+        - name: periodNumber
+          type: Int!
+        - name: dueDate
+          type: String!
+        - name: principalAllocated
+          type: Float!
+        - name: interestAllocated
+          type: Float!
+        - name: feeChargesAllocated
+          type: Float!
+        - name: penaltyChargesAllocated
+          type: Float!
+        - name: totalAllocated
+          type: Float!
+
+  scalars:
+    - name: JSON

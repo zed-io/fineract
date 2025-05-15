@@ -1,0 +1,29 @@
+- name: performCreditCheck
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/credit-check/perform"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: performCreditCheck
+  
+- name: getCreditCheckHistory
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/credit-check/history"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getCreditCheckHistory
+  
+- name: getCreditCheckById
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/credit-check/byId"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getCreditCheckById
