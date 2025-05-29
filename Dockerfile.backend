@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine as builder
+FROM eclipse-temurin:21-jdk-alpine as builder
 
 WORKDIR /app
 
@@ -35,7 +35,7 @@ COPY custom ./custom/
 # Build the application
 RUN ./gradlew build -x test
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 RUN apk add --no-cache curl
 
