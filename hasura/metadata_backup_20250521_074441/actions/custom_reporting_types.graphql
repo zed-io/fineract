@@ -1,0 +1,396 @@
+# Custom Report Template Types
+type CustomReportTemplate {
+  id: String!
+  name: String!
+  displayName: String!
+  description: String
+  dataSources: JSON!
+  reportConfig: JSON!
+  isTemplate: Boolean!
+  isPublic: Boolean!
+  parentTemplateId: String
+  ownerId: String
+  createdDate: String!
+  updatedDate: String
+  parameters: [CustomReportParameter!]!
+}
+
+type CustomReportParameter {
+  id: String!
+  reportId: String!
+  name: String!
+  displayName: String!
+  parameterType: String!
+  defaultValue: String
+  options: JSON
+  isRequired: Boolean!
+  validationRules: JSON
+  helpText: String
+  orderPosition: Int!
+}
+
+type CustomReportSavedQuery {
+  id: String!
+  reportId: String!
+  name: String!
+  description: String
+  parameters: JSON!
+  filters: JSON
+  ownerId: String!
+  createdDate: String!
+  updatedDate: String
+}
+
+type CustomReportExecution {
+  id: String!
+  reportId: String!
+  savedQueryId: String
+  executionDate: String!
+  parameters: JSON!
+  filters: JSON
+  sorting: JSON
+  executionTimeMs: Int!
+  rowCount: Int!
+  resultMetadata: JSON
+  status: String!
+  errorMessage: String
+  ownerId: String!
+}
+
+# Visualization Component Types
+type VisualizationComponent {
+  id: String!
+  name: String!
+  displayName: String!
+  description: String
+  componentType: String!
+  configuration: JSON!
+  dataSource: JSON!
+  isTemplate: Boolean!
+  parentComponentId: String
+  isPublic: Boolean!
+  ownerId: String
+  createdDate: String!
+  updatedDate: String
+}
+
+# Dashboard Types
+type Dashboard {
+  id: String!
+  name: String!
+  displayName: String!
+  description: String
+  layoutConfig: JSON!
+  isSystem: Boolean!
+  isPublic: Boolean!
+  isDefault: Boolean!
+  ownerId: String
+  createdDate: String!
+  updatedDate: String
+  panels: [DashboardPanel!]!
+}
+
+type DashboardPanel {
+  id: String!
+  dashboardId: String!
+  visualizationId: String!
+  visualization: VisualizationComponent!
+  panelTitle: String
+  panelDescription: String
+  positionConfig: JSON!
+  panelConfig: JSON
+  createdDate: String!
+  updatedDate: String
+}
+
+type UserDashboardPreference {
+  id: String!
+  userId: String!
+  dashboardId: String!
+  dashboard: Dashboard!
+  isFavorite: Boolean!
+  isDefault: Boolean!
+  displayOrder: Int
+  customSettings: JSON
+  createdDate: String!
+  updatedDate: String
+}
+
+type ScheduledDashboard {
+  id: String!
+  dashboardId: String!
+  dashboard: Dashboard!
+  name: String!
+  frequency: String!
+  scheduleConfig: JSON!
+  format: String!
+  recipientEmails: [String!]!
+  isActive: Boolean!
+  lastRunDate: String
+  nextRunDate: String
+  ownerId: String!
+  createdDate: String!
+  updatedDate: String
+}
+
+# Data Mart Types
+type DataMart {
+  id: String!
+  name: String!
+  displayName: String!
+  description: String
+  sourceQuery: String!
+  refreshFrequency: String!
+  refreshConfig: JSON
+  lastRefreshDate: String
+  nextRefreshDate: String
+  rowCount: Int
+  status: String!
+  isActive: Boolean!
+  createdDate: String!
+  updatedDate: String
+}
+
+# Input Types for Operations
+input CustomReportTemplateInput {
+  name: String!
+  displayName: String!
+  description: String
+  dataSources: JSON!
+  reportConfig: JSON!
+  isTemplate: Boolean
+  isPublic: Boolean
+  parentTemplateId: String
+}
+
+input CustomReportParameterInput {
+  name: String!
+  displayName: String!
+  parameterType: String!
+  defaultValue: String
+  options: JSON
+  isRequired: Boolean!
+  validationRules: JSON
+  helpText: String
+  orderPosition: Int
+}
+
+input CustomReportSavedQueryInput {
+  reportId: String!
+  name: String!
+  description: String
+  parameters: JSON!
+  filters: JSON
+}
+
+input CustomReportExecutionInput {
+  reportId: String!
+  savedQueryId: String
+  parameters: JSON!
+  filters: JSON
+  sorting: JSON
+  pagination: JSON
+}
+
+input VisualizationComponentInput {
+  name: String!
+  displayName: String!
+  description: String
+  componentType: String!
+  configuration: JSON!
+  dataSource: JSON!
+  isTemplate: Boolean
+  parentComponentId: String
+  isPublic: Boolean
+}
+
+input DashboardInput {
+  name: String!
+  displayName: String!
+  description: String
+  layoutConfig: JSON!
+  isPublic: Boolean
+  isDefault: Boolean
+}
+
+input DashboardPanelInput {
+  dashboardId: String!
+  visualizationId: String!
+  panelTitle: String
+  panelDescription: String
+  positionConfig: JSON!
+  panelConfig: JSON
+}
+
+input UserDashboardPreferenceInput {
+  dashboardId: String!
+  isFavorite: Boolean!
+  isDefault: Boolean!
+  displayOrder: Int
+  customSettings: JSON
+}
+
+input ScheduledDashboardInput {
+  dashboardId: String!
+  name: String!
+  frequency: String!
+  scheduleConfig: JSON!
+  format: String!
+  recipientEmails: [String!]!
+  isActive: Boolean!
+}
+
+input DataMartInput {
+  name: String!
+  displayName: String!
+  description: String
+  sourceQuery: String!
+  refreshFrequency: String!
+  refreshConfig: JSON
+  isActive: Boolean!
+}
+
+# Response Types
+type CustomReportTemplateResponse {
+  success: Boolean!
+  template: CustomReportTemplate
+  message: String
+}
+
+type CustomReportTemplatesResponse {
+  success: Boolean!
+  templates: [CustomReportTemplate!]!
+  count: Int!
+  message: String
+}
+
+type CustomReportExecutionResponse {
+  success: Boolean!
+  execution: CustomReportExecution
+  data: JSON
+  columns: [ReportColumn!]
+  message: String
+}
+
+type CustomReportSavedQueryResponse {
+  success: Boolean!
+  savedQuery: CustomReportSavedQuery
+  message: String
+}
+
+type VisualizationComponentResponse {
+  success: Boolean!
+  component: VisualizationComponent
+  message: String
+}
+
+type VisualizationComponentsResponse {
+  success: Boolean!
+  components: [VisualizationComponent!]!
+  count: Int!
+  message: String
+}
+
+type DashboardResponse {
+  success: Boolean!
+  dashboard: Dashboard
+  message: String
+}
+
+type DashboardsResponse {
+  success: Boolean!
+  dashboards: [Dashboard!]!
+  count: Int!
+  message: String
+}
+
+type DashboardPanelResponse {
+  success: Boolean!
+  panel: DashboardPanel
+  message: String
+}
+
+type UserDashboardPreferenceResponse {
+  success: Boolean!
+  preference: UserDashboardPreference
+  message: String
+}
+
+type ScheduledDashboardResponse {
+  success: Boolean!
+  scheduledDashboard: ScheduledDashboard
+  message: String
+}
+
+type DataMartResponse {
+  success: Boolean!
+  dataMart: DataMart
+  message: String
+}
+
+type DataMartsResponse {
+  success: Boolean!
+  dataMarts: [DataMart!]!
+  count: Int!
+  message: String
+}
+
+# Visualization Rendering Types
+type ChartData {
+  type: String!
+  data: JSON!
+  options: JSON!
+  width: Int
+  height: Int
+}
+
+type VisualizationRenderResponse {
+  success: Boolean!
+  chartData: ChartData
+  message: String
+}
+
+type DashboardDataResponse {
+  success: Boolean!
+  dashboard: Dashboard
+  panels: [DashboardPanelData!]!
+  message: String
+}
+
+type DashboardPanelData {
+  panel: DashboardPanel!
+  chartData: ChartData
+}
+
+# Export Types
+type ExportResponse {
+  success: Boolean!
+  fileName: String
+  fileUrl: String
+  contentType: String
+  message: String
+}
+
+# Combined Response (for bulk operations)
+type BulkOperationResponse {
+  success: Boolean!
+  successCount: Int!
+  failureCount: Int!
+  results: [OperationResult!]!
+  message: String
+}
+
+type OperationResult {
+  id: String!
+  success: Boolean!
+  message: String
+}
+
+# Event Stream for Real-time Updates
+type DashboardUpdateEvent {
+  dashboardId: String!
+  panelId: String
+  eventType: String!
+  timestamp: String!
+  data: JSON
+}

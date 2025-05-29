@@ -2,7 +2,7 @@
 -- Creates tables and functions for managing beneficiaries of recurring deposit accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create table for recurring deposit account beneficiaries
 CREATE TABLE IF NOT EXISTS recurring_deposit_beneficiary (

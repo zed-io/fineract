@@ -5,10 +5,10 @@ echo "=== Loading Trinidad and Tobago Seed Data ==="
 
 # Database connection parameters
 DB_HOST="localhost"
-DB_PORT="5432"
+DB_PORT="5434"
 DB_USER="postgres"
 DB_PASSWORD="postgres"
-DB_NAME="fineract"
+DB_NAME="fineract_hasura"
 
 # Ensure the scripts exist
 SCRIPTS=(
@@ -19,6 +19,10 @@ SCRIPTS=(
   "/Users/markp/wam/fineract/hasura/seeds/trinidad_recurring_deposit_schema.sql"
   "/Users/markp/wam/fineract/hasura/seeds/trinidad_reporting_seed.sql"
   "/Users/markp/wam/fineract/hasura/seeds/trinidad_integration_seed.sql"
+  "/Users/markp/wam/fineract/hasura/seeds/trinidad_share_products.sql"
+  "/Users/markp/wam/fineract/hasura/seeds/trinidad_accounts_transactions.sql"
+  "/Users/markp/wam/fineract/hasura/seeds/trinidad_transaction_history.sql"
+  "/Users/markp/wam/fineract/hasura/seeds/trinidad_demo_users.sql"
 )
 
 for script in "${SCRIPTS[@]}"; do
@@ -66,6 +70,18 @@ run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_reporting_seed.sql"
 echo "Step 7: Loading integration data (APIs, webhooks, data exchange)..."
 run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_integration_seed.sql"
 
+echo "Step 8: Loading share products and configurations..."
+run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_share_products.sql"
+
+echo "Step 9: Loading accounts and initial transactions..."
+run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_accounts_transactions.sql"
+
+echo "Step 10: Loading comprehensive transaction history..."
+run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_transaction_history.sql"
+
+echo "Step 11: Loading demo user accounts..."
+run_script "/Users/markp/wam/fineract/hasura/seeds/trinidad_demo_users.sql"
+
 echo "=== All Trinidad and Tobago seed data loaded successfully! ==="
 echo ""
 echo "You now have a complete mock dataset for Trinidad and Tobago operations including:"
@@ -79,4 +95,26 @@ echo "• Chart of accounts referencing local banks (First Citizens, RBC)"
 echo "• Comprehensive reporting data with Trinidad-specific metrics"
 echo "• Integration configurations with Trinidad financial institutions"
 echo ""
-echo "To verify the data, run: psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c 'SELECT * FROM trinidad_reporting_summary;'"
+echo "NEW: Complete mock data including:"
+echo "• 50+ savings accounts with realistic balances"
+echo "• 40+ active loan accounts (Home, Business, Education, Agricultural, Carnival)"
+echo "• 20+ fixed deposit accounts with varying terms"
+echo "• 25+ recurring deposit accounts including Carnival Savers"
+echo "• 30+ share accounts for credit union members"
+echo "• 3000+ transactions including:"
+echo "  - Monthly salary deposits from local employers"
+echo "  - Utility bill payments (T&TEC, WASA, TSTT, Flow)"
+echo "  - Grocery shopping at local stores (Massy, PriceSmart, Hi-Lo)"
+echo "  - Carnival-related expenses (costumes, fetes, band registration)"
+echo "  - School fee payments to local institutions"
+echo "  - ATM withdrawals from Trinidad banks"
+echo "  - Insurance premiums to local providers"
+echo "  - Monthly interest postings"
+echo "• Group lending data for cooperatives"
+echo "• Beneficiary information for accounts"
+echo "• Audit trail and command history"
+echo ""
+echo "To verify the data:"
+echo "psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c 'SELECT COUNT(*) FROM m_savings_account WHERE status_enum = 300;'"
+echo "psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c 'SELECT COUNT(*) FROM m_loan WHERE loan_status_id = 300;'"
+echo "psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c 'SELECT COUNT(*) FROM m_savings_account_transaction;'"

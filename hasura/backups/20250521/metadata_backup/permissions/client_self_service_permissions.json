@@ -1,0 +1,319 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "account_no",
+              "activation_date",
+              "client_type",
+              "company_name",
+              "display_name",
+              "email_address",
+              "external_id",
+              "firstname",
+              "fullname",
+              "id",
+              "lastname",
+              "middlename",
+              "mobile_no",
+              "status",
+              "submitted_date"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-Client-Id"
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client_family_member"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "age",
+              "date_of_birth",
+              "firstname",
+              "gender",
+              "id",
+              "is_dependent",
+              "lastname",
+              "marital_status",
+              "middlename",
+              "mobile_number",
+              "profession",
+              "qualification",
+              "relationship_id"
+            ],
+            "filter": {
+              "client_id": {
+                "_eq": "X-Hasura-Client-Id"
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client_address"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "address_line_1",
+              "address_line_2",
+              "address_line_3",
+              "address_type",
+              "city",
+              "country",
+              "id",
+              "is_active",
+              "postal_code",
+              "state_province"
+            ],
+            "filter": {
+              "client_id": {
+                "_eq": "X-Hasura-Client-Id"
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "account_no",
+              "annual_nominal_interest_rate",
+              "approved_on_date",
+              "client_id",
+              "currency_code",
+              "currency_digits",
+              "days_in_month_enum",
+              "days_in_year_enum",
+              "disbursed_on_date",
+              "expected_disbursement_date",
+              "expected_maturity_date",
+              "external_id",
+              "id",
+              "interest_calculation_period_type",
+              "interest_charged_derived",
+              "interest_method_type",
+              "interest_outstanding_derived",
+              "interest_recalculation_enabled",
+              "interest_waived_derived",
+              "loan_status",
+              "number_of_repayments",
+              "principal_amount",
+              "principal_disbursed_derived",
+              "principal_outstanding_derived",
+              "principal_repaid_derived",
+              "repayment_frequency_type",
+              "submitted_on_date",
+              "term_frequency",
+              "term_frequency_type",
+              "total_charges_due_at_disbursement_derived",
+              "total_outstanding_derived",
+              "total_repayment_derived",
+              "total_waived_derived"
+            ],
+            "filter": {
+              "client_id": {
+                "_eq": "X-Hasura-Client-Id"
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "account_balance_derived",
+              "account_no",
+              "account_type",
+              "activated_on_date",
+              "annual_fee_amount",
+              "approved_on_date",
+              "client_id",
+              "closed_on_date",
+              "currency_code",
+              "currency_digits",
+              "dormant_on_date",
+              "external_id",
+              "id",
+              "interest_calculation_type",
+              "interest_compounding_period_type",
+              "interest_posting_period_type",
+              "last_active_transaction_date",
+              "nominal_annual_interest_rate",
+              "status",
+              "sub_status",
+              "submitted_on_date",
+              "total_deposits_derived",
+              "total_interest_earned_derived",
+              "total_interest_posted_derived",
+              "total_withdrawals_derived"
+            ],
+            "filter": {
+              "client_id": {
+                "_eq": "X-Hasura-Client-Id"
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan_repayment_schedule"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "completed_derived",
+              "due_date",
+              "fee_charges_amount",
+              "fee_charges_completed_derived",
+              "fee_charges_waived_derived",
+              "from_date",
+              "id",
+              "installment_number",
+              "interest_amount",
+              "interest_completed_derived",
+              "interest_waived_derived",
+              "loan_id",
+              "obligations_met_on_date",
+              "penalty_charges_amount",
+              "penalty_charges_completed_derived",
+              "penalty_charges_waived_derived",
+              "principal_amount",
+              "principal_completed_derived"
+            ],
+            "filter": {
+              "loan": {
+                "client_id": {
+                  "_eq": "X-Hasura-Client-Id"
+                }
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan_transaction"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "amount",
+              "fee_charges_portion_derived",
+              "id",
+              "interest_portion_derived",
+              "is_reversed",
+              "loan_id",
+              "manually_adjusted_or_reversed",
+              "outstanding_loan_balance_derived",
+              "overpayment_portion_derived",
+              "penalty_charges_portion_derived",
+              "principal_portion_derived",
+              "reversed_on_date",
+              "submitted_on_date",
+              "transaction_date",
+              "transaction_type",
+              "unrecognized_income_portion"
+            ],
+            "filter": {
+              "loan": {
+                "client_id": {
+                  "_eq": "X-Hasura-Client-Id"
+                }
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account_transaction"
+      },
+      "select_permissions": [
+        {
+          "role": "client_self_service",
+          "permission": {
+            "columns": [
+              "amount",
+              "balance_end_date_derived",
+              "balance_number_of_days_derived",
+              "id",
+              "is_reversed",
+              "reversed_on_date",
+              "running_balance_derived",
+              "savings_account_id",
+              "submitted_on_date",
+              "transaction_date",
+              "transaction_type"
+            ],
+            "filter": {
+              "account": {
+                "client_id": {
+                  "_eq": "X-Hasura-Client-Id"
+                }
+              }
+            },
+            "allow_aggregations": false
+          }
+        }
+      ]
+    }
+  ]
+}

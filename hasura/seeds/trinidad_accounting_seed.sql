@@ -2,7 +2,7 @@
 -- This seed file creates GL accounts and journal entries specific to Trinidad and Tobago
 
 -- Set search path to the appropriate schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- ================================================
 -- Chart of Accounts for Trinidad and Tobago

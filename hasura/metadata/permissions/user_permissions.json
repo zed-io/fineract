@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "client"
       },
       "select_permissions": [
@@ -15,7 +15,7 @@
                 "_in": {
                   "_exists": {
                     "_table": {
-                      "schema": "fineract_default",
+                      "schema": "default",
                       "name": "app_user_role"
                     },
                     "_where": {
@@ -53,7 +53,7 @@
                 "_in": {
                   "_exists": {
                     "_table": {
-                      "schema": "fineract_default",
+                      "schema": "default",
                       "name": "app_user_role"
                     },
                     "_where": {
@@ -134,7 +134,7 @@
                 "_in": {
                   "_exists": {
                     "_table": {
-                      "schema": "fineract_default",
+                      "schema": "default",
                       "name": "app_user_role"
                     },
                     "_where": {
@@ -170,7 +170,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan"
       },
       "select_permissions": [
@@ -186,7 +186,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -218,7 +218,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -262,7 +262,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -294,7 +294,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -376,7 +376,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "savings_account"
       },
       "select_permissions": [
@@ -392,7 +392,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -424,7 +424,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -468,7 +468,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {
@@ -500,7 +500,7 @@
                       "_in": {
                         "_exists": {
                           "_table": {
-                            "schema": "fineract_default",
+                            "schema": "default",
                             "name": "app_user_role"
                           },
                           "_where": {

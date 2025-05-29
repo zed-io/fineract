@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fineract_default
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Hasura GraphQL Engine
+  hasura:
+    image: hasura/graphql-engine:v2.35.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/fineract_default
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLE_LOGGING: "true"
+      HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgres@postgres:5432/hasura_metadata
+    volumes:
+      - ./hasura/metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+    restart: unless-stopped
+
+  # Fineract Backend
+  fineract:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8443:8443"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      JAVA_OPTS: "-Xmx1G"
+      FINERACT_DEFAULT_TENANTDB_HOSTNAME: postgres
+      FINERACT_DEFAULT_TENANTDB_PORT: 5432
+      FINERACT_DEFAULT_TENANTDB_UID: postgres
+      FINERACT_DEFAULT_TENANTDB_PWD: postgres
+      FINERACT_DEFAULT_TENANTDB_NAME: fineract_default
+      FINERACT_DEFAULT_TENANTDB_DRIVER: org.postgresql.Driver
+      FINERACT_DEFAULT_TENANTDB_PROTOCOL: jdbc:postgresql
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://localhost:8443/fineract-provider/api/v1/offices?tenantIdentifier=default", "-k", "--silent", "--user", "mifos:password"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./front-ends/credit-cloud-admin
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      fineract:
+        condition: service_healthy
+      hasura:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_API_URL: http://fineract:8443/fineract-provider/api/v1
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: http://hasura:8080/v1/graphql
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+    volumes:
+      - ./front-ends/credit-cloud-admin:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  postgres_data:

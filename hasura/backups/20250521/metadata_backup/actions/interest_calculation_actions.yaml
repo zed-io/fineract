@@ -1,0 +1,46 @@
+# Interest Calculation Actions
+- name: calculateInterest
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/interest-calculation/calculate"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: postInterest
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/interest-calculation/post"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: recordDailyAccrual
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/interest-calculation/accrual/record"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getDailyAccruals
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/interest-calculation/accruals"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getInterestPostingHistory
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/interest-calculation/history"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service

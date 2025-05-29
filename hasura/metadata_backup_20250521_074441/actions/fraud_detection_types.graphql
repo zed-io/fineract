@@ -1,0 +1,150 @@
+# Fraud detection types
+
+# Fraud check type enum
+enum FraudCheckType {
+  IDENTITY_VERIFICATION
+  ADDRESS_VERIFICATION
+  DOCUMENT_AUTHENTICITY
+  TRANSACTION_PATTERN
+  AML_SCREENING
+  PEP_SCREENING
+  SANCTIONS_SCREENING
+  CREDIT_BEHAVIOR
+}
+
+# Risk level enum
+enum FraudRiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+# Check status enum
+enum FraudCheckStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+# Request for fraud detection
+input FraudDetectionRequest {
+  clientId: String!
+  checkTypes: [FraudCheckType!]
+  identificationNumber: String
+  identificationType: String
+  firstName: String
+  lastName: String
+  dateOfBirth: String
+  address: String
+  nationality: String
+  documentIds: [String!]
+  metaData: JSON
+}
+
+# Result of a single fraud check
+type FraudCheckResult {
+  checkType: FraudCheckType!
+  checkId: String!
+  status: FraudCheckStatus!
+  riskLevel: FraudRiskLevel!
+  score: Int!
+  details: String!
+  matchDetails: JSON
+  rawResponse: JSON
+  timestamp: String!
+}
+
+# Result of fraud detection
+type FraudDetectionResult {
+  requestId: String!
+  clientId: String!
+  timestamp: String!
+  overallRiskLevel: FraudRiskLevel!
+  checks: [FraudCheckResult!]!
+  requiresManualReview: Boolean!
+  reviewReason: String
+  errors: [String!]
+  clientName: String
+}
+
+# Request to get fraud detection history
+input FraudDetectionHistoryRequest {
+  clientId: String!
+  limit: Int
+}
+
+# Request to get fraud detection by ID
+input FraudDetectionByIdRequest {
+  checkId: String!
+}
+
+# Request to resolve a manual review
+input ResolveManualReviewRequest {
+  checkId: String!
+  approved: Boolean!
+  notes: String!
+}
+
+# Request to get pending manual reviews
+input PendingManualReviewsRequest {
+  limit: Int
+  offset: Int
+}
+
+# Fraud detection operation result
+type PerformFraudDetectionOutput {
+  success: Boolean!
+  fraudDetection: FraudDetectionResult
+  message: String
+}
+
+# Fraud detection history result
+type FraudDetectionHistoryOutput {
+  success: Boolean!
+  history: [FraudDetectionResult!]
+  message: String
+}
+
+# Fraud detection by ID result
+type FraudDetectionByIdOutput {
+  success: Boolean!
+  fraudDetection: FraudDetectionResult
+  message: String
+}
+
+# Resolve manual review result
+type ResolveManualReviewOutput {
+  success: Boolean!
+  fraudDetection: FraudDetectionResult
+  message: String
+}
+
+# Pending manual reviews result
+type PendingManualReviewsOutput {
+  success: Boolean!
+  reviews: [FraudDetectionResult!]
+  count: Int!
+  message: String
+}
+
+# GraphQL Actions
+
+type Mutation {
+  # Perform fraud detection checks for a client
+  performFraudDetection(input: FraudDetectionRequest!): PerformFraudDetectionOutput
+  
+  # Resolve a manual review
+  resolveManualReview(input: ResolveManualReviewRequest!): ResolveManualReviewOutput
+}
+
+type Query {
+  # Get fraud detection history for a client
+  getFraudDetectionHistory(input: FraudDetectionHistoryRequest!): FraudDetectionHistoryOutput
+  
+  # Get a specific fraud detection result by ID
+  getFraudDetectionById(input: FraudDetectionByIdRequest!): FraudDetectionByIdOutput
+  
+  # Get pending manual reviews
+  getPendingManualReviews(input: PendingManualReviewsRequest!): PendingManualReviewsOutput
+}

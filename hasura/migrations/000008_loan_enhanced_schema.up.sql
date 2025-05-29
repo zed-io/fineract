@@ -2,7 +2,7 @@
 -- Extends the base loan schema with document handling, decisioning, and credit union specific features
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for loan document management and decisioning
 CREATE TYPE document_status AS ENUM ('pending', 'verified', 'rejected');

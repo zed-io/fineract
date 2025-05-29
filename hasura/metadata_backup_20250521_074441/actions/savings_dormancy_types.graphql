@@ -1,0 +1,206 @@
+# Savings Dormancy Management GraphQL Types
+
+# ===== Input Types =====
+
+input DormancyConfigurationInput {
+  productId: UUID!
+  isDormancyTrackingActive: Boolean
+  daysToInactive: Int
+  daysToDormancy: Int
+  daysToEscheat: Int
+  dormancyFeeAmount: Float
+  dormancyFeePeriodFrequency: Int
+  dormancyFeePeriodFrequencyType: String
+  dormancyNotificationDays: [Int!]
+  reactivationAllowed: Boolean
+  autoReactivateOnCredit: Boolean
+}
+
+input DormancyReactivationInput {
+  accountId: UUID!
+  reactivationDate: Date!
+  note: String
+}
+
+input ManualDormancyFeeInput {
+  accountId: UUID!
+  feeDate: Date!
+  amount: Float
+}
+
+input DormancyStatusChangeInput {
+  accountId: UUID!
+  newStatus: SavingsAccountSubStatus!
+  transitionDate: Date!
+  reason: String!
+  notes: String
+}
+
+input DormancyReportInput {
+  productId: UUID
+  officeId: UUID
+  fieldOfficerId: UUID
+  fromDormancyDate: Date
+  toDormancyDate: Date
+  minDormantDays: Int
+  maxDormantDays: Int
+  minBalance: Float
+  maxBalance: Float
+  includeClosed: Boolean
+  includeInactive: Boolean
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input DormancyLogInput {
+  accountId: UUID!
+  startDate: Date
+  endDate: Date
+  limit: Int
+  offset: Int
+}
+
+input ProcessDormancyFeesInput {
+  processDate: Date!
+  batchSize: Int
+}
+
+# ===== Response Types =====
+
+type DormancyConfiguration {
+  productId: UUID!
+  productName: String!
+  isDormancyTrackingActive: Boolean!
+  daysToInactive: Int
+  daysToDormancy: Int
+  daysToEscheat: Int
+  dormancyFeeAmount: Float
+  dormancyFeePeriodFrequency: Int
+  dormancyFeePeriodFrequencyType: String
+  dormancyNotificationDays: [Int!]
+  reactivationAllowed: Boolean!
+  autoReactivateOnCredit: Boolean!
+}
+
+type DormancyReactivationResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  previousStatus: String!
+  newStatus: String!
+  reactivationDate: Date!
+  message: String!
+}
+
+type DormancyStatusChangeResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  previousStatus: String!
+  newStatus: String!
+  transitionDate: Date!
+  message: String!
+}
+
+type DormancyLogEntry {
+  id: UUID!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  transitionDate: Date!
+  previousStatus: String!
+  newStatus: String!
+  triggeredBy: String
+  reason: String
+  notes: String
+  createdDate: Date!
+}
+
+type DormancyLogResponse {
+  totalCount: Int!
+  logs: [DormancyLogEntry!]!
+  accountId: UUID!
+  accountNo: String!
+  ownerName: String!
+}
+
+type DormantAccount {
+  id: UUID!
+  accountNo: String!
+  externalId: String
+  ownerName: String!
+  clientId: UUID
+  groupId: UUID
+  productName: String!
+  status: String!
+  subStatus: String!
+  currency: String!
+  balance: Float!
+  lastActiveDate: Date
+  dormantSince: Date
+  daysDormant: Int
+  fieldOfficer: String
+  office: String
+  lastDormancyFeeDate: Date
+  nextDormancyFeeDate: Date
+}
+
+type DormancyReportResponse {
+  totalCount: Int!
+  totalBalance: Float!
+  accounts: [DormantAccount!]!
+}
+
+type DormancyFeeProcessingResponse {
+  success: Boolean!
+  processDate: Date!
+  totalAccountsProcessed: Int!
+  totalFeesApplied: Int!
+  totalFeeAmount: Float!
+  message: String!
+}
+
+type DormancyFeeResponse {
+  success: Boolean!
+  accountId: UUID!
+  accountNo: String!
+  clientName: String!
+  feeDate: Date!
+  amount: Float!
+  transactionId: UUID!
+  message: String!
+}
+
+# ===== Mutation Types =====
+
+type Mutation {
+  # Dormancy configuration
+  updateDormancyConfiguration(input: DormancyConfigurationInput!): DormancyConfiguration!
+  
+  # Account status management
+  reactivateDormantAccount(input: DormancyReactivationInput!): DormancyReactivationResponse!
+  changeDormancyStatus(input: DormancyStatusChangeInput!): DormancyStatusChangeResponse!
+  
+  # Dormancy fee processing
+  applyDormancyFee(input: ManualDormancyFeeInput!): DormancyFeeResponse!
+  processDormancyFees(input: ProcessDormancyFeesInput!): DormancyFeeProcessingResponse!
+}
+
+# ===== Query Type =====
+
+type Query {
+  # Configuration queries
+  getDormancyConfiguration(productId: UUID!): DormancyConfiguration!
+  
+  # Dormancy reporting
+  getDormancyReport(input: DormancyReportInput!): DormancyReportResponse!
+  getDormancyLog(input: DormancyLogInput!): DormancyLogResponse!
+}
+
+# Required scalar types
+scalar UUID
+scalar Date

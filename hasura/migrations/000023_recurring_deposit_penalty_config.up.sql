@@ -2,7 +2,7 @@
 -- Adds penalty configurations and penalty history tracking
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum for penalty types
 CREATE TYPE deposit_penalty_type AS ENUM ('fixed', 'percentage');

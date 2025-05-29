@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan"
       },
       "object_relationships": [
@@ -91,7 +91,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_charge"
               },
               "column": "loan_id"
@@ -103,7 +103,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_collateral"
               },
               "column": "loan_id"
@@ -115,7 +115,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_guarantor"
               },
               "column": "loan_id"
@@ -127,7 +127,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_transaction"
               },
               "column": "loan_id"
@@ -139,7 +139,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_repayment_schedule"
               },
               "column": "loan_id"
@@ -151,7 +151,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_officer_assignment"
               },
               "column": "loan_id"
@@ -162,7 +162,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan_product"
       },
       "object_relationships": [
@@ -179,7 +179,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_product_charge"
               },
               "column": "loan_product_id"
@@ -191,7 +191,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan"
               },
               "column": "loan_product_id"
@@ -203,7 +203,7 @@
           "using": {
             "manual_configuration": {
               "remote_table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "product_account_mapping"
               },
               "column_mapping": {
@@ -217,7 +217,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan_transaction"
       },
       "object_relationships": [
@@ -249,7 +249,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan_repayment_schedule"
       },
       "object_relationships": [

@@ -1,0 +1,124 @@
+{
+  "relationships": [
+    {
+      "name": "clients_recurring_deposit_accounts",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "clients"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "mapping": {
+        "client_id": "id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "recurring_deposit_account",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_transactions"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "mapping": {
+        "account_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "recurring_deposit_transactions",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_transactions"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "recurring_deposit_schedule",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_installments"
+      },
+      "mapping": {
+        "id": "account_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "recurring_deposit_account_product",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_products"
+      },
+      "mapping": {
+        "product_id": "id"
+      },
+      "relationship_type": "object"
+    },
+    {
+      "name": "recurring_deposit_chart_slabs",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_interest_rate_charts"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_interest_rate_slabs"
+      },
+      "mapping": {
+        "id": "chart_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "recurring_deposit_product_charts",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_products"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_interest_rate_charts"
+      },
+      "mapping": {
+        "id": "product_id"
+      },
+      "relationship_type": "array"
+    },
+    {
+      "name": "recurring_deposit_accounts",
+      "source_table": {
+        "schema": "fineract_default",
+        "name": "groups"
+      },
+      "target_table": {
+        "schema": "fineract_default",
+        "name": "recurring_deposit_accounts"
+      },
+      "mapping": {
+        "group_id": "id"
+      },
+      "relationship_type": "array"
+    }
+  ]
+}

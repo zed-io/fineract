@@ -1,0 +1,580 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "select_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "office_id": {
+                "_in": {
+                  "_exists": {
+                    "_table": {
+                      "schema": "fineract_default",
+                      "name": "app_user_role"
+                    },
+                    "_where": {
+                      "user_id": {
+                        "_eq": "X-Hasura-User-Id"
+                      },
+                      "role": {
+                        "permissions": {
+                          "permission": {
+                            "entity_name": {
+                              "_eq": "CLIENT"
+                            },
+                            "action_name": {
+                              "_eq": "READ"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "_field": "office_id"
+                  }
+                }
+              }
+            },
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "check": {
+              "office_id": {
+                "_in": {
+                  "_exists": {
+                    "_table": {
+                      "schema": "fineract_default",
+                      "name": "app_user_role"
+                    },
+                    "_where": {
+                      "user_id": {
+                        "_eq": "X-Hasura-User-Id"
+                      },
+                      "role": {
+                        "permissions": {
+                          "permission": {
+                            "entity_name": {
+                              "_eq": "CLIENT"
+                            },
+                            "action_name": {
+                              "_eq": "CREATE"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "_field": "office_id"
+                  }
+                }
+              }
+            },
+            "columns": [
+              "account_no",
+              "client_classification_cv_id",
+              "client_type",
+              "company_name",
+              "company_registration_date",
+              "company_registration_no",
+              "display_name",
+              "email_address",
+              "external_id",
+              "firstname",
+              "fullname",
+              "gender",
+              "lastname",
+              "legal_form_id",
+              "marital_status",
+              "middlename",
+              "mobile_no",
+              "nationality",
+              "office_id",
+              "staff_id",
+              "submitted_date"
+            ],
+            "backend_only": false,
+            "set": {
+              "created_by": "X-Hasura-User-Id",
+              "submitted_by_userid": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "columns": [
+              "client_classification_cv_id",
+              "company_name",
+              "company_registration_date",
+              "company_registration_no",
+              "email_address",
+              "external_id",
+              "firstname",
+              "lastname",
+              "legal_form_id",
+              "marital_status",
+              "middlename",
+              "mobile_no",
+              "nationality",
+              "staff_id"
+            ],
+            "filter": {
+              "office_id": {
+                "_in": {
+                  "_exists": {
+                    "_table": {
+                      "schema": "fineract_default",
+                      "name": "app_user_role"
+                    },
+                    "_where": {
+                      "user_id": {
+                        "_eq": "X-Hasura-User-Id"
+                      },
+                      "role": {
+                        "permissions": {
+                          "permission": {
+                            "entity_name": {
+                              "_eq": "CLIENT"
+                            },
+                            "action_name": {
+                              "_eq": "UPDATE"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "_field": "office_id"
+                  }
+                }
+              }
+            },
+            "check": null,
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan"
+      },
+      "select_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "_or": [
+                {
+                  "client": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "LOAN"
+                                  },
+                                  "action_name": {
+                                    "_eq": "READ"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "LOAN"
+                                  },
+                                  "action_name": {
+                                    "_eq": "READ"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "check": {
+              "_or": [
+                {
+                  "client": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "LOAN"
+                                  },
+                                  "action_name": {
+                                    "_eq": "CREATE"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "LOAN"
+                                  },
+                                  "action_name": {
+                                    "_eq": "CREATE"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "columns": [
+              "account_no",
+              "allow_multiple_disbursements",
+              "allow_partial_period_interest_calcualtion",
+              "amortization_method_type",
+              "annual_nominal_interest_rate",
+              "client_id",
+              "currency_code",
+              "currency_digits",
+              "days_in_month_enum",
+              "days_in_year_enum",
+              "disbursed_amount_percentage_for_down_payment",
+              "expected_disbursement_date",
+              "external_id",
+              "fund_id",
+              "grace_interest_free_period",
+              "grace_on_interest_payment",
+              "grace_on_principal_payment",
+              "group_id",
+              "interest_calculation_period_type",
+              "interest_method_type",
+              "interest_period_frequency_type",
+              "is_auto_repayment_enabled_for_down_payment",
+              "is_down_payment_enabled",
+              "is_equal_amortization",
+              "is_fixed_installment_amount",
+              "loan_officer_id",
+              "loan_product_id",
+              "loan_type",
+              "max_disbursements",
+              "max_outstanding_loan_balance",
+              "nominal_interest_rate_per_period",
+              "number_of_repayments",
+              "principal_amount",
+              "repay_every",
+              "repayment_frequency_type",
+              "repayment_strategy",
+              "submitted_on_date",
+              "sync_disbursement_with_meeting",
+              "term_frequency",
+              "term_frequency_type"
+            ],
+            "backend_only": false,
+            "set": {
+              "created_by": "X-Hasura-User-Id",
+              "loan_status": "submitted_and_pending_approval",
+              "submitted_by_user_id": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account"
+      },
+      "select_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "_or": [
+                {
+                  "client": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "SAVINGSACCOUNT"
+                                  },
+                                  "action_name": {
+                                    "_eq": "READ"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "SAVINGSACCOUNT"
+                                  },
+                                  "action_name": {
+                                    "_eq": "READ"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "user",
+          "permission": {
+            "check": {
+              "_or": [
+                {
+                  "client": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "SAVINGSACCOUNT"
+                                  },
+                                  "action_name": {
+                                    "_eq": "CREATE"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "group": {
+                    "office_id": {
+                      "_in": {
+                        "_exists": {
+                          "_table": {
+                            "schema": "fineract_default",
+                            "name": "app_user_role"
+                          },
+                          "_where": {
+                            "user_id": {
+                              "_eq": "X-Hasura-User-Id"
+                            },
+                            "role": {
+                              "permissions": {
+                                "permission": {
+                                  "entity_name": {
+                                    "_eq": "SAVINGSACCOUNT"
+                                  },
+                                  "action_name": {
+                                    "_eq": "CREATE"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "_field": "office_id"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "columns": [
+              "account_no",
+              "account_type",
+              "allow_overdraft",
+              "annual_fee_amount",
+              "annual_fee_on_day",
+              "annual_fee_on_month",
+              "client_id",
+              "currency_code",
+              "currency_digits",
+              "days_to_dormancy",
+              "days_to_escheat",
+              "days_to_inactive",
+              "deposit_fee_for_transfer",
+              "enforce_min_required_balance",
+              "external_id",
+              "field_officer_id",
+              "group_id",
+              "interest_calculation_days_in_year_type",
+              "interest_calculation_type",
+              "interest_compounding_period_type",
+              "interest_posting_period_type",
+              "is_dormancy_tracking_active",
+              "lockin_period_frequency",
+              "lockin_period_frequency_type",
+              "min_balance_for_interest_calculation",
+              "min_overdraft_for_interest_calculation",
+              "min_required_balance",
+              "min_required_opening_balance",
+              "nominal_annual_interest_rate",
+              "nominal_annual_interest_rate_overdraft",
+              "overdraft_limit",
+              "product_id",
+              "submitted_on_date",
+              "withdrawal_fee_amount",
+              "withdrawal_fee_for_transfer",
+              "withdrawal_fee_type_enum"
+            ],
+            "backend_only": false,
+            "set": {
+              "created_by": "X-Hasura-User-Id",
+              "status": "submitted_and_pending_approval",
+              "submitted_by_user_id": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

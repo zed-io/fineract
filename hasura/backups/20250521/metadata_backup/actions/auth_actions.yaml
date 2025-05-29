@@ -1,0 +1,209 @@
+actions:
+  - name: login
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/auth/login"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: anonymous
+    comment: Authenticates a user and returns JWT tokens
+
+  - name: refreshToken
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/auth/refresh-token"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: anonymous
+      - role: user
+    comment: Refreshes an expired access token using a refresh token
+
+  - name: createUser
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/auth/create-user"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: admin
+    comment: Creates a new user account (admin only)
+
+  - name: changePassword
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/auth/change-password"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: user
+    comment: Allows a user to change their password
+
+  - name: validateToken
+    definition:
+      kind: synchronous
+      handler: "{{ACTION_BASE_URL}}/api/auth/validate-token"
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: anonymous
+      - role: user
+    comment: Validates a JWT token and returns decoded information
+
+# Custom types for action inputs and outputs
+custom_types:
+  enums: []
+  input_objects:
+    - name: LoginInput
+      fields:
+        - name: username
+          type: String!
+        - name: password
+          type: String!
+        - name: tenantId
+          type: String
+
+    - name: RefreshTokenInput
+      fields:
+        - name: refreshToken
+          type: String!
+
+    - name: CreateUserInput
+      fields:
+        - name: username
+          type: String!
+        - name: email
+          type: String
+        - name: firstname
+          type: String
+        - name: lastname
+          type: String
+        - name: password
+          type: String!
+        - name: repeatPassword
+          type: String!
+        - name: officeId
+          type: String!
+        - name: staffId
+          type: String
+        - name: roles
+          type: [String!]!
+        - name: isSelfServiceUser
+          type: Boolean
+        - name: sendPasswordToEmail
+          type: Boolean
+
+    - name: ChangePasswordInput
+      fields:
+        - name: oldPassword
+          type: String!
+        - name: newPassword
+          type: String!
+        - name: repeatPassword
+          type: String!
+
+    - name: ValidateTokenInput
+      fields:
+        - name: token
+          type: String!
+
+  objects:
+    - name: TokenResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: accessToken
+          type: String!
+        - name: refreshToken
+          type: String!
+        - name: tokenType
+          type: String!
+        - name: expiresIn
+          type: Int!
+        - name: roles
+          type: [String!]!
+        - name: permissions
+          type: [Permission!]!
+        - name: userBasicInfo
+          type: UserBasicInfo!
+
+    - name: Permission
+      fields:
+        - name: grouping
+          type: String!
+        - name: code
+          type: String!
+        - name: entityName
+          type: String!
+        - name: actionName
+          type: String!
+
+    - name: UserBasicInfo
+      fields:
+        - name: id
+          type: String!
+        - name: username
+          type: String!
+        - name: email
+          type: String
+        - name: firstname
+          type: String
+        - name: lastname
+          type: String
+        - name: displayName
+          type: String!
+        - name: officeId
+          type: String
+        - name: officeName
+          type: String
+        - name: staffId
+          type: String
+        - name: staffName
+          type: String
+        - name: lastLogin
+          type: String
+        - name: isSuperUser
+          type: Boolean!
+        - name: tenantId
+          type: String
+
+    - name: CreateUserResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: userId
+          type: String
+
+    - name: ChangePasswordResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+
+    - name: ValidateTokenResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: decoded
+          type: JSON
+
+  scalars:
+    - name: JSON

@@ -1,0 +1,175 @@
+# Trinidad and Tobago Credit Union digital banking actions
+actions:
+  - name: digitalClientOnboarding
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/digitalOnboarding'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: uploadKycDocument
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/uploadKycDocument'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: submitDigitalLoanApplication
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/submitDigitalLoanApplication'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: setupMobileBankingProfile
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/setupMobileBankingProfile'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: setupSecurityQuestions
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/setupSecurityQuestions'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: linkDigitalWallet
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/linkDigitalWallet'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: processDigitalLoanRepayment
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/processDigitalLoanRepayment'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: setupMfaAuthentication
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/setupMfaAuthentication'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: getSecurityQuestions
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/getSecurityQuestions'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: getLinkedDigitalWallets
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/getLinkedDigitalWallets'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+  - name: getClientVerificationStatus
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/v1/getClientVerificationStatus'
+      forward_client_headers: true
+      headers:
+        - name: Content-Type
+          value: application/json
+    permissions:
+      - role: client_self_service
+      - role: admin
+      - role: user
+
+custom_types:
+  enums: []
+  input_objects:
+    - name: DeviceInfoInput
+    - name: DocumentUploadInput
+    - name: DigitalOnboardingInput
+    - name: LoanDigitalApplicationInput
+    - name: CollateralDetailInput
+    - name: EmploymentDetailInput
+    - name: MobileBankingSetupInput
+    - name: SecurityAnswerSetupInput
+    - name: SecurityAnswerInput
+    - name: DigitalWalletLinkInput
+    - name: LoanDigitalRepaymentInput
+    - name: PaymentDetailsInput
+    - name: MfaSetupInput
+  objects:
+    - name: DigitalOnboardingResponse
+    - name: DocumentVerificationResponse
+    - name: LoanDigitalApplicationResponse
+    - name: MobileBankingSetupResponse
+    - name: SecurityQuestionResponse
+    - name: SecurityQuestion
+    - name: DigitalWalletResponse
+    - name: LoanDigitalRepaymentResponse
+    - name: MfaSetupResponse
+    - name: DigitalWallet
+    - name: VerificationStatusResponse
+    - name: DocumentVerification
+  scalars: []

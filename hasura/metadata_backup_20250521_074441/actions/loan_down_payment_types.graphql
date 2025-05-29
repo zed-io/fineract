@@ -1,0 +1,143 @@
+type Query {
+  calculateLoanScheduleWithDownPayment(
+    productId: String!
+    principalAmount: Float!
+    numberOfRepayments: Int!
+    interestRatePerPeriod: Float!
+    disbursementDate: String!
+    repaymentEvery: Int!
+    repaymentFrequencyType: String!
+    interestType: String!
+    amortizationType: String!
+    termFrequency: Int!
+    termFrequencyType: String!
+    enableDownPayment: Boolean!
+    downPaymentType: String!
+    downPaymentAmount: Float
+    downPaymentPercentage: Float
+    graceOnPrincipal: Int
+    graceOnInterest: Int
+    graceOnInterestCharged: Int
+    submittedOnDate: String
+  ): CalculateLoanScheduleResponse!
+
+  calculateDownPayment(
+    loanApplicationTerms: LoanApplicationTermsInput!
+  ): CalculateDownPaymentResponse!
+}
+
+type Mutation {
+  disburseLoanWithDownPayment(
+    loanId: String!
+    disbursementDate: String!
+    paymentTypeId: String
+    transactionAmount: Float
+    note: String
+    receiptNumber: String
+    checkNumber: String
+    routingCode: String
+    bankNumber: String
+    accountNumber: String
+    processDownPayment: Boolean
+  ): DisburseLoanResponse!
+
+  processDownPayment(
+    loanId: String!
+    transactionDate: String
+    paymentTypeId: String
+    note: String
+    receiptNumber: String
+    checkNumber: String
+    routingCode: String
+    bankNumber: String
+    accountNumber: String
+  ): ProcessDownPaymentResponse!
+}
+
+input LoanApplicationTermsInput {
+  principalAmount: Float!
+  currency: String!
+  loanTermFrequency: Int!
+  loanTermFrequencyType: String!
+  numberOfRepayments: Int!
+  repaymentEvery: Int!
+  repaymentFrequencyType: String!
+  interestRatePerPeriod: Float!
+  interestMethod: String!
+  amortizationMethod: String!
+  expectedDisbursementDate: String!
+  submittedOnDate: String!
+  enableDownPayment: Boolean!
+  downPaymentType: String!
+  downPaymentAmount: Float
+  downPaymentPercentage: Float
+}
+
+type LoanSchedulePeriodResponse {
+  periodNumber: Int!
+  periodType: String
+  fromDate: String!
+  dueDate: String!
+  principalAmount: Float!
+  interestAmount: Float!
+  feeAmount: Float!
+  penaltyAmount: Float!
+  totalDue: Float!
+  outstandingBalance: Float!
+}
+
+type CalculateLoanScheduleResponse {
+  success: Boolean!
+  message: String
+  currency: String
+  loanTermInDays: Int
+  periods: [LoanSchedulePeriodResponse]
+  totalPrincipal: Float
+  totalInterest: Float
+  totalFees: Float
+  totalPenalties: Float
+  totalRepayment: Float
+  downPaymentAmount: Float
+}
+
+type DownPaymentDetails {
+  downPaymentAmount: Float!
+  downPaymentType: String!
+  effectivePrincipalAmount: Float!
+  downPaymentPercentage: Float
+  totalLoanAmount: Float!
+  transactionDate: String!
+}
+
+type CalculateDownPaymentResponse {
+  success: Boolean!
+  message: String
+  downPaymentDetails: DownPaymentDetails
+}
+
+type DownPaymentInfo {
+  amount: Float!
+  effectivePrincipalAmount: Float!
+  transactionId: String
+  processed: Boolean!
+}
+
+type DisburseLoanResponse {
+  success: Boolean!
+  message: String
+  loanId: String
+  transactionId: String
+  disbursementDate: String
+  disbursedAmount: Float
+  downPayment: DownPaymentInfo
+}
+
+type ProcessDownPaymentResponse {
+  success: Boolean!
+  message: String
+  loanId: String
+  transactionId: String
+  transactionDate: String
+  downPaymentAmount: Float
+  outstandingBalance: Float
+}

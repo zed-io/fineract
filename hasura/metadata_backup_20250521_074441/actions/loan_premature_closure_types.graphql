@@ -1,0 +1,93 @@
+type PrematureCalculationResponse {
+  accountId: String!
+  depositAmount: String!
+  interestEarned: String!
+  penaltyAmount: String!
+  penaltyRate: Float!
+  penaltyApplicable: Boolean!
+  penaltyType: String!
+  totalPayoutAmount: String!
+  daysCompleted: Int!
+  percentageComplete: String!
+  originalMaturityDate: String!
+  currency: String!
+}
+
+type PrematureClosureResult {
+  accountId: String!
+  closureId: String!
+  closureDate: String!
+  depositAmount: String!
+  interestAmount: String!
+  penaltyAmount: String!
+  totalAmount: String!
+  transactionId: String!
+  transferAccountId: String
+}
+
+input CalculatePrematureClosureInput {
+  accountId: String!
+  calculationDate: String!
+}
+
+input ProcessPrematureClosureInput {
+  accountId: String!
+  closureDate: String!
+  closureReason: String!
+  transferToAccountId: String
+  note: String
+  applyPenalty: Boolean
+  overridePenaltyRate: Float
+  paymentTypeId: String
+  receiptNumber: String
+  checkNumber: String
+  routingCode: String
+  bankNumber: String
+  accountNumber: String
+}
+
+input GetPrematureClosureHistoryInput {
+  accountId: String!
+}
+
+type PrematureClosureHistory {
+  id: String!
+  accountId: String!
+  closureDate: String!
+  maturityDate: String!
+  closurePrincipalAmount: String!
+  interestAmount: String!
+  penaltyAmount: String!
+  totalAmount: String!
+  penaltyInterestRate: Float
+  closureReason: String!
+  closureTransactionId: String!
+  transferToAccountId: String
+  closureNote: String
+  daysCompleted: Int!
+  percentagePeriodComplete: Float!
+  accountNo: String!
+  transferAccountNo: String
+  clientName: String
+  clientId: String
+}
+
+type PrematureClosureHistoryResponse {
+  history: PrematureClosureHistory
+}
+
+type Mutation {
+  calculatePrematureClosure(
+    input: CalculatePrematureClosureInput!
+  ): PrematureCalculationResponse
+  
+  processPrematureClosure(
+    input: ProcessPrematureClosureInput!
+  ): PrematureClosureResult
+}
+
+type Query {
+  getPrematureClosureHistory(
+    input: GetPrematureClosureHistoryInput!
+  ): PrematureClosureHistoryResponse
+}

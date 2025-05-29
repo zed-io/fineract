@@ -1,11 +1,11 @@
 -- Migration file for Fineract tenant management
--- This creates the base schema for tenant management, equivalent to the original fineract_tenants database
+-- This creates the base schema for tenant management, equivalent to the original tenants database
 
 -- Create Schema for tenant management
-CREATE SCHEMA IF NOT EXISTS fineract_tenants;
+CREATE SCHEMA IF NOT EXISTS tenants;
 
 -- Set search path
-SET search_path TO fineract_tenants;
+SET search_path TO tenants;
 
 -- Create extension for UUID generation
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -191,7 +191,7 @@ INSERT INTO tenants (
 ) VALUES (
   'default', 
   'Default Tenant', 
-  'fineract_default', 
+  '"default"', 
   'Asia/Kolkata',
   'localhost', 
   5432, 

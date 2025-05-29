@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "gl_account"
       },
       "object_relationships": [
@@ -25,7 +25,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "gl_account"
               },
               "column": "parent_id"
@@ -37,7 +37,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "gl_journal_entry"
               },
               "column": "account_id"
@@ -49,7 +49,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "product_account_mapping"
               },
               "column": "gl_account_id"
@@ -60,7 +60,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "gl_journal_entry"
       },
       "object_relationships": [
@@ -101,7 +101,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "gl_journal_entry"
               },
               "column": "reversal_id"
@@ -112,7 +112,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "gl_closure"
       },
       "object_relationships": [
@@ -126,7 +126,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "product_account_mapping"
       },
       "object_relationships": [
@@ -140,7 +140,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "payment_type"
       },
       "array_relationships": [
@@ -149,7 +149,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "payment_detail"
               },
               "column": "payment_type_id"
@@ -160,7 +160,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "payment_detail"
       },
       "object_relationships": [
@@ -177,7 +177,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "loan_transaction"
               },
               "column": "payment_detail_id"
@@ -189,7 +189,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_account_transaction"
               },
               "column": "payment_detail_id"
@@ -201,7 +201,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "gl_journal_entry"
               },
               "column": "payment_details_id"

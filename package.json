@@ -1,0 +1,32 @@
+{
+  "name": "fineract-hasura-mono-repo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fineract mono-repo with Hasura backend and Next.js frontend",
+  "scripts": {
+    "dev": "concurrently -n postgres,hasura,frontend \"npm run postgres:dev\" \"npm run hasura:dev\" \"npm run frontend:dev\"",
+    "postgres:dev": "docker-compose -f docker-compose-hasura.yml up postgres",
+    "hasura:dev": "npm run hasura:migrate && npm run hasura:metadata && docker-compose -f docker-compose-hasura.yml up hasura",
+    "frontend:dev": "cd front-ends/credit-cloud-admin && npm run dev",
+    "hasura:migrate": "cd hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret myadminsecretkey --database-name default",
+    "hasura:metadata": "cd hasura && hasura metadata apply --endpoint http://localhost:8080 --admin-secret myadminsecretkey",
+    "hasura:console": "cd hasura && hasura console --endpoint http://localhost:8080 --admin-secret myadminsecretkey",
+    "build": "npm run frontend:build",
+    "frontend:build": "cd front-ends/credit-cloud-admin && npm run build",
+    "install": "npm run frontend:install",
+    "frontend:install": "cd front-ends/credit-cloud-admin && npm install",
+    "test": "npm run frontend:test",
+    "frontend:test": "cd front-ends/credit-cloud-admin && npm run test",
+    "docker:up": "docker-compose -f docker-compose-hasura.yml up",
+    "docker:down": "docker-compose -f docker-compose-hasura.yml down",
+    "docker:build": "docker-compose -f docker-compose-hasura.yml build",
+    "setup": "npm install && npm run frontend:install"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

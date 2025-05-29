@@ -1,0 +1,464 @@
+type Query {
+  getGroup(
+    groupId: String!
+    includeMembers: Boolean
+    includeRoles: Boolean
+    includeNotes: Boolean
+  ): GroupDetailResponse
+  
+  searchGroups(
+    criteria: GroupSearchCriteria!
+    limit: Int
+    offset: Int
+  ): GroupListResponse
+  
+  getGroupLoans(
+    groupId: String!
+  ): GroupLoansResponse
+  
+  getGroupLoanDetails(
+    groupId: String!
+    loanId: String!
+  ): GroupLoanDetailResponse
+  
+  getGroupLoanSummary(
+    groupId: String!
+  ): GroupLoanSummaryResponse
+}
+
+type Mutation {
+  createGroup(
+    groupName: String!
+    officeId: String!
+    staffId: String
+    parentId: String
+    levelId: String
+    externalId: String
+    submittedDate: String
+    activationDate: String
+    isCentralizedGroup: Boolean
+    clientMembers: [String]
+  ): GroupCreateResponse
+  
+  updateGroup(
+    groupId: String!
+    groupName: String
+    officeId: String
+    staffId: String
+    externalId: String
+    isCentralizedGroup: Boolean
+  ): Group
+  
+  deleteGroup(
+    groupId: String!
+  ): DeleteResponse
+  
+  activateGroup(
+    groupId: String!
+    activationDate: String!
+  ): Group
+  
+  closeGroup(
+    groupId: String!
+    closureDate: String!
+    closureReason: String
+  ): Group
+  
+  addGroupMembers(
+    groupId: String!
+    clientIds: [String!]!
+  ): [GroupMember]
+  
+  removeGroupMember(
+    groupId: String!
+    clientId: String!
+  ): DeleteResponse
+  
+  assignGroupRole(
+    groupId: String!
+    clientId: String!
+    roleId: String!
+  ): GroupRole
+  
+  removeGroupRole(
+    groupId: String!
+    clientId: String!
+    roleId: String!
+  ): DeleteResponse
+  
+  addGroupNote(
+    groupId: String!
+    note: String!
+  ): GroupNote
+  
+  transferGroup(
+    groupId: String!
+    destinationOfficeId: String!
+    transferDate: String!
+    note: String
+  ): GroupTransferResponse
+  
+  createGroupLoan(
+    groupId: String!
+    productId: String!
+    principal: Float
+    interestRate: Float
+    termFrequency: Int
+    termFrequencyType: String
+    submittedOnDate: String
+    expectedDisbursementDate: String
+    repaymentFrequency: Int
+    repaymentFrequencyType: String
+    repaymentEvery: Int
+    amortizationType: String
+    interestType: String
+    interestCalculationPeriodType: String
+    transactionProcessingStrategyId: String
+    charges: [LoanChargeInput]
+    note: String
+  ): GroupLoanCreateResponse
+}
+
+# Common types
+type DeleteResponse {
+  success: Boolean!
+}
+
+# Group types
+enum GroupStatus {
+  pending
+  active
+  inactive
+  closed
+  rejected
+  submitted_and_pending_approval
+  approved
+}
+
+enum GroupRoleType {
+  Leader
+  Secretary
+  Treasurer
+  Member
+}
+
+type Group {
+  id: String!
+  officeId: String!
+  officeName: String
+  staffId: String
+  staffName: String
+  parentId: String
+  levelId: String
+  groupName: String!
+  externalId: String
+  status: GroupStatus!
+  activationDate: String
+  submittedDate: String
+  submitterUserId: String
+  isCentralizedGroup: Boolean!
+  hierarchy: String
+  createdDate: String
+  createdBy: String
+  lastModifiedDate: String
+  lastModifiedBy: String
+  closedDate: String
+  closedByUserId: String
+}
+
+type GroupMember {
+  id: String!
+  groupId: String!
+  clientId: String!
+  clientName: String
+  accountNo: String
+  createdDate: String
+  createdBy: String
+  lastModifiedDate: String
+  lastModifiedBy: String
+}
+
+type GroupRole {
+  id: String!
+  groupId: String!
+  clientId: String!
+  clientName: String
+  roleId: String!
+  roleName: String
+  createdDate: String
+  createdBy: String
+  lastModifiedDate: String
+  lastModifiedBy: String
+}
+
+type GroupNote {
+  id: String!
+  groupId: String!
+  note: String!
+  createdDate: String
+  createdBy: String
+  lastModifiedDate: String
+  lastModifiedBy: String
+}
+
+type GroupTransferResponse {
+  id: String!
+  groupId: String!
+  fromOfficeId: String!
+  toOfficeId: String!
+  transferDate: String!
+  submittedDate: String!
+  submittedBy: String!
+  status: GroupStatus!
+  description: String
+  createdDate: String
+  createdBy: String
+}
+
+input GroupSearchCriteria {
+  name: String
+  officeId: String
+  staffId: String
+  status: GroupStatus
+  externalId: String
+  parentId: String
+  isParent: Boolean
+}
+
+type GroupSummary {
+  id: String!
+  accountNo: String!
+  name: String!
+  status: GroupStatus!
+  activationDate: String
+  officeId: String!
+  officeName: String!
+  staffId: String
+  staffName: String
+  hierarchy: String
+  levelId: String
+  levelName: String
+  parentId: String
+  parentName: String
+  memberCount: Int
+  externalId: String
+}
+
+type GroupDetailResponse {
+  group: Group!
+  members: [GroupMember!]!
+  roles: [GroupRole!]!
+  notes: [GroupNote!]
+  parentGroup: GroupSummary
+  childGroups: [GroupSummary!]
+}
+
+type GroupListResponse {
+  totalFilteredRecords: Int!
+  pageItems: [GroupSummary!]!
+}
+
+type GroupCreateResponse {
+  officeId: String!
+  groupId: String!
+  resourceId: String!
+}
+
+# Group loan types
+input LoanChargeInput {
+  chargeId: String!
+  amount: Float!
+  percentage: Float
+  amountPercentageAppliedTo: Float
+  chargeTimeType: String
+  chargeCalculationType: String
+  isPenalty: Boolean
+}
+
+type GroupLoanCreateResponse {
+  success: Boolean!
+  loanId: String!
+  accountNumber: String!
+  groupId: String!
+  loanStatus: String!
+  submittedOnDate: String!
+}
+
+type GroupLoansResponse {
+  loans: [GroupLoanSummary!]!
+}
+
+type GroupLoanSummary {
+  id: String!
+  accountNo: String!
+  status: String!
+  productName: String!
+  productShortName: String
+  officeName: String!
+  officeId: String!
+  principal: Float!
+  approvedPrincipal: Float
+  principalDisbursed: Float
+  principalOutstanding: Float
+  principalRepaid: Float
+  interestOutstanding: Float
+  interestRepaid: Float
+  totalChargesDue: Float
+  totalExpectedRepayment: Float
+  totalRepaid: Float
+  interestRate: Float!
+  interestMethod: String!
+  termFrequency: Int!
+  termFrequencyType: String!
+  submittedOnDate: String!
+  approvedOnDate: String
+  disbursedOnDate: String
+  expectedDisbursementDate: String
+  expectedMaturityDate: String
+  closedOnDate: String
+}
+
+type GroupLoanDetailResponse {
+  loanDetails: GroupLoanDetail!
+  transactions: [LoanTransaction!]!
+  charges: [LoanCharge!]!
+  notes: [LoanNote!]!
+  repaymentSchedule: [RepaymentScheduleItem!]!
+}
+
+type GroupLoanDetail {
+  id: String!
+  accountNo: String!
+  status: String!
+  groupId: String!
+  groupName: String!
+  loanType: String!
+  productId: String!
+  productName: String!
+  productShortName: String
+  officeId: String!
+  officeName: String!
+  currencyCode: String!
+  currencyDigits: Int!
+  currencyMultiplesOf: Int
+  principal: Float!
+  approvedPrincipal: Float
+  principalDisbursed: Float
+  principalOutstanding: Float
+  principalRepaid: Float
+  interestOutstanding: Float
+  interestRepaid: Float
+  totalExpectedRepayment: Float
+  totalRepaid: Float
+  interestRate: Float!
+  interestRateFrequencyType: String!
+  interestType: String!
+  interestCalculationPeriodType: String!
+  termFrequency: Int!
+  termFrequencyType: String!
+  repaymentFrequency: Int!
+  repaymentFrequencyType: String!
+  repaymentEvery: Int!
+  amortizationType: String!
+  submittedOnDate: String!
+  approvedOnDate: String
+  disbursedOnDate: String
+  expectedDisbursementDate: String
+  expectedMaturityDate: String
+  closedOnDate: String
+  createdDate: String!
+  createdBy: String
+  lastModifiedDate: String
+  lastModifiedBy: String
+}
+
+type LoanTransaction {
+  id: String!
+  transactionType: String!
+  transactionTypeDescription: String!
+  amount: Float!
+  principal: Float!
+  interest: Float!
+  fees: Float!
+  penalties: Float!
+  outstanding: Float!
+  transactionDate: String!
+  paymentTypeName: String
+  receiptNumber: String
+  checkNumber: String
+  accountNumber: String
+  createdDate: String!
+}
+
+type LoanCharge {
+  id: String!
+  chargeId: String!
+  chargeName: String!
+  amount: Float!
+  amountOutstanding: Float!
+  amountPaid: Float
+  amountWaived: Float
+  isPenalty: Boolean!
+  isPaid: Boolean!
+  isWaived: Boolean!
+  chargeTimeType: String!
+  chargeCalculationType: String!
+  dueDate: String
+}
+
+type LoanNote {
+  id: String!
+  note: String!
+  createdBy: String
+  createdDate: String!
+}
+
+type RepaymentScheduleItem {
+  id: String!
+  installmentNumber: Int!
+  dueDate: String!
+  principalAmount: Float!
+  principalCompleted: Float
+  principalOutstanding: Float!
+  interestAmount: Float!
+  interestCompleted: Float
+  interestOutstanding: Float!
+  feeChargesAmount: Float
+  feeChargesCompleted: Float
+  feeChargesOutstanding: Float
+  penaltyChargesAmount: Float
+  penaltyChargesCompleted: Float
+  penaltyChargesOutstanding: Float
+  totalPaidInAdvance: Float
+  totalPaidLate: Float
+  completed: Boolean!
+  obligationsMetOnDate: String
+}
+
+type GroupLoanSummaryResponse {
+  statistics: GroupLoanStatistics!
+  recentLoans: [RecentLoan!]!
+}
+
+type GroupLoanStatistics {
+  totalLoans: Int!
+  activeLoans: Int!
+  closedLoans: Int!
+  pendingLoans: Int!
+  approvedLoans: Int!
+  totalPrincipal: Float!
+  totalDisbursed: Float!
+  totalOutstanding: Float!
+  totalPrincipalRepaid: Float!
+  totalInterestRepaid: Float!
+}
+
+type RecentLoan {
+  id: String!
+  accountNo: String!
+  status: String!
+  principal: Float!
+  productName: String!
+  submittedDate: String!
+  disbursedDate: String
+}

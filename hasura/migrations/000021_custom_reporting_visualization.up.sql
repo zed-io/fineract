@@ -2,7 +2,7 @@
 -- This creates the necessary tables for the custom reporting and data visualization features
 
 -- Set schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create custom report templates table
 CREATE TABLE IF NOT EXISTS m_custom_report_template (

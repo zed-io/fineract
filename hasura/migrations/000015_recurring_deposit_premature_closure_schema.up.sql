@@ -2,7 +2,7 @@
 -- Creates the schema for tracking and managing premature closures of recurring deposit accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum type for premature closure reason
 CREATE TYPE recurring_deposit_premature_closure_reason AS ENUM (

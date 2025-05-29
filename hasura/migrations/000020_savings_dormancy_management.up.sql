@@ -2,7 +2,7 @@
 -- Adds dormancy fees, notifications, and additional tracking capabilities
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Add dormancy fee configuration to savings_product
 ALTER TABLE savings_product

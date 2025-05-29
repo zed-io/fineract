@@ -7,7 +7,7 @@
       "tables": [
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "office"
           },
           "object_relationships": [],
@@ -24,7 +24,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "app_user"
           },
           "object_relationships": [
@@ -47,7 +47,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "app_user_role"
                   },
                   "column": "app_user_id"
@@ -67,7 +67,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "role"
           },
           "array_relationships": [
@@ -76,7 +76,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "role_permission"
                   },
                   "column": "role_id"
@@ -88,7 +88,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "app_user_role"
                   },
                   "column": "role_id"
@@ -108,7 +108,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "permission"
           },
           "array_relationships": [
@@ -117,7 +117,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "role_permission"
                   },
                   "column": "permission_id"
@@ -137,7 +137,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "app_user_role"
           },
           "object_relationships": [
@@ -166,7 +166,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "role_permission"
           },
           "object_relationships": [
@@ -195,7 +195,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "staff"
           },
           "object_relationships": [
@@ -218,7 +218,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "code"
           },
           "array_relationships": [
@@ -227,7 +227,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "code_value"
                   },
                   "column": "code_id"
@@ -247,7 +247,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "code_value"
           },
           "object_relationships": [
@@ -270,7 +270,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "currency"
           },
           "select_permissions": [
@@ -285,7 +285,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "configuration"
           },
           "select_permissions": [
@@ -300,7 +300,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "working_days"
           },
           "select_permissions": [
@@ -315,7 +315,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "holiday"
           },
           "array_relationships": [
@@ -324,7 +324,7 @@
               "using": {
                 "foreign_key_constraint_on": {
                   "table": {
-                    "schema": "fineract_default",
+                    "schema": "default",
                     "name": "holiday_office"
                   },
                   "column": "holiday_id"
@@ -344,7 +344,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "holiday_office"
           },
           "object_relationships": [
@@ -373,7 +373,7 @@
         },
         {
           "table": {
-            "schema": "fineract_default",
+            "schema": "default",
             "name": "audit_trail"
           },
           "object_relationships": [

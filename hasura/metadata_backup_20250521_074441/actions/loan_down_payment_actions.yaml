@@ -1,0 +1,131 @@
+- name: calculateLoanScheduleWithDownPayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan/down-payment/calculate-schedule"
+    type: Query
+    headers:
+      - name: Authorization
+        value_from_env: ACTION_AUTH_HEADER
+    arguments:
+      - name: productId
+        type: String!
+      - name: principalAmount
+        type: Float!
+      - name: numberOfRepayments
+        type: Int!
+      - name: interestRatePerPeriod
+        type: Float!
+      - name: disbursementDate
+        type: String!
+      - name: repaymentEvery
+        type: Int!
+      - name: repaymentFrequencyType
+        type: String!
+      - name: interestType
+        type: String!
+      - name: amortizationType
+        type: String!
+      - name: termFrequency
+        type: Int!
+      - name: termFrequencyType
+        type: String!
+      - name: enableDownPayment
+        type: Boolean!
+      - name: downPaymentType
+        type: String!
+      - name: downPaymentAmount
+        type: Float
+      - name: downPaymentPercentage
+        type: Float
+      - name: graceOnPrincipal
+        type: Int
+      - name: graceOnInterest
+        type: Int
+      - name: graceOnInterestCharged
+        type: Int
+      - name: submittedOnDate
+        type: String
+    output_type: CalculateLoanScheduleResponse!
+    forward_client_headers: true
+  comment: Calculate loan schedule with down payment feature
+
+- name: calculateDownPayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan/down-payment/calculate"
+    type: Query
+    headers:
+      - name: Authorization
+        value_from_env: ACTION_AUTH_HEADER
+    arguments:
+      - name: loanApplicationTerms
+        type: LoanApplicationTermsInput!
+    output_type: CalculateDownPaymentResponse!
+    forward_client_headers: true
+  comment: Calculate down payment amount based on loan terms
+
+- name: disburseLoanWithDownPayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan/down-payment/disburse"
+    type: Mutation
+    headers:
+      - name: Authorization
+        value_from_env: ACTION_AUTH_HEADER
+    arguments:
+      - name: loanId
+        type: String!
+      - name: disbursementDate
+        type: String!
+      - name: paymentTypeId
+        type: String
+      - name: transactionAmount
+        type: Float
+      - name: note
+        type: String
+      - name: receiptNumber
+        type: String
+      - name: checkNumber
+        type: String
+      - name: routingCode
+        type: String
+      - name: bankNumber
+        type: String
+      - name: accountNumber
+        type: String
+      - name: processDownPayment
+        type: Boolean
+    output_type: DisburseLoanResponse!
+    forward_client_headers: true
+  comment: Disburse loan with down payment processing option
+
+- name: processDownPayment
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/loan/down-payment/process"
+    type: Mutation
+    headers:
+      - name: Authorization
+        value_from_env: ACTION_AUTH_HEADER
+    arguments:
+      - name: loanId
+        type: String!
+      - name: transactionDate
+        type: String
+      - name: paymentTypeId
+        type: String
+      - name: note
+        type: String
+      - name: receiptNumber
+        type: String
+      - name: checkNumber
+        type: String
+      - name: routingCode
+        type: String
+      - name: bankNumber
+        type: String
+      - name: accountNumber
+        type: String
+    output_type: ProcessDownPaymentResponse!
+    forward_client_headers: true
+  comment: Process down payment for a loan that was previously disbursed

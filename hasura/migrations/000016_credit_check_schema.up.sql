@@ -2,7 +2,7 @@
 -- Creates table to store credit check information for clients
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create credit check table
 CREATE TABLE credit_check (
@@ -40,7 +40,7 @@ DO $$
 BEGIN
     -- Add credit_score column if it doesn't exist
     IF NOT EXISTS (SELECT FROM pg_attribute 
-                  WHERE attrelid = 'fineract_default.client'::regclass
+                  WHERE attrelid = '"default".client'::regclass
                   AND attname = 'credit_score'
                   AND NOT attisdropped) THEN
         ALTER TABLE client ADD COLUMN credit_score INTEGER;
@@ -48,7 +48,7 @@ BEGIN
 
     -- Add last_credit_check_date column if it doesn't exist
     IF NOT EXISTS (SELECT FROM pg_attribute 
-                  WHERE attrelid = 'fineract_default.client'::regclass
+                  WHERE attrelid = '"default".client'::regclass
                   AND attname = 'last_credit_check_date'
                   AND NOT attisdropped) THEN
         ALTER TABLE client ADD COLUMN last_credit_check_date TIMESTAMP;
@@ -138,7 +138,7 @@ BEGIN
        NEW.loan_status = 'submitted_and_pending_approval' THEN
        
         -- Flag the loan for credit check (in real implementation, this would trigger an event)
-        INSERT INTO fineract_default.loan_audit (
+        INSERT INTO "default".loan_audit (
             loan_id, action_type, action_timestamp, performed_by, changes
         ) VALUES (
             NEW.id, 

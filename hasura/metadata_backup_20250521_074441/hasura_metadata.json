@@ -1,0 +1,140 @@
+{
+  "version": 3,
+  "sources": [
+    {
+      "name": "default",
+      "kind": "postgres",
+      "tables": [
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "client"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "client_group"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "client_group_member"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "loan"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "loan_product"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "office"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "staff"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "app_user"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "role"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "permission"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "currency"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "code"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "code_value"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "configuration"
+          }
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "clients"
+          },
+          "is_enum": false
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "loan_products"
+          },
+          "is_enum": false
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "loan_applications"
+          },
+          "is_enum": false
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "running_loans"
+          },
+          "is_enum": false
+        }
+      ],
+      "configuration": {
+        "connection_info": {
+          "database_url": {
+            "from_env": "HASURA_GRAPHQL_DATABASE_URL"
+          },
+          "isolation_level": "read-committed",
+          "use_prepared_statements": true,
+          "pool_settings": {
+            "connection_lifetime": 600,
+            "retries": 1,
+            "idle_timeout": 180,
+            "max_connections": 50,
+            "pool_timeout": 360
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {}
+}

@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "savings_account"
       },
       "object_relationships": [
@@ -61,7 +61,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_account_charge"
               },
               "column": "savings_account_id"
@@ -73,7 +73,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_account_transaction"
               },
               "column": "savings_account_id"
@@ -85,7 +85,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_officer_assignment"
               },
               "column": "savings_account_id"
@@ -96,7 +96,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "savings_product"
       },
       "array_relationships": [
@@ -105,7 +105,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_product_charge"
               },
               "column": "savings_product_id"
@@ -117,7 +117,7 @@
           "using": {
             "foreign_key_constraint_on": {
               "table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "savings_account"
               },
               "column": "product_id"
@@ -129,7 +129,7 @@
           "using": {
             "manual_configuration": {
               "remote_table": {
-                "schema": "fineract_default",
+                "schema": "default",
                 "name": "product_account_mapping"
               },
               "column_mapping": {
@@ -143,7 +143,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "savings_account_transaction"
       },
       "object_relationships": [

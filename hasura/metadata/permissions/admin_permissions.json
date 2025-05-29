@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "client"
       },
       "select_permissions": [
@@ -46,7 +46,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "client_group"
       },
       "select_permissions": [
@@ -90,7 +90,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "loan"
       },
       "select_permissions": [
@@ -134,7 +134,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "savings_account"
       },
       "select_permissions": [
@@ -178,7 +178,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "gl_account"
       },
       "select_permissions": [

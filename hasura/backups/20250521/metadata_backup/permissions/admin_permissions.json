@@ -1,0 +1,224 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*",
+            "backend_only": false
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client_group"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*",
+            "backend_only": false
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "loan"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*",
+            "backend_only": false
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "savings_account"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*",
+            "backend_only": false
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "gl_account"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "allow_aggregations": true
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*",
+            "backend_only": false
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    }
+  ]
+}

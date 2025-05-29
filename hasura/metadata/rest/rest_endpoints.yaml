@@ -10,7 +10,7 @@ rest_endpoints:
         query:
           query: |
             query GetClients($offset: Int!, $limit: Int!, $search: String, $status: String, $officeId: uuid) {
-              clients: fineract_default_client(
+              clients: default_client(
                 limit: $limit
                 offset: $offset
                 where: {
@@ -45,7 +45,7 @@ rest_endpoints:
                 activation_date
                 submitted_date
               }
-              total: fineract_default_client_aggregate(
+              total: default_client_aggregate(
                 where: {
                   _and: [
                     { status: { _eq: $status } },
@@ -102,7 +102,7 @@ rest_endpoints:
         query:
           query: |
             query GetLoans($offset: Int!, $limit: Int!, $status: String, $clientId: uuid) {
-              loans: fineract_default_loan(
+              loans: default_loan(
                 limit: $limit
                 offset: $offset
                 where: {
@@ -138,7 +138,7 @@ rest_endpoints:
                 approved_on_date
                 disbursed_on_date
               }
-              total: fineract_default_loan_aggregate(
+              total: default_loan_aggregate(
                 where: {
                   _and: [
                     { loan_status: { _eq: $status } },
@@ -183,7 +183,7 @@ rest_endpoints:
         query:
           query: |
             query GetSavingsAccounts($offset: Int!, $limit: Int!, $status: String, $clientId: uuid) {
-              savingsAccounts: fineract_default_savings_account(
+              savingsAccounts: default_savings_account(
                 limit: $limit
                 offset: $offset
                 where: {
@@ -218,7 +218,7 @@ rest_endpoints:
                 submitted_on_date
                 activated_on_date
               }
-              total: fineract_default_savings_account_aggregate(
+              total: default_savings_account_aggregate(
                 where: {
                   _and: [
                     { status: { _eq: $status } },
@@ -263,7 +263,7 @@ rest_endpoints:
         query:
           query: |
             query GetClientById($clientId: uuid!) {
-              client: fineract_default_client_by_pk(id: $clientId) {
+              client: default_client_by_pk(id: $clientId) {
                 id
                 account_no
                 external_id
@@ -346,7 +346,7 @@ rest_endpoints:
         query:
           query: |
             query GetLoanById($loanId: uuid!) {
-              loan: fineract_default_loan_by_pk(id: $loanId) {
+              loan: default_loan_by_pk(id: $loanId) {
                 id
                 account_no
                 external_id

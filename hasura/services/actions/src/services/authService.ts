@@ -56,7 +56,7 @@ export async function generateToken(payload: Partial<JWTPayload>, type: TokenTyp
   const tokenPayload: JWTPayload = {
     ...payload as JWTPayload,
     iat: issuedAt,
-    exp: expiresAt,
+    exp: expiresAt,``
     typ: type === TokenType.ACCESS ? 'access' : 'refresh',
     jti: jwtId
   };

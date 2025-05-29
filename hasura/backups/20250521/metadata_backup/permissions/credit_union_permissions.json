@@ -1,0 +1,903 @@
+{
+  "tables": [
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "client"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {}
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": "*",
+            "filter": {}
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "id",
+              "display_name",
+              "firstname",
+              "lastname",
+              "middlename",
+              "date_of_birth",
+              "gender",
+              "mobile_no",
+              "email",
+              "address_line_1",
+              "address_line_2",
+              "city",
+              "state_province",
+              "country",
+              "postal_code",
+              "is_active",
+              "external_id",
+              "created_date",
+              "last_modified_date"
+            ],
+            "filter": {
+              "id": { "_eq": "X-Hasura-User-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {},
+            "columns": "*"
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "check": {},
+            "columns": [
+              "firstname",
+              "lastname",
+              "middlename",
+              "display_name",
+              "date_of_birth",
+              "gender",
+              "mobile_no",
+              "email",
+              "address_line_1",
+              "address_line_2",
+              "city",
+              "state_province",
+              "country",
+              "postal_code",
+              "is_active",
+              "external_id"
+            ]
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {},
+            "check": {}
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "firstname",
+              "lastname",
+              "middlename",
+              "display_name",
+              "date_of_birth",
+              "gender",
+              "mobile_no",
+              "email",
+              "address_line_1",
+              "address_line_2",
+              "city",
+              "state_province",
+              "country",
+              "postal_code",
+              "is_active",
+              "external_id",
+              "last_modified_date",
+              "last_modified_by"
+            ],
+            "filter": {},
+            "check": {}
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "mobile_no",
+              "email",
+              "address_line_1",
+              "address_line_2",
+              "city",
+              "state_province",
+              "country",
+              "postal_code"
+            ],
+            "filter": {
+              "id": { "_eq": "X-Hasura-User-Id" }
+            },
+            "check": {
+              "id": { "_eq": "X-Hasura-User-Id" }
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "enhanced_cif"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "membership_number",
+              "membership_date",
+              "employment_status",
+              "employer_name",
+              "job_title",
+              "monthly_income",
+              "member_status",
+              "member_category",
+              "total_shares_value",
+              "total_loan_value",
+              "total_deposit_value"
+            ],
+            "filter": {
+              "client_id": { "_eq": "X-Hasura-User-Id" },
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": "*",
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id"
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": [
+              "client_id",
+              "membership_number",
+              "membership_date",
+              "employment_status",
+              "employer_name",
+              "job_title",
+              "monthly_income",
+              "annual_income",
+              "risk_rating",
+              "income_source",
+              "net_worth",
+              "fatca_status",
+              "pep_status",
+              "referral_source",
+              "member_status",
+              "member_category"
+            ],
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "employment_status",
+              "employer_name",
+              "job_title",
+              "monthly_income",
+              "annual_income",
+              "risk_rating",
+              "income_source",
+              "net_worth",
+              "fatca_status",
+              "pep_status",
+              "referral_source",
+              "member_status",
+              "member_category",
+              "last_contact_date",
+              "credit_score"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {},
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "employment_status",
+              "employer_name",
+              "job_title",
+              "monthly_income"
+            ],
+            "filter": {
+              "client_id": { "_eq": "X-Hasura-User-Id" },
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "client_id": { "_eq": "X-Hasura-User-Id" }
+            },
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "identity_verification"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "id",
+              "document_type",
+              "document_number",
+              "issuing_authority",
+              "issue_date",
+              "expiry_date",
+              "verification_status",
+              "verification_date",
+              "document_image_url",
+              "created_date"
+            ],
+            "filter": {
+              "client_id": { "_eq": "X-Hasura-User-Id" },
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": "*",
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id"
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": [
+              "client_id",
+              "document_type",
+              "document_number",
+              "issuing_authority",
+              "issue_date",
+              "expiry_date",
+              "verification_status",
+              "document_image_url"
+            ],
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id"
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "check": {
+              "client_id": { "_eq": "X-Hasura-User-Id" },
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" },
+              "verification_status": { "_eq": "pending" }
+            },
+            "columns": [
+              "client_id",
+              "document_type",
+              "document_number",
+              "issuing_authority",
+              "issue_date",
+              "expiry_date",
+              "document_image_url"
+            ],
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id",
+              "verification_status": "pending"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "verification_status",
+              "verification_date",
+              "verified_by_user_id",
+              "rejection_reason"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {},
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()",
+              "verified_by_user_id": "X-Hasura-User-Id",
+              "verification_date": "now()"
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "document_store"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "id",
+              "document_type",
+              "document_name",
+              "file_name",
+              "mime_type",
+              "storage_path",
+              "file_size",
+              "version",
+              "is_current_version",
+              "description",
+              "tags",
+              "created_date"
+            ],
+            "filter": {
+              "_or": [
+                {
+                  "entity_type": { "_eq": "client" },
+                  "entity_id": { "_eq": "X-Hasura-User-Id" }
+                },
+                {
+                  "entity_type": { "_eq": "loan" },
+                  "loan": {
+                    "client_id": { "_eq": "X-Hasura-User-Id" }
+                  }
+                },
+                {
+                  "entity_type": { "_eq": "savings" },
+                  "savings_account": {
+                    "client_id": { "_eq": "X-Hasura-User-Id" }
+                  }
+                }
+              ],
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": "*",
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id"
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": [
+              "entity_type",
+              "entity_id",
+              "document_type",
+              "document_name",
+              "file_name",
+              "mime_type",
+              "storage_path",
+              "file_size",
+              "checksum",
+              "description",
+              "tags"
+            ],
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id",
+              "version": "1",
+              "is_current_version": "true"
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" },
+              "_or": [
+                {
+                  "entity_type": { "_eq": "client" },
+                  "entity_id": { "_eq": "X-Hasura-User-Id" }
+                }
+              ]
+            },
+            "columns": [
+              "entity_type",
+              "entity_id",
+              "document_type",
+              "document_name",
+              "file_name",
+              "mime_type",
+              "storage_path",
+              "file_size",
+              "checksum",
+              "description",
+              "tags"
+            ],
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id",
+              "version": "1",
+              "is_current_version": "true"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": [
+              "document_type",
+              "document_name",
+              "description",
+              "tags",
+              "metadata",
+              "is_current_version"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "document_type",
+              "document_name",
+              "description",
+              "tags",
+              "metadata"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {},
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        },
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "document_name",
+              "description",
+              "tags"
+            ],
+            "filter": {
+              "entity_type": { "_eq": "client" },
+              "entity_id": { "_eq": "X-Hasura-User-Id" },
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" },
+              "created_by": { "_eq": "X-Hasura-User-Id" }
+            },
+            "check": {
+              "entity_id": { "_eq": "X-Hasura-User-Id" }
+            },
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "enhanced_audit_log"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "id",
+              "action_type",
+              "entity_type",
+              "entity_id",
+              "user_id",
+              "action_time",
+              "ip_address",
+              "new_values",
+              "change_reason",
+              "severity",
+              "requires_review"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "compliance",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": "*",
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "user_id": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": [
+              "requires_review",
+              "reviewed_by",
+              "reviewed_at"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "set": {
+              "reviewed_by": "X-Hasura-User-Id",
+              "reviewed_at": "now()"
+            }
+          }
+        },
+        {
+          "role": "compliance",
+          "permission": {
+            "columns": [
+              "requires_review",
+              "reviewed_by",
+              "reviewed_at"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {},
+            "set": {
+              "reviewed_by": "X-Hasura-User-Id",
+              "reviewed_at": "now()"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "fineract_default",
+        "name": "aml_transaction_monitoring"
+      },
+      "select_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "credit_union_staff",
+          "permission": {
+            "columns": [
+              "id",
+              "transaction_id",
+              "client_id",
+              "account_id",
+              "detection_time",
+              "alert_type",
+              "risk_score",
+              "alert_status",
+              "description",
+              "assigned_to"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        },
+        {
+          "role": "compliance",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            }
+          }
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "columns": "*",
+            "set": {
+              "tenant_id": "X-Hasura-Tenant-Id",
+              "created_by": "X-Hasura-User-Id"
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "admin",
+          "permission": {
+            "columns": "*",
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()"
+            }
+          }
+        },
+        {
+          "role": "compliance",
+          "permission": {
+            "columns": [
+              "alert_status",
+              "assigned_to",
+              "resolution",
+              "resolution_notes",
+              "is_sar_filed",
+              "sar_reference",
+              "sar_filed_date"
+            ],
+            "filter": {
+              "tenant_id": { "_eq": "X-Hasura-Tenant-Id" }
+            },
+            "check": {},
+            "set": {
+              "last_modified_by": "X-Hasura-User-Id",
+              "last_modified_date": "now()",
+              "resolved_by": "X-Hasura-User-Id",
+              "resolution_time": "now()"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 -- Creates the schema for share certificates and templates
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for share certificates
 CREATE TYPE share_certificate_status_type AS ENUM (

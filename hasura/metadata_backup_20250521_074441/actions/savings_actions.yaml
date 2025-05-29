@@ -1,0 +1,566 @@
+actions:
+  - name: createSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/create"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to create a new savings account
+
+  - name: approveSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/approve"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to approve a savings account application
+
+  - name: activateSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/activate"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to activate an approved savings account
+    
+  - name: closeSavingsAccount
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/close"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to close a savings account
+
+  - name: depositToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/deposit"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to make a deposit to a savings account
+
+  - name: withdrawFromSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/withdraw"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to make a withdrawal from a savings account
+
+  - name: postInterestToSavings
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/post-interest"
+      timeout: 120
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+    comment: Action to post interest to savings accounts
+
+  - name: calculateSavingsInterest
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/calculate-interest"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+      - role: client_self_service
+    comment: Action to calculate interest for a savings account
+    
+  - name: generateSavingsStatement
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/generate-statement"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+      - role: client_self_service
+    comment: Action to generate a statement for a savings account
+    
+  - name: searchSavingsAccounts
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/savings/search"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: admin
+      - role: user
+    comment: Action to search for savings accounts with various criteria
+
+custom_types:
+  enums: []
+  input_objects:
+    - name: SavingsAccountCreationInput
+      fields:
+        - name: clientId
+          type: uuid
+        - name: groupId
+          type: uuid
+        - name: productId
+          type: uuid!
+        - name: fieldOfficerId
+          type: uuid
+        - name: externalId
+          type: String
+        - name: submittedOnDate
+          type: date!
+        - name: nominalAnnualInterestRate
+          type: numeric
+        - name: interestCompoundingPeriodType
+          type: String
+        - name: interestPostingPeriodType
+          type: String
+        - name: interestCalculationType
+          type: String
+        - name: interestCalculationDaysInYearType
+          type: Int
+        - name: minRequiredOpeningBalance
+          type: numeric
+        - name: lockinPeriodFrequency
+          type: Int
+        - name: lockinPeriodFrequencyType
+          type: String
+        - name: allowOverdraft
+          type: Boolean
+        - name: overdraftLimit
+          type: numeric
+        - name: enforceMinRequiredBalance
+          type: Boolean
+        - name: minRequiredBalance
+          type: numeric
+        - name: withdrawalFeeForTransfers
+          type: Boolean
+        - name: allowInterestChargeForOverdraft
+          type: Boolean
+        - name: note
+          type: String
+
+    - name: SavingsApprovalInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: approvedOnDate
+          type: date!
+        - name: note
+          type: String
+
+    - name: SavingsActivationInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: activatedOnDate
+          type: date!
+        - name: note
+          type: String
+
+    - name: SavingsDepositInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: SavingsWithdrawalInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: receiptNumber
+          type: String
+        - name: checkNumber
+          type: String
+        - name: routingCode
+          type: String
+        - name: bankNumber
+          type: String
+        - name: accountNumber
+          type: String
+
+    - name: PostInterestInput
+      fields:
+        - name: postingDate
+          type: date!
+        - name: accountIds
+          type: [uuid!]
+
+    - name: CalculateInterestInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: calculateAsOf
+          type: date
+          
+    - name: SavingsCloseInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: closedOnDate
+          type: date!
+        - name: note
+          type: String
+        - name: transferAccountId
+          type: uuid
+          
+    - name: StatementGenerateInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: fromDate
+          type: date
+        - name: toDate
+          type: date
+        - name: includeDetails
+          type: Boolean
+        - name: format
+          type: String
+        - name: download
+          type: Boolean
+          
+    - name: SavingsAccountSearchInput
+      fields:
+        - name: accountNumber
+          type: String
+        - name: externalId
+          type: String
+        - name: clientId
+          type: uuid
+        - name: groupId
+          type: uuid
+        - name: productId
+          type: uuid
+        - name: status
+          type: [String!]
+        - name: officeId
+          type: uuid
+        - name: staffId
+          type: uuid
+        - name: clientName
+          type: String
+        - name: balanceFrom
+          type: numeric
+        - name: balanceTo
+          type: numeric
+        - name: minInterestRate
+          type: numeric
+        - name: maxInterestRate
+          type: numeric
+        - name: fromDate
+          type: date
+        - name: toDate
+          type: date
+        - name: page
+          type: Int
+        - name: pageSize
+          type: Int
+        - name: sortBy
+          type: String
+        - name: sortOrder
+          type: String
+
+  objects:
+    - name: SavingsAccountCreationResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: clientId
+          type: uuid
+        - name: groupId
+          type: uuid
+        - name: message
+          type: String!
+        - name: submittedOnDate
+          type: date!
+        - name: status
+          type: String!
+
+    - name: SavingsApprovalResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: approvedOnDate
+          type: date!
+
+    - name: SavingsActivationResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: activatedOnDate
+          type: date!
+
+    - name: SavingsTransactionResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: message
+          type: String!
+        - name: transactionId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: amount
+          type: numeric!
+        - name: runningBalance
+          type: numeric!
+        - name: transactionType
+          type: String!
+
+    - name: PostInterestResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String!
+        - name: accountsProcessed
+          type: Int!
+        - name: failedAccounts
+          type: Int!
+        - name: totalInterestPosted
+          type: numeric!
+        - name: postingDate
+          type: date!
+
+    - name: InterestCalculationResult
+      fields:
+        - name: interestCalculatedFrom
+          type: date!
+        - name: interestCalculatedTo
+          type: date!
+        - name: interestAmount
+          type: numeric!
+        - name: averageBalance
+          type: numeric
+        - name: daysInPeriod
+          type: Int!
+          
+    - name: SavingsCloseResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: accountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: clientName
+          type: String!
+        - name: message
+          type: String!
+        - name: closedOnDate
+          type: date!
+        - name: balanceTransferred
+          type: Boolean!
+        - name: transferAmount
+          type: numeric!
+        - name: transferAccountId
+          type: uuid
+          
+    - name: StatementTransaction
+      fields:
+        - name: transactionId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: valueDate
+          type: date!
+        - name: transactionType
+          type: String!
+        - name: description
+          type: String
+        - name: debitAmount
+          type: numeric
+        - name: creditAmount
+          type: numeric
+        - name: runningBalance
+          type: numeric!
+          
+    - name: SavingsStatement
+      fields:
+        - name: id
+          type: uuid!
+        - name: accountId
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: accountType
+          type: String!
+        - name: clientId
+          type: uuid!
+        - name: clientName
+          type: String!
+        - name: productName
+          type: String!
+        - name: currencyCode
+          type: String!
+        - name: statementDate
+          type: date!
+        - name: periodStartDate
+          type: date!
+        - name: periodEndDate
+          type: date!
+        - name: openingBalance
+          type: numeric!
+        - name: closingBalance
+          type: numeric!
+        - name: totalDeposits
+          type: numeric!
+        - name: totalWithdrawals
+          type: numeric!
+        - name: totalInterest
+          type: numeric!
+        - name: totalFees
+          type: numeric!
+        - name: transactions
+          type: [StatementTransaction!]
+          
+    - name: SavingsAccountSearchResult
+      fields:
+        - name: id
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: externalId
+          type: String
+        - name: clientId
+          type: uuid
+        - name: clientName
+          type: String
+        - name: groupId
+          type: uuid
+        - name: groupName
+          type: String
+        - name: productId
+          type: uuid!
+        - name: productName
+          type: String!
+        - name: fieldOfficerId
+          type: uuid
+        - name: fieldOfficerName
+          type: String
+        - name: status
+          type: String!
+        - name: subStatus
+          type: String
+        - name: accountType
+          type: String!
+        - name: currencyCode
+          type: String!
+        - name: accountBalance
+          type: numeric!
+        - name: availableBalance
+          type: numeric!
+        - name: nominalAnnualInterestRate
+          type: numeric!
+        - name: minRequiredBalance
+          type: numeric
+        - name: minRequiredOpeningBalance
+          type: numeric
+        - name: allowOverdraft
+          type: Boolean!
+        - name: overdraftLimit
+          type: numeric
+        - name: submittedOnDate
+          type: date!
+        - name: approvedOnDate
+          type: date
+        - name: activatedOnDate
+          type: date
+        - name: closedOnDate
+          type: date
+        - name: lastActiveTransactionDate
+          type: date
+          
+    - name: SavingsAccountSearchResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String
+        - name: totalCount
+          type: Int!
+        - name: page
+          type: Int!
+        - name: pageSize
+          type: Int!
+        - name: totalPages
+          type: Int!
+        - name: results
+          type: [SavingsAccountSearchResult!]!

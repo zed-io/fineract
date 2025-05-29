@@ -2,7 +2,7 @@
 -- Adds notification templates and configurations for tracking installments
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create notification templates for recurring deposit installments
 INSERT INTO notification_template (

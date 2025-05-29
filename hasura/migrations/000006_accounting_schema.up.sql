@@ -2,7 +2,7 @@
 -- Creates the schema for accounting and general ledger functionality
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum types for accounting
 CREATE TYPE account_type AS ENUM ('asset', 'liability', 'equity', 'income', 'expense');

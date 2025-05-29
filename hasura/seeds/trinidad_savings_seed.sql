@@ -2,7 +2,7 @@
 -- This seed file creates savings products and accounts specific to Trinidad and Tobago
 
 -- Set search path to the appropriate schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- ================================================
 -- Savings Products for Trinidad and Tobago

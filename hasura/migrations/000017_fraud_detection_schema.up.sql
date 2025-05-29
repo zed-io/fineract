@@ -2,7 +2,7 @@
 -- Creates tables to store fraud detection results and risk assessments
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum types for fraud detection
 CREATE TYPE fraud_risk_level AS ENUM ('low', 'medium', 'high', 'critical');
@@ -23,7 +23,7 @@ DO $$
 BEGIN
     -- Add risk_level column if it doesn't exist
     IF NOT EXISTS (SELECT FROM pg_attribute 
-                  WHERE attrelid = 'fineract_default.client'::regclass
+                  WHERE attrelid = '"default".client'::regclass
                   AND attname = 'risk_level'
                   AND NOT attisdropped) THEN
         ALTER TABLE client ADD COLUMN risk_level VARCHAR(20);
@@ -31,7 +31,7 @@ BEGIN
 
     -- Add risk_reason column if it doesn't exist
     IF NOT EXISTS (SELECT FROM pg_attribute 
-                  WHERE attrelid = 'fineract_default.client'::regclass
+                  WHERE attrelid = '"default".client'::regclass
                   AND attname = 'risk_reason'
                   AND NOT attisdropped) THEN
         ALTER TABLE client ADD COLUMN risk_reason TEXT;
@@ -39,7 +39,7 @@ BEGIN
     
     -- Add last_risk_review_date column if it doesn't exist
     IF NOT EXISTS (SELECT FROM pg_attribute 
-                  WHERE attrelid = 'fineract_default.client'::regclass
+                  WHERE attrelid = '"default".client'::regclass
                   AND attname = 'last_risk_review_date'
                   AND NOT attisdropped) THEN
         ALTER TABLE client ADD COLUMN last_risk_review_date TIMESTAMP;
@@ -329,7 +329,7 @@ BEGIN
     IF (TG_OP = 'INSERT') OR (TG_OP = 'UPDATE' AND OLD.status_enum <> NEW.status_enum AND NEW.status_enum = 300) THEN
        
         -- Flag the client for fraud detection (in real implementation, this would trigger an event)
-        INSERT INTO fineract_default.client_audit (
+        INSERT INTO "default".client_audit (
             client_id, action_type, action_timestamp, performed_by, changes
         ) VALUES (
             NEW.id, 

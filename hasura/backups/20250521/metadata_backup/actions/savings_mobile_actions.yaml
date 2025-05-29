@@ -1,0 +1,313 @@
+actions:
+  - name: mobileSavingsAccountSummary
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/summary"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: client_self_service
+      - role: user
+      - role: admin
+    comment: Lightweight summary of a savings account optimized for mobile display
+
+  - name: mobileSavingsTransactionHistory
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/transactions"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: client_self_service
+      - role: user
+      - role: admin
+    comment: Optimized transaction history with cursor-based pagination for mobile
+
+  - name: mobileSavingsDepositWithQueue
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/deposit"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: client_self_service
+      - role: user
+      - role: admin
+    comment: Mobile-optimized deposit with offline queue support
+
+  - name: mobileSavingsWithdrawWithQueue
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/withdraw"
+      timeout: 30
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: client_self_service
+      - role: user
+      - role: admin
+    comment: Mobile-optimized withdrawal with offline queue support
+    
+  - name: mobileSavingsSyncOfflineTransactions
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/sync"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: client_self_service
+      - role: user
+      - role: admin
+    comment: Sync offline transactions in batch for mobile clients
+  
+  - name: mobileSavingsBatchOperations
+    definition:
+      kind: synchronous
+      handler: "{{HASURA_ACTIONS_URL}}/api/mobile/savings/batch"
+      timeout: 60
+      headers:
+        - name: x-hasura-admin-secret
+          value_from_env: HASURA_ADMIN_SECRET
+    permissions:
+      - role: user
+      - role: admin
+    comment: Execute multiple savings operations in a single request for mobile efficiency
+
+custom_types:
+  enums: []
+  input_objects:
+    - name: MobileSavingsAccountSummaryInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: includeMetadata
+          type: Boolean
+          
+    - name: MobileSavingsTransactionHistoryInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: limit
+          type: Int
+        - name: cursor
+          type: String
+        - name: fromDate
+          type: date
+        - name: toDate
+          type: date
+        - name: transactionTypes
+          type: [String!]
+        - name: includeRunningBalances
+          type: Boolean
+          
+    - name: MobileSavingsDepositInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: offlineId
+          type: String
+        - name: offlineCreatedAt
+          type: timestamptz
+        - name: deviceId
+          type: String
+          
+    - name: MobileSavingsWithdrawalInput
+      fields:
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: transactionAmount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: offlineId
+          type: String
+        - name: offlineCreatedAt
+          type: timestamptz
+        - name: deviceId
+          type: String
+          
+    - name: OfflineTransaction
+      fields:
+        - name: offlineId
+          type: String!
+        - name: accountId
+          type: uuid!
+        - name: transactionType
+          type: String!
+        - name: transactionDate
+          type: date!
+        - name: amount
+          type: numeric!
+        - name: paymentTypeId
+          type: uuid!
+        - name: note
+          type: String
+        - name: offlineCreatedAt
+          type: timestamptz!
+        - name: deviceId
+          type: String!
+          
+    - name: MobileSavingsSyncInput
+      fields:
+        - name: transactions
+          type: [OfflineTransaction!]!
+          
+    - name: BatchOperationType
+      fields:
+        - name: type
+          type: String!
+        - name: payload
+          type: jsonb!
+          
+    - name: MobileSavingsBatchInput
+      fields:
+        - name: operations
+          type: [BatchOperationType!]!
+          
+  objects:
+    - name: CacheMetadata
+      fields:
+        - name: lastUpdated
+          type: timestamptz!
+        - name: etag
+          type: String!
+        - name: expiresAt
+          type: timestamptz!
+          
+    - name: MobileSavingsAccountSummary
+      fields:
+        - name: id
+          type: uuid!
+        - name: accountNo
+          type: String!
+        - name: clientId
+          type: uuid!
+        - name: clientName
+          type: String!
+        - name: productName
+          type: String!
+        - name: status
+          type: String!
+        - name: currency
+          type: String!
+        - name: balance
+          type: numeric!
+        - name: availableBalance
+          type: numeric!
+        - name: interestRate
+          type: numeric!
+        - name: lastTransactionDate
+          type: date
+        - name: metadata
+          type: CacheMetadata
+          
+    - name: MobileSavingsTransaction
+      fields:
+        - name: id
+          type: uuid!
+        - name: date
+          type: date!
+        - name: type
+          type: String!
+        - name: amount
+          type: numeric!
+        - name: runningBalance
+          type: numeric
+        - name: description
+          type: String
+        - name: status
+          type: String!
+        - name: offlineId
+          type: String
+          
+    - name: MobileSavingsTransactionHistory
+      fields:
+        - name: transactions
+          type: [MobileSavingsTransaction!]!
+        - name: hasMore
+          type: Boolean!
+        - name: nextCursor
+          type: String
+        - name: metadata
+          type: CacheMetadata
+          
+    - name: MobileSavingsTransactionResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: transactionId
+          type: uuid
+        - name: offlineId
+          type: String
+        - name: accountId
+          type: uuid!
+        - name: transactionDate
+          type: date!
+        - name: amount
+          type: numeric!
+        - name: status
+          type: String!
+        - name: processingStatus
+          type: String!
+        - name: message
+          type: String
+        - name: pendingSync
+          type: Boolean!
+        - name: newBalance
+          type: numeric
+          
+    - name: MobileSavingsSyncResult
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String
+        - name: totalProcessed
+          type: Int!
+        - name: successCount
+          type: Int!
+        - name: failedCount
+          type: Int!
+        - name: results
+          type: [MobileSavingsTransactionResponse!]!
+          
+    - name: BatchOperationResult
+      fields:
+        - name: operationType
+          type: String!
+        - name: success
+          type: Boolean!
+        - name: data
+          type: jsonb
+        - name: error
+          type: String
+          
+    - name: MobileSavingsBatchResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String
+        - name: results
+          type: [BatchOperationResult!]!

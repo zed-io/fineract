@@ -1,0 +1,519 @@
+{
+  "version": 3,
+  "sources": [
+    {
+      "name": "default",
+      "kind": "postgres",
+      "tables": [
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "office"
+          },
+          "object_relationships": [],
+          "array_relationships": [],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "name", "opening_date", "parent_id", "hierarchy", "external_id", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "app_user"
+          },
+          "object_relationships": [
+            {
+              "name": "office",
+              "using": {
+                "foreign_key_constraint_on": "office_id"
+              }
+            },
+            {
+              "name": "staff",
+              "using": {
+                "foreign_key_constraint_on": "staff_id"
+              }
+            }
+          ],
+          "array_relationships": [
+            {
+              "name": "roles",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "app_user_role"
+                  },
+                  "column": "app_user_id"
+                }
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "username", "email", "first_name", "last_name", "is_active", "office_id", "staff_id", "is_system_user", "last_login_date", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "role"
+          },
+          "array_relationships": [
+            {
+              "name": "permissions",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "role_permission"
+                  },
+                  "column": "role_id"
+                }
+              }
+            },
+            {
+              "name": "users",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "app_user_role"
+                  },
+                  "column": "role_id"
+                }
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "name", "description", "is_disabled", "is_self_service", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "permission"
+          },
+          "array_relationships": [
+            {
+              "name": "roles",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "role_permission"
+                  },
+                  "column": "permission_id"
+                }
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "grouping", "code", "entity_name", "action_name", "can_maker_checker"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "app_user_role"
+          },
+          "object_relationships": [
+            {
+              "name": "app_user",
+              "using": {
+                "foreign_key_constraint_on": "app_user_id"
+              }
+            },
+            {
+              "name": "role",
+              "using": {
+                "foreign_key_constraint_on": "role_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["app_user_id", "role_id"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "role_permission"
+          },
+          "object_relationships": [
+            {
+              "name": "role",
+              "using": {
+                "foreign_key_constraint_on": "role_id"
+              }
+            },
+            {
+              "name": "permission",
+              "using": {
+                "foreign_key_constraint_on": "permission_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["role_id", "permission_id"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "staff"
+          },
+          "object_relationships": [
+            {
+              "name": "office",
+              "using": {
+                "foreign_key_constraint_on": "office_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "office_id", "first_name", "last_name", "display_name", "is_loan_officer", "mobile_no", "external_id", "is_active", "joining_date", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "code"
+          },
+          "array_relationships": [
+            {
+              "name": "values",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "code_value"
+                  },
+                  "column": "code_id"
+                }
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "name", "is_system_defined", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "code_value"
+          },
+          "object_relationships": [
+            {
+              "name": "code",
+              "using": {
+                "foreign_key_constraint_on": "code_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "code_id", "code_value", "code_description", "order_position", "is_active", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "currency"
+          },
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["code", "name", "decimal_places", "display_symbol", "name_code", "internationalized_name_code"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "configuration"
+          },
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "name", "value", "enabled", "description", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "working_days"
+          },
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "recurrence", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "holiday"
+          },
+          "array_relationships": [
+            {
+              "name": "offices",
+              "using": {
+                "foreign_key_constraint_on": {
+                  "table": {
+                    "schema": "fineract_default",
+                    "name": "holiday_office"
+                  },
+                  "column": "holiday_id"
+                }
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "name", "from_date", "to_date", "description", "is_active", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "holiday_office"
+          },
+          "object_relationships": [
+            {
+              "name": "holiday",
+              "using": {
+                "foreign_key_constraint_on": "holiday_id"
+              }
+            },
+            {
+              "name": "office",
+              "using": {
+                "foreign_key_constraint_on": "office_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["holiday_id", "office_id"],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "schema": "fineract_default",
+            "name": "audit_trail"
+          },
+          "object_relationships": [
+            {
+              "name": "user",
+              "using": {
+                "foreign_key_constraint_on": "user_id"
+              }
+            },
+            {
+              "name": "office",
+              "using": {
+                "foreign_key_constraint_on": "office_id"
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": ["id", "entity_name", "entity_id", "action", "action_date", "user_id", "office_id", "details", "created_date"],
+                "filter": {}
+              }
+            }
+          ]
+        }
+      ],
+      "configuration": {
+        "connection_info": {
+          "use_prepared_statements": true,
+          "database_url": {
+            "from_env": "HASURA_GRAPHQL_DATABASE_URL"
+          },
+          "isolation_level": "read-committed",
+          "pool_settings": {
+            "connection_lifetime": 600,
+            "retries": 1,
+            "idle_timeout": 180,
+            "max_connections": 50,
+            "pool_timeout": 360
+          }
+        }
+      },
+      "customization": {
+        "naming_convention": "hasura-default"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "name": "login",
+      "definition": {
+        "handler": "{{ACTIONS_URL}}/auth",
+        "kind": "synchronous",
+        "forward_client_headers": true,
+        "headers": [],
+        "arguments": [
+          {
+            "name": "username",
+            "type": "String!"
+          },
+          {
+            "name": "password",
+            "type": "String!"
+          }
+        ],
+        "output_type": "LoginResponse"
+      },
+      "comment": "Authenticate user and return JWT token"
+    }
+  ],
+  "custom_types": {
+    "enums": [],
+    "input_objects": [],
+    "objects": [
+      {
+        "name": "LoginResponse",
+        "fields": [
+          {
+            "name": "token",
+            "type": "String!"
+          },
+          {
+            "name": "userId",
+            "type": "String!"
+          },
+          {
+            "name": "username",
+            "type": "String!"
+          },
+          {
+            "name": "firstName",
+            "type": "String"
+          },
+          {
+            "name": "lastName",
+            "type": "String"
+          },
+          {
+            "name": "roles",
+            "type": "[String!]"
+          }
+        ]
+      }
+    ],
+    "scalars": []
+  },
+  "rest_endpoints": [
+    {
+      "name": "login",
+      "url": "/api/auth/login",
+      "methods": ["POST"],
+      "definition": {
+        "query": {
+          "name": "login",
+          "arguments": {
+            "username": {
+              "type": "String!",
+              "value": "{{$body.username}}"
+            },
+            "password": {
+              "type": "String!",
+              "value": "{{$body.password}}"
+            }
+          }
+        },
+        "output_object_type": "LoginResponse"
+      }
+    }
+  ],
+  "query_collections": [],
+  "allow_list": [],
+  "event_triggers": [],
+  "remote_schemas": [],
+  "cron_triggers": [],
+  "api_limits": {
+    "disabled": true,
+    "rate_limit": 60,
+    "webhook_rate_limit": 60,
+    "depth_limit": 10,
+    "node_limit": 1000
+  }
+}

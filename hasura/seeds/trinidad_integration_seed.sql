@@ -2,7 +2,7 @@
 -- This script creates integration configurations and sample data specific to Trinidad and Tobago
 
 -- Ensure we're using the correct schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- 1. API Clients (systems that can connect to the Fineract API)
 INSERT INTO api_client (

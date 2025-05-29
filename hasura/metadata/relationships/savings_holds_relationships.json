@@ -2,8 +2,8 @@
   "relationships": [
     {
       "name": "savings_account_holds",
-      "source_table": "fineract_default.savings_account",
-      "target_table": "fineract_default.savings_account_hold",
+      "source_table": "default.savings_account",
+      "target_table": "default.savings_account_hold",
       "relationship_type": "one_to_many",
       "mapping": {
         "id": "savings_account_id"
@@ -12,8 +12,8 @@
     },
     {
       "name": "savings_account",
-      "source_table": "fineract_default.savings_account_hold",
-      "target_table": "fineract_default.savings_account",
+      "source_table": "default.savings_account_hold",
+      "target_table": "default.savings_account",
       "relationship_type": "many_to_one",
       "mapping": {
         "savings_account_id": "id"
@@ -22,8 +22,8 @@
     },
     {
       "name": "app_user",
-      "source_table": "fineract_default.savings_account_hold",
-      "target_table": "fineract_default.app_user",
+      "source_table": "default.savings_account_hold",
+      "target_table": "default.app_user",
       "relationship_type": "many_to_one",
       "mapping": {
         "released_by_user_id": "id"

@@ -1,0 +1,49 @@
+jwt:
+  # JWT secret key
+  secret: "{{JWT_SECRET}}"
+  
+  # JWT claim field for the role mapping
+  claims_namespace: "https://hasura.io/jwt/claims"
+  
+  # JWT claim field for the user ID
+  claims_format: json
+  
+  # Name of the claim field containing Hasura user-role
+  claims_namespace_path: $.hasura.claims
+  
+  # Allowed audiences for the JWT
+  audience: ["fineract-hasura"]
+  
+  # Allowed issuers for the JWT
+  issuer: "fineract-auth"
+
+# JWT claim settings in the payload
+claims_map:
+  # JWT subject field maps to x-hasura-user-id
+  x-hasura-user-id: sub
+  
+  # From the roles field in JWT
+  x-hasura-default-role: $.roles[0]
+  
+  # Array of roles from JWT
+  x-hasura-allowed-roles: $.roles
+  
+  # Custom permission codes from JWT
+  x-hasura-permissions: $.perms
+  
+  # Office ID from JWT
+  x-hasura-office-id: $.off
+  
+  # Tenant ID from JWT
+  x-hasura-tenant-id: $.tn
+
+# Hasura Authorization settings
+authorization:
+  # Default role for unauthenticated users
+  anonymous_role: anonymous
+  
+  # Default role for authenticated users
+  default_role: user
+  
+  # Disable JWT verification in development mode (should be false in production)
+  disable_jwt_verification: false

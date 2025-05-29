@@ -2,7 +2,7 @@
 -- This script creates sample reporting data specific to Trinidad and Tobago
 
 -- Ensure we're using the correct schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- 1. Report Templates
 INSERT INTO report_template (

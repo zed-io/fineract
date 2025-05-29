@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fineract_hasura
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hasura:
+    image: hasura/graphql-engine:v2.35.0
+    ports:
+      - "8090:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/fineract_hasura
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLE_LOGGING: "true"
+      HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key":"your-jwt-secret-key-here-must-be-at-least-32-chars"}'
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+    volumes:
+      - ./hasura/metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./front-ends/credit-cloud-admin
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      hasura:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: http://localhost:8080/v1/graphql
+      NEXT_PUBLIC_HASURA_ADMIN_SECRET: myadminsecretkey
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+      NODE_ENV: development
+    volumes:
+      - ./front-ends/credit-cloud-admin:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  postgres_data:

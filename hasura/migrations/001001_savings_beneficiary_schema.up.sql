@@ -2,7 +2,7 @@
 -- Creates tables and functions for managing beneficiaries of savings accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum for beneficiary verification status
 CREATE TYPE beneficiary_verification_status AS ENUM ('pending', 'verified', 'rejected');

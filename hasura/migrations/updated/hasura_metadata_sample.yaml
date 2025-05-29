@@ -1,0 +1,175 @@
+- tables:
+  - table:
+      schema: "default"
+      name: "m_appuser"
+    array_relationships:
+    - name: "roles"
+      using:
+        foreign_key_constraint_on:
+          column: "user_id"
+          table:
+            schema: "default"
+            name: "m_appuser_role"
+  - table:
+      schema: "default"
+      name: "m_role"
+    array_relationships:
+    - name: "permissions"
+      using:
+        foreign_key_constraint_on:
+          column: "role_id"
+          table:
+            schema: "default"
+            name: "m_role_permission"
+    - name: "users"
+      using:
+        foreign_key_constraint_on:
+          column: "role_id"
+          table:
+            schema: "default"
+            name: "m_appuser_role"
+  - table:
+      schema: "default"
+      name: "m_permission"
+    array_relationships:
+    - name: "roles"
+      using:
+        foreign_key_constraint_on:
+          column: "permission_id"
+          table:
+            schema: "default"
+            name: "m_role_permission"
+  - table:
+      schema: "default"
+      name: "m_office"
+    object_relationships:
+    - name: "parent"
+      using:
+        foreign_key_constraint_on: "parent_id"
+    array_relationships:
+    - name: "children"
+      using:
+        foreign_key_constraint_on:
+          column: "parent_id"
+          table:
+            schema: "default"
+            name: "m_office"
+    - name: "staff"
+      using:
+        foreign_key_constraint_on:
+          column: "office_id"
+          table:
+            schema: "default"
+            name: "m_staff"
+  - table:
+      schema: "default"
+      name: "m_staff"
+    object_relationships:
+    - name: "office"
+      using:
+        foreign_key_constraint_on: "office_id"
+  - table:
+      schema: "default"
+      name: "m_code"
+    array_relationships:
+    - name: "values"
+      using:
+        foreign_key_constraint_on:
+          column: "code_id"
+          table:
+            schema: "default"
+            name: "m_code_value"
+  - table:
+      schema: "default"
+      name: "m_code_value"
+    object_relationships:
+    - name: "code"
+      using:
+        foreign_key_constraint_on: "code_id"
+  - table:
+      schema: "tenants"
+      name: "tenant"
+    array_relationships:
+    - name: "configurations"
+      using:
+        foreign_key_constraint_on:
+          column: "tenant_id"
+          table:
+            schema: "tenants"
+            name: "tenant_config"
+    - name: "server_connections"
+      using:
+        foreign_key_constraint_on:
+          column: "tenant_id"
+          table:
+            schema: "tenants"
+            name: "tenant_server_connection"
+
+# Example of permissions for a user role
+- permissions:
+  - role: "user"
+    table:
+      schema: "default"
+      name: "m_appuser"
+    select_permissions:
+      filter:
+        id: { _eq: "X-Hasura-User-Id" }
+      columns:
+        - id
+        - username
+        - firstname
+        - lastname
+        - email
+        - mobile_no
+        - status
+        - last_login
+        - created_date
+    update_permissions:
+      filter:
+        id: { _eq: "X-Hasura-User-Id" }
+      columns:
+        - firstname
+        - lastname
+        - email
+        - mobile_no
+        - password
+
+# Example of an action to create a new tenant
+- actions:
+  - name: "createTenant"
+    definition:
+      kind: "synchronous"
+      handler: "{{ACTION_BASE_URL}}/actions/tenant/create"
+      forward_client_headers: true
+    permissions:
+      - role: "admin"
+    arguments:
+      - name: "identifier"
+        type: "String!"
+      - name: "name"
+        type: "String!"
+      - name: "timezoneId"
+        type: "String!"
+    output_type: "CreateTenantOutput"
+    
+# Example of custom types for tenant management
+- custom_types:
+  - name: "CreateTenantOutput"
+    fields:
+      - name: "tenant"
+        type: "Tenant"
+      - name: "success"
+        type: "Boolean!"
+      - name: "message"
+        type: "String"
+  
+  - name: "Tenant"
+    fields:
+      - name: "id"
+        type: "UUID!"
+      - name: "identifier"
+        type: "String!"
+      - name: "name"
+        type: "String!"
+      - name: "status"
+        type: "String!"

@@ -2,7 +2,7 @@
 -- This creates a centralized notification system for all modules
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create notification types enum
 DO $$ BEGIN

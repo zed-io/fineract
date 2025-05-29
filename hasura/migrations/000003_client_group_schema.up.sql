@@ -2,7 +2,7 @@
 -- Creates the schema for managing clients and groups
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Client management tables
 CREATE TABLE client (

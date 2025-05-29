@@ -1,0 +1,314 @@
+type ClientListResponse {
+  totalCount: Int!
+  clients: [ClientSummary!]!
+}
+
+type ClientSummary {
+  id: String!
+  accountNo: String!
+  externalId: String
+  status: String!
+  subStatus: String
+  activationDate: String
+  officeId: String!
+  officeName: String!
+  staffId: String
+  staffName: String
+  submittedDate: String
+  mobileNo: String
+  emailAddress: String
+  dateOfBirth: String
+  gender: String
+  clientType: String
+  legalForm: String
+  firstname: String
+  middlename: String
+  lastname: String
+  fullname: String
+  displayName: String!
+}
+
+type ClientDetail {
+  id: String!
+  accountNo: String!
+  externalId: String
+  status: String!
+  subStatus: String
+  activationDate: String
+  officeId: String!
+  officeName: String!
+  staffId: String
+  staffName: String
+  submittedDate: String
+  mobileNo: String
+  emailAddress: String
+  dateOfBirth: String
+  gender: String
+  clientType: String
+  clientTypeValue: String
+  clientClassification: String
+  clientClassificationValue: String
+  legalForm: String
+  firstname: String
+  middlename: String
+  lastname: String
+  fullname: String
+  displayName: String!
+  createdDate: String
+  lastModifiedDate: String
+  closedDate: String
+  reopenedDate: String
+  identifiers: [ClientIdentifier!]!
+  addresses: [ClientAddress!]!
+  familyMembers: [ClientFamilyMember!]!
+  notes: [ClientNote!]!
+  documents: [ClientDocument!]!
+}
+
+type ClientIdentifier {
+  id: String!
+  documentType: String!
+  documentTypeId: String!
+  documentKey: String!
+  description: String
+  status: String!
+}
+
+type ClientAddress {
+  id: String!
+  addressType: String!
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+  isActive: Boolean!
+}
+
+type ClientFamilyMember {
+  id: String!
+  firstname: String!
+  middlename: String
+  lastname: String
+  qualification: String
+  mobileNumber: String
+  age: Int
+  isDependent: Boolean!
+  relationshipId: String
+  relationship: String
+  maritalStatus: String
+  gender: String
+  dateOfBirth: String
+  profession: String
+}
+
+type ClientNote {
+  id: String!
+  note: String!
+  createdDate: String!
+  createdBy: String
+}
+
+type ClientDocument {
+  id: String!
+  name: String!
+  fileName: String!
+  size: Int
+  type: String
+  description: String
+  location: String!
+}
+
+type ClientAccountsSummary {
+  loanAccounts: [LoanAccount!]!
+  savingsAccounts: [SavingsAccount!]!
+}
+
+type LoanAccount {
+  id: String!
+  accountNo: String!
+  externalId: String
+  status: String!
+  productName: String!
+  loanType: String!
+  principalAmount: Float!
+  disbursedDate: String
+  expectedMaturityDate: String
+  totalOutstanding: Float
+}
+
+type SavingsAccount {
+  id: String!
+  accountNo: String!
+  externalId: String
+  status: String!
+  productName: String!
+  accountType: String!
+  currencyCode: String!
+  accountBalance: Float!
+}
+
+type ClientActionResponse {
+  resourceId: String!
+  officeId: String!
+  clientId: String!
+  resourceIdentifier: String
+  changes: JSON
+}
+
+scalar JSON
+
+input ClientListInput {
+  officeId: String!
+  status: String
+  name: String
+  externalId: String
+  limit: Int
+  offset: Int
+  orderBy: String
+  sortOrder: String
+}
+
+input ClientGetInput {
+  id: String!
+}
+
+input ClientCreateInput {
+  officeId: String!
+  firstname: String
+  lastname: String
+  fullname: String
+  mobileNo: String
+  emailAddress: String
+  externalId: String
+  staffId: String
+  dateOfBirth: String
+  gender: String
+  clientType: String
+  clientClassification: String
+  isStaff: Boolean
+  active: Boolean
+  activationDate: String
+  submittedDate: String
+}
+
+input ClientUpdateInput {
+  id: String!
+  firstname: String
+  lastname: String
+  fullname: String
+  mobileNo: String
+  emailAddress: String
+  externalId: String
+  staffId: String
+  dateOfBirth: String
+  gender: String
+  clientType: String
+  clientClassification: String
+  isStaff: Boolean
+}
+
+input ClientActivateInput {
+  id: String!
+  activationDate: String!
+}
+
+input ClientCloseInput {
+  id: String!
+  closureDate: String!
+  closureReasonId: String!
+}
+
+input ClientRejectInput {
+  id: String!
+  rejectionDate: String!
+  rejectionReasonId: String!
+}
+
+input ClientWithdrawInput {
+  id: String!
+  withdrawalDate: String!
+  withdrawalReasonId: String!
+}
+
+input ClientReactivateInput {
+  id: String!
+  reactivationDate: String!
+}
+
+input ClientAddIdentifierInput {
+  clientId: String!
+  documentTypeId: String!
+  documentKey: String!
+  description: String
+}
+
+input ClientAccountsInput {
+  clientId: String!
+}
+
+input ClientAddAddressInput {
+  clientId: String!
+  addressType: String!
+  addressLine1: String
+  addressLine2: String
+  addressLine3: String
+  city: String
+  stateProvince: String
+  country: String
+  postalCode: String
+  isActive: Boolean
+}
+
+input ClientAddFamilyMemberInput {
+  clientId: String!
+  firstname: String!
+  middlename: String
+  lastname: String
+  qualification: String
+  mobileNumber: String
+  age: Int
+  isDependent: Boolean
+  relationshipId: String
+  maritalStatus: String
+  gender: String
+  dateOfBirth: String
+  profession: String
+}
+
+input ClientAddDocumentInput {
+  clientId: String!
+  name: String!
+  fileName: String!
+  size: Int
+  type: String
+  description: String
+  location: String!
+}
+
+# Action mutations and queries
+type Mutation {
+  # Client management
+  client_create(input: ClientCreateInput!): ClientActionResponse!
+  client_update(input: ClientUpdateInput!): ClientActionResponse!
+  client_activate(input: ClientActivateInput!): ClientActionResponse!
+  client_close(input: ClientCloseInput!): ClientActionResponse!
+  client_reject(input: ClientRejectInput!): ClientActionResponse!
+  client_withdraw(input: ClientWithdrawInput!): ClientActionResponse!
+  client_reactivate(input: ClientReactivateInput!): ClientActionResponse!
+  
+  # Client related entities
+  client_add_identifier(input: ClientAddIdentifierInput!): ClientActionResponse!
+  client_add_address(input: ClientAddAddressInput!): ClientActionResponse!
+  client_add_family_member(input: ClientAddFamilyMemberInput!): ClientActionResponse!
+  client_add_document(input: ClientAddDocumentInput!): ClientActionResponse!
+}
+
+type Query {
+  # Client queries
+  client_list(input: ClientListInput!): ClientListResponse!
+  client_get(input: ClientGetInput!): ClientDetail!
+  client_accounts(input: ClientAccountsInput!): ClientAccountsSummary!
+}

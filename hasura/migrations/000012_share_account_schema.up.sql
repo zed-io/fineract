@@ -2,7 +2,7 @@
 -- Creates the schema for share products and accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for share accounts
 CREATE TYPE share_account_status_type AS ENUM (

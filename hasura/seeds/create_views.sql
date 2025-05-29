@@ -1,5 +1,5 @@
 -- Create useful views for GraphQL operations
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create a simple client view for the GraphQL operations
 DROP VIEW IF EXISTS clients;

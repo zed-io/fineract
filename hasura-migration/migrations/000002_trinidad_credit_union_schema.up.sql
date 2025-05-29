@@ -2,7 +2,7 @@
 -- Based on requirements analysis for enhanced digital banking capabilities
 
 -- Set search path
-SET search_path TO fineract_default, public;
+SET search_path TO "default", public;
 
 -- Enhanced KYC/AML tables for improved regulatory compliance
 CREATE TYPE identity_verification_status AS ENUM (

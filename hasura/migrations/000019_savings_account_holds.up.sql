@@ -2,7 +2,7 @@
 -- Creates the schema for managing account holds, blocks, and restrictions
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum type for hold type
 CREATE TYPE savings_hold_type AS ENUM (

@@ -2,7 +2,7 @@
 -- Creates the schema for interest calculation history and daily accrual tracking
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for interest calculation
 CREATE TYPE interest_calculation_strategy_type AS ENUM ('daily_balance', 'average_daily_balance', 'minimum_balance', 'tiered');

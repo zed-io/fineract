@@ -2,11 +2,11 @@
 -- This script creates the fixed deposit schema and adds sample data for Trinidad and Tobago
 
 -- Set search path to the appropriate schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Fixed Deposit Product table
 CREATE TABLE IF NOT EXISTS fixed_deposit_product (
-    id UUID PRIMARY KEY DEFAULT fineract_default.uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT "default".uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     short_name VARCHAR(4) NOT NULL,
     description VARCHAR(500),
@@ -34,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_fixed_deposit_product_active ON fixed_deposit_pro
 
 -- Fixed Deposit Account table
 CREATE TABLE IF NOT EXISTS fixed_deposit_account (
-    id UUID PRIMARY KEY DEFAULT fineract_default.uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT "default".uuid_generate_v4(),
     account_no VARCHAR(100) NOT NULL UNIQUE,
     external_id VARCHAR(100) UNIQUE,
     client_id UUID,
@@ -80,7 +80,7 @@ CREATE INDEX IF NOT EXISTS idx_fixed_deposit_account_maturity ON fixed_deposit_a
 
 -- Fixed Deposit Transaction table
 CREATE TABLE IF NOT EXISTS fixed_deposit_transaction (
-    id UUID PRIMARY KEY DEFAULT fineract_default.uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT "default".uuid_generate_v4(),
     fixed_deposit_account_id UUID NOT NULL,
     office_id UUID NOT NULL,
     transaction_type VARCHAR(50) NOT NULL,

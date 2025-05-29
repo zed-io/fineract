@@ -1,0 +1,157 @@
+- name: getRecurringDepositBeneficiaries
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/list"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Retrieve beneficiaries for a recurring deposit account
+  permissions:
+    - role: admin
+    - role: user
+    - role: credit_union_admin
+    - role: credit_union_teller
+    - role: credit_union_supervisor
+
+- name: getRecurringDepositBeneficiary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/get"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Retrieve a specific recurring deposit beneficiary by ID
+  permissions:
+    - role: admin
+    - role: user
+    - role: credit_union_admin
+    - role: credit_union_teller
+    - role: credit_union_supervisor
+
+- name: addRecurringDepositBeneficiary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/add"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Add a new beneficiary to a recurring deposit account
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor
+
+- name: updateRecurringDepositBeneficiary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/update"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Update an existing recurring deposit beneficiary
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor
+
+- name: verifyRecurringDepositBeneficiary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/verify"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Verify a recurring deposit beneficiary
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor
+
+- name: removeRecurringDepositBeneficiary
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/remove"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Remove a beneficiary from a recurring deposit account
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor
+
+- name: getRecurringDepositBeneficiaryNotifications
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/notifications/list"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Retrieve notifications for recurring deposit beneficiaries
+  permissions:
+    - role: admin
+    - role: user
+    - role: credit_union_admin
+    - role: credit_union_teller
+    - role: credit_union_supervisor
+
+- name: getRecurringDepositBeneficiaryNotificationPreferences
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/notifications/preferences"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Retrieve notification preferences for a recurring deposit beneficiary
+  permissions:
+    - role: admin
+    - role: user
+    - role: credit_union_admin
+    - role: credit_union_teller
+    - role: credit_union_supervisor
+
+- name: sendRecurringDepositBeneficiaryNotification
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/notifications/send"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Send a notification to a recurring deposit beneficiary
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor
+
+- name: updateRecurringDepositBeneficiaryNotificationPreference
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/actions/v1/recurring-deposit/beneficiaries/notifications/update-preference"
+    forward_client_headers: true
+    headers:
+      - name: Content-Type
+        value: application/json
+    timeout: 120
+  comment: Update notification preferences for a recurring deposit beneficiary
+  permissions:
+    - role: admin
+    - role: credit_union_admin
+    - role: credit_union_supervisor

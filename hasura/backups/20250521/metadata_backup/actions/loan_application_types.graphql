@@ -1,0 +1,151 @@
+# GraphQL type definitions for loan application functionality
+
+# Input type for creating a loan application
+input LoanApplicationInput {
+  clientId: UUID!
+  productId: UUID!
+  principal: String!
+  numberOfRepayments: Int!
+  interestRate: String!
+  disbursementDate: Date!
+  repaymentEvery: Int!
+  repaymentFrequencyType: String!
+  termFrequency: Int
+  termFrequencyType: String
+  graceOnPrincipal: Int
+  graceOnInterest: Int
+  interestType: String!
+  amortizationType: String!
+  note: String
+  submittedById: UUID!
+}
+
+# Response type for loan application creation
+type CreateLoanApplicationResponse {
+  success: Boolean!
+  message: String!
+  loanId: UUID
+}
+
+# Mutation for creating a loan application
+type Mutation {
+  createLoanApplication(input: LoanApplicationInput!): CreateLoanApplicationResponse
+}
+
+# Query for listing loan applications
+type Query {
+  loanApplications(
+    where: LoanApplicationFilterInput
+    orderBy: [LoanApplicationOrderByInput!]
+    limit: Int
+    offset: Int
+  ): [LoanApplication!]!
+  
+  loanApplicationById(id: UUID!): LoanApplication
+}
+
+# Filter input for loan applications
+input LoanApplicationFilterInput {
+  id: UUIDFilterInput
+  applicantId: UUIDFilterInput
+  status: StringFilterInput
+  applicationDate: DateFilterInput
+}
+
+# Order by input for loan applications
+input LoanApplicationOrderByInput {
+  field: String!
+  direction: OrderDirection!
+}
+
+# Order direction enum
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+# Filter inputs for different field types
+input UUIDFilterInput {
+  eq: UUID
+  in: [UUID!]
+}
+
+input StringFilterInput {
+  eq: String
+  in: [String!]
+  like: String
+}
+
+input DateFilterInput {
+  eq: Date
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  between: [Date!]
+}
+
+# LoanApplication type
+type LoanApplication {
+  id: UUID!
+  applicantId: UUID!
+  loanTypeId: UUID!
+  principal: Float!
+  startDate: Date
+  status: String!
+  device: String
+  applicationDate: Date!
+  tenor: Int!
+  applicant: Client
+  loanType: LoanProduct
+}
+
+# Client type
+type Client {
+  id: UUID!
+  displayName: String
+  firstName: String
+  lastName: String
+  mobileNo: String
+  emailAddress: String
+  status: String
+  clientType: String
+  dateOfBirth: Date
+  gender: String
+}
+
+# LoanProduct type
+type LoanProduct {
+  id: UUID!
+  loanName: String!
+  description: String
+  shortName: String
+  currencyCode: String!
+  minPrincipalAmount: Float
+  defaultPrincipalAmount: Float
+  maxPrincipalAmount: Float
+  minNumberOfRepayments: Int
+  defaultNumberOfRepayments: Int
+  maxNumberOfRepayments: Int
+  repaymentEvery: Int
+  repaymentFrequencyType: String
+  interestRatePerPeriod: Float
+  interestPeriodFrequencyType: String
+  annualNominalInterestRate: Float
+  interestType: String
+  interestCalculationPeriodType: String
+  amortizationType: String
+  active: Boolean
+  loanCategory: LoanCategory
+}
+
+# LoanCategory type
+type LoanCategory {
+  id: UUID!
+  name: String!
+  description: String
+}
+
+# Basic scalar types
+scalar UUID
+scalar Date

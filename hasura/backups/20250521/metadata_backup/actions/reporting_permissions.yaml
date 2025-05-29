@@ -1,0 +1,45 @@
+- permission:
+    role: admin
+  actions:
+    - executeReport
+    - exportReport
+    - portfolioAtRiskReport
+    - collectionReport
+    - loanPortfolioSummary
+    - expectedRepaymentsReport
+    - incomeStatementReport
+    - balanceSheetReport
+    - financialRatiosReport
+    - interestIncomeReport
+    - feeIncomeReport
+
+- permission:
+    role: user
+  actions:
+    - executeReport
+    - exportReport
+    - portfolioAtRiskReport
+    - collectionReport
+    - loanPortfolioSummary
+    - expectedRepaymentsReport
+    
+- permission:
+    role: accountant
+  actions:
+    - executeReport
+    - exportReport
+    - incomeStatementReport
+    - balanceSheetReport
+    - financialRatiosReport
+    - interestIncomeReport
+    - feeIncomeReport
+
+- permission:
+    role: loan_officer
+  actions:
+    - executeReport
+    - exportReport
+    - portfolioAtRiskReport
+    - collectionReport
+    - loanPortfolioSummary
+    - expectedRepaymentsReport

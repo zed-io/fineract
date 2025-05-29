@@ -2,7 +2,7 @@
 -- This script populates the database with realistic mock data for Trinidad and Tobago
 
 -- Set search path to the appropriate schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- ================================================
 -- Office Locations in Trinidad and Tobago
@@ -13,23 +13,23 @@ UPDATE office SET name = 'Port of Spain Headquarters', opening_date = '2020-01-0
 
 -- Create branch offices across Trinidad and Tobago
 INSERT INTO office (name, hierarchy, opening_date, parent_id)
-SELECT 'San Fernando Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', fineract_default.uuid_generate_v4()), '2020-03-15', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
+SELECT 'San Fernando Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', "default".uuid_generate_v4()), '2020-03-15', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
 WHERE NOT EXISTS (SELECT 1 FROM office WHERE name = 'San Fernando Branch');
 
 INSERT INTO office (name, hierarchy, opening_date, parent_id)
-SELECT 'Arima Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', fineract_default.uuid_generate_v4()), '2020-06-20', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
+SELECT 'Arima Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', "default".uuid_generate_v4()), '2020-06-20', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
 WHERE NOT EXISTS (SELECT 1 FROM office WHERE name = 'Arima Branch');
 
 INSERT INTO office (name, hierarchy, opening_date, parent_id)
-SELECT 'Chaguanas Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', fineract_default.uuid_generate_v4()), '2021-02-10', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
+SELECT 'Chaguanas Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', "default".uuid_generate_v4()), '2021-02-10', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
 WHERE NOT EXISTS (SELECT 1 FROM office WHERE name = 'Chaguanas Branch');
 
 INSERT INTO office (name, hierarchy, opening_date, parent_id)
-SELECT 'Scarborough Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', fineract_default.uuid_generate_v4()), '2021-08-05', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
+SELECT 'Scarborough Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', "default".uuid_generate_v4()), '2021-08-05', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
 WHERE NOT EXISTS (SELECT 1 FROM office WHERE name = 'Scarborough Branch');
 
 INSERT INTO office (name, hierarchy, opening_date, parent_id)
-SELECT 'Point Fortin Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', fineract_default.uuid_generate_v4()), '2022-01-15', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
+SELECT 'Point Fortin Branch', CONCAT((SELECT hierarchy FROM office WHERE name = 'Port of Spain Headquarters'), '.', "default".uuid_generate_v4()), '2022-01-15', (SELECT id FROM office WHERE name = 'Port of Spain Headquarters')
 WHERE NOT EXISTS (SELECT 1 FROM office WHERE name = 'Point Fortin Branch');
 
 -- ================================================

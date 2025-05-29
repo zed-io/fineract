@@ -1,8 +1,8 @@
 -- Migration file for Fineract Payment Gateway Integration
 -- This creates the necessary tables for external payment gateway integration
 
--- Set search path to fineract_default schema
-SET search_path TO fineract_default;
+-- Set search path to "default" schema
+SET search_path TO "default";
 
 -- Create payment gateway provider table
 CREATE TABLE IF NOT EXISTS payment_gateway_provider (

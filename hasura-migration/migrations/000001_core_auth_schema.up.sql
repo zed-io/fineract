@@ -2,10 +2,10 @@
 -- Creates the base schema for the auth system in a tenant schema
 
 -- Create tenant schema if it doesn't exist
-CREATE SCHEMA IF NOT EXISTS fineract_default;
+CREATE SCHEMA IF NOT EXISTS "default";
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

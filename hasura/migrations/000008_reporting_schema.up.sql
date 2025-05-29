@@ -2,7 +2,7 @@
 -- This creates the necessary tables for the reporting system
 
 -- Create Schema for report objects
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create report definition table
 CREATE TABLE IF NOT EXISTS m_report (

@@ -2,7 +2,7 @@
 -- Adds notification tables, templates and functionality for beneficiary management
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create a table for notification templates specific to beneficiaries
 CREATE TABLE IF NOT EXISTS savings_beneficiary_notification_template (

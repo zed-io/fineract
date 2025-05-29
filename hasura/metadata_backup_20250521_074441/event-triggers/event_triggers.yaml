@@ -1,0 +1,123 @@
+event_triggers:
+  - name: loan_status_changed
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns:
+          - loan_status
+          - loan_status_change_date
+      delete:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/loan-status-changed"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a loan status changes
+
+  - name: savings_account_status_changed
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns:
+          - status
+          - activated_on_date
+          - closed_on_date
+      delete:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/savings-status-changed"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a savings account status changes
+
+  - name: loan_transaction_created
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns: []
+      delete:
+        columns: []
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/loan-transaction-created"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a loan transaction is created
+
+  - name: savings_transaction_created
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns: []
+      delete:
+        columns: []
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/savings-transaction-created"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a savings transaction is created
+
+  - name: client_status_changed
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns:
+          - status
+          - activation_date
+          - closed_date
+          - reopened_date
+      delete:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/client-status-changed"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a client status changes
+
+  - name: journal_entry_created
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+      update:
+        columns: []
+      delete:
+        columns: []
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_WEBHOOK_URL}}/event-handlers/journal-entry-created"
+    headers:
+      - name: x-hasura-webhook-secret
+        value_from_env: HASURA_WEBHOOK_SECRET
+    comment: Trigger for when a journal entry is created

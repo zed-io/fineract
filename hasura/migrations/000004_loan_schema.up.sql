@@ -2,7 +2,7 @@
 -- Creates the schema for loan products and loan accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for loans
 CREATE TYPE interest_method_type AS ENUM ('declining_balance', 'flat', 'compound');

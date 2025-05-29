@@ -2,7 +2,7 @@
 -- This migration creates the core tables and types needed by all other schema objects
 
 -- Set search path to both schemas
-SET search_path TO fineract_default, public;
+SET search_path TO "default", public;
 
 -- Common domain types
 CREATE TYPE account_status AS ENUM ('active', 'inactive', 'dormant', 'closed');

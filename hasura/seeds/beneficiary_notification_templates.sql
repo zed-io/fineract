@@ -2,7 +2,7 @@
 -- This file contains template definitions for common beneficiary notification events
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Clear existing templates (for clean reinstallation if needed)
 TRUNCATE TABLE savings_beneficiary_notification_template CASCADE;

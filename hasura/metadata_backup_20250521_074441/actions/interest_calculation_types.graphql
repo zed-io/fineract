@@ -1,0 +1,143 @@
+type Query {
+  # Calculate interest (preview without posting)
+  calculateInterest(
+    accountId: String!
+    accountType: AccountType!
+    calculationDate: String
+    fromDate: String
+    toDate: String
+  ): InterestCalculationResponse
+  
+  # Get daily interest accruals
+  getDailyAccruals(
+    accountId: String!
+    accountType: AccountType!
+    fromDate: String!
+    toDate: String!
+    onlyUnposted: Boolean
+  ): DailyAccrualsResponse
+  
+  # Get interest posting history
+  getInterestPostingHistory(
+    accountId: String!
+    accountType: AccountType!
+    limit: Int
+    offset: Int
+  ): InterestPostingHistoryResponse
+}
+
+type Mutation {
+  # Post interest to an account
+  postInterest(
+    accountId: String!
+    accountType: AccountType!
+    interestAmount: Float!
+    postingDate: String
+    fromDate: String!
+    toDate: String!
+  ): InterestPostingResponse
+  
+  # Record daily interest accrual
+  recordDailyAccrual(
+    accountId: String!
+    accountType: AccountType!
+    accrualDate: String
+    amount: Float!
+    balance: Float!
+    interestRate: Float!
+  ): DailyAccrualRecordResponse
+}
+
+# Account types supported by interest calculation
+enum AccountType {
+  savings
+  loan
+  recurring_deposit
+  fixed_deposit
+}
+
+# Interest calculation result
+type InterestCalculation {
+  accountId: String!
+  accountNo: String!
+  accountType: AccountType!
+  balance: String!
+  interestRate: String!
+  interestEarned: String!
+  calculationDate: String!
+  fromDate: String!
+  toDate: String!
+  daysInPeriod: Int!
+  compoundingFrequency: String!
+  calculationType: String!
+}
+
+# Interest posting transaction
+type InterestPostingTransaction {
+  id: String!
+  accountId: String!
+  accountType: AccountType!
+  amount: String!
+  date: String!
+  fromDate: String!
+  toDate: String!
+}
+
+# Daily accrual record
+type DailyAccrualRecord {
+  id: String!
+  accountId: String!
+  accrualDate: String!
+  amount: String!
+  balance: String!
+  interestRate: String!
+  isPosted: Boolean!
+  postedDate: String
+  postedTransactionId: String
+}
+
+# Interest posting history record
+type InterestPostingHistoryRecord {
+  id: String!
+  accountId: String!
+  accountType: AccountType!
+  transactionId: String!
+  postingDate: String!
+  fromDate: String!
+  toDate: String!
+  interestAmount: String!
+  balanceAfterPosting: String!
+  createdDate: String!
+}
+
+# Response types
+
+type InterestCalculationResponse {
+  success: Boolean!
+  calculation: InterestCalculation
+  error: String
+}
+
+type InterestPostingResponse {
+  success: Boolean!
+  transaction: InterestPostingTransaction
+  error: String
+}
+
+type DailyAccrualRecordResponse {
+  success: Boolean!
+  accrual: DailyAccrualRecord
+  error: String
+}
+
+type DailyAccrualsResponse {
+  success: Boolean!
+  accruals: [DailyAccrualRecord!]!
+  error: String
+}
+
+type InterestPostingHistoryResponse {
+  success: Boolean!
+  history: [InterestPostingHistoryRecord!]!
+  error: String
+}

@@ -2,7 +2,7 @@
 -- This seed file populates sample data needed for the credit-cloud-admin frontend
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create mock users if they don't exist
 INSERT INTO app_user (

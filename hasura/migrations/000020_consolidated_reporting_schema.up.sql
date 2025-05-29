@@ -2,7 +2,7 @@
 -- This creates the necessary tables for the cross-module reporting system
 
 -- Set schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create data source registry table
 CREATE TABLE IF NOT EXISTS m_reporting_datasource (

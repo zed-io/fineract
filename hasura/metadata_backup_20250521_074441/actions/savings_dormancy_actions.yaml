@@ -1,0 +1,63 @@
+- name: getDormancyConfiguration
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/get-dormancy-configuration"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: updateDormancyConfiguration
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/update-dormancy-configuration"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: reactivateDormantAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/reactivate-dormant-account"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: changeDormancyStatus
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/change-dormancy-status"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: applyDormancyFee
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/apply-dormancy-fee"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: processDormancyFees
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/process-dormancy-fees"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getDormancyLog
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/get-dormancy-log"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getDormancyReport
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/savings-dormancy/get-dormancy-report"
+    forward_client_headers: true
+  permissions:
+    - role: admin

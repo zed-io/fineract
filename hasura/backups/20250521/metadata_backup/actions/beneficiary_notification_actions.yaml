@@ -1,0 +1,126 @@
+- name: getBeneficiaryNotifications
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: getBeneficiaryNotifications
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: getBeneficiaryNotification
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: getBeneficiaryNotification
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: getBeneficiaryNotificationTemplates
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: getBeneficiaryNotificationTemplates
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: getBeneficiaryNotificationTemplate
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: getBeneficiaryNotificationTemplate
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: getBeneficiaryNotificationPreferences
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: getBeneficiaryNotificationPreferences
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: sendBeneficiaryNotification
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: sendBeneficiaryNotification
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: updateBeneficiaryNotificationStatus
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: updateBeneficiaryNotificationStatus
+    timeout: 60
+  permissions:
+    - role: admin
+
+- name: updateBeneficiaryNotificationPreference
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: updateBeneficiaryNotificationPreference
+    timeout: 60
+  permissions:
+    - role: user
+    - role: admin
+
+- name: createBeneficiaryNotificationTemplate
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: createBeneficiaryNotificationTemplate
+    timeout: 60
+  permissions:
+    - role: admin
+
+- name: updateBeneficiaryNotificationTemplate
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/handlers/beneficiary-notifications'
+    forward_client_headers: true
+    headers:
+      - name: X-Hasura-Action
+        value: updateBeneficiaryNotificationTemplate
+    timeout: 60
+  permissions:
+    - role: admin

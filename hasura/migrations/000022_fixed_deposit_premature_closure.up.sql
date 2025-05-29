@@ -2,7 +2,7 @@
 -- Enhances the schema for handling premature closure scenarios with different penalty calculations
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create a type for penalty calculation method if not exists
 CREATE TYPE penalty_calculation_method AS ENUM (

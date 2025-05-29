@@ -2,7 +2,7 @@
 -- This creates the necessary tables for webhooks, API clients, and integration features
 
 -- Create Schema for integration objects
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create webhook configuration table
 CREATE TABLE IF NOT EXISTS integration_webhook (

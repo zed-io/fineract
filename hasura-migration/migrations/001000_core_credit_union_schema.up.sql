@@ -2,7 +2,7 @@
 -- Designed for PostgreSQL with normalized tables, constraints, and indexes
 
 -- Set search path
-SET search_path TO fineract_default, public;
+SET search_path TO "default", public;
 
 -- Create tenant management schema
 CREATE SCHEMA IF NOT EXISTS tenant_management;
@@ -728,7 +728,7 @@ INSERT INTO tenant_management.tenant (
     '11111111-1111-1111-1111-111111111111', 
     'Default Credit Union', 
     'default', 
-    'fineract_default', 
+    '"default"', 
     'default.creditunion.tt', 
     'active'
 )

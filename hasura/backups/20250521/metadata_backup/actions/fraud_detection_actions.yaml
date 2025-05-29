@@ -1,0 +1,48 @@
+- name: performFraudDetection
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/fraud-detection/perform"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: performFraudDetection
+  
+- name: getFraudDetectionHistory
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/fraud-detection/history"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getFraudDetectionHistory
+  
+- name: getFraudDetectionById
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/fraud-detection/byId"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getFraudDetectionById
+  
+- name: resolveManualReview
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/fraud-detection/resolve"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+  type_name: resolveManualReview
+  
+- name: getPendingManualReviews
+  definition:
+    kind: synchronous
+    handler: "{{ACTION_BASE_URL}}/api/fraud-detection/pendingReviews"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+  type_name: getPendingManualReviews

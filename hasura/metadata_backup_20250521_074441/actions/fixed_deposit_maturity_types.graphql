@@ -1,0 +1,116 @@
+type Query {
+  getFixedDepositMaturityDetails(
+    accountId: String!
+  ): FixedDepositMaturityDetailsResponse
+  
+  getFixedDepositPrematureClosureDetails(
+    accountId: String!,
+    closureDate: String!
+  ): FixedDepositPrematureClosureDetailsResponse
+  
+  getFixedDepositMaturityHistory(
+    accountId: String!
+  ): FixedDepositMaturityHistoryResponse
+}
+
+type Mutation {
+  processFixedDepositMaturity(
+    accountId: String!,
+    processDate: String!
+  ): FixedDepositMaturityProcessingResponse
+  
+  updateFixedDepositMaturityInstructions(
+    accountId: String!,
+    onAccountClosureType: String!,
+    transferToSavingsAccountId: String,
+    transferDescription: String,
+    renewalPeriod: Int,
+    renewalPeriodFrequencyType: String
+  ): UpdateFixedDepositMaturityInstructionsResponse
+  
+  prematureCloseFixedDepositAccount(
+    accountId: String!,
+    closedOnDate: String!,
+    note: String,
+    onAccountClosureType: String!,
+    toSavingsAccountId: String,
+    transferDescription: String,
+    paymentTypeId: String,
+    accountNumber: String,
+    checkNumber: String,
+    routingCode: String,
+    receiptNumber: String,
+    bankNumber: String
+  ): PrematureCloseFixedDepositAccountResponse
+}
+
+# Type definitions for maturity processing
+type FixedDepositMaturityDetailsResponse {
+  accountId: String!
+  accountNo: String!
+  maturityDate: String!
+  maturityAmount: Float!
+  currentMaturityInstructions: EnumOption!
+  transferToSavingsAccountId: String
+  transferToSavingsAccountNo: String
+  renewalTerm: Int
+  renewalTermFrequencyType: EnumOption
+  interestAtMaturity: Float!
+  totalPrincipal: Float!
+  availableSavingsAccounts: [SavingsAccountOption!]!
+}
+
+type FixedDepositMaturityHistoryResponse {
+  accountId: String!
+  maturityHistory: [MaturityHistoryEntry!]!
+}
+
+type MaturityHistoryEntry {
+  id: String!
+  originalMaturityDate: String!
+  processedDate: String!
+  maturityAmount: Float!
+  processingResult: String!
+  renewedAccountId: String
+  renewedAccountNo: String
+  transactionId: String
+}
+
+type FixedDepositMaturityProcessingResponse {
+  accountId: String!
+  processedDate: String!
+  maturityAmount: Float!
+  processingResult: String!
+  renewedAccountId: String
+  renewedAccountNo: String
+  transactionId: String
+  message: String!
+}
+
+# Type definitions for premature closure
+type FixedDepositPrematureClosureDetailsResponse {
+  accountId: String!
+  accountNo: String!
+  closureDate: String!
+  depositStartDate: String!
+  originalMaturityDate: String!
+  depositPeriodInDays: Int!
+  completedPeriodInDays: Int!
+  depositAmount: Float!
+  interestAccrued: Float!
+  interestPosted: Float!
+  penaltyAmount: Float!
+  penaltyCalculationMethod: String!
+  totalPayoutAmount: Float!
+  availableSavingsAccounts: [SavingsAccountOption!]!
+}
+
+type PrematureCloseFixedDepositAccountResponse {
+  accountId: String!
+  savingsAccountId: String!
+  closedOnDate: String!
+  totalAmount: Float!
+  penaltyAmount: Float!
+  transactionId: String!
+  message: String!
+}

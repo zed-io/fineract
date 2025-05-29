@@ -2,7 +2,7 @@
 -- Creates the schema for fixed deposit products and accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for fixed deposits
 CREATE TYPE deposit_term_frequency_type AS ENUM ('days', 'weeks', 'months', 'years');

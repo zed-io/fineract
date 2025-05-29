@@ -2,7 +2,7 @@
   "tables": [
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "client"
       },
       "select_permissions": [
@@ -152,7 +152,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "enhanced_cif"
       },
       "select_permissions": [
@@ -320,7 +320,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "identity_verification"
       },
       "select_permissions": [
@@ -477,7 +477,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "document_store"
       },
       "select_permissions": [
@@ -696,7 +696,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "enhanced_audit_log"
       },
       "select_permissions": [
@@ -798,7 +798,7 @@
     },
     {
       "table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "aml_transaction_monitoring"
       },
       "select_permissions": [

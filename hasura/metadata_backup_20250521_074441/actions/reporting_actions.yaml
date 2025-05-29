@@ -1,0 +1,164 @@
+- name: executeReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/execute'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: exportReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/export'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: portfolioAtRiskReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/portfolio-at-risk'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: collectionReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/collection-report'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: loanPortfolioSummary
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/loan-portfolio-summary'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: expectedRepaymentsReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/expected-repayments'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: incomeStatementReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/income-statement'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: balanceSheetReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/balance-sheet'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: financialRatiosReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/financial-ratios'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: interestIncomeReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/interest-income'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: feeIncomeReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/fee-income'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: trialBalanceReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/trial-balance'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: generalLedgerReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/general-ledger'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: journalEntryReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/journal-entries'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user
+
+- name: cashFlowReport
+  definition:
+    kind: synchronous
+    handler: '{{HASURA_ACTIONS_URL}}/api/reporting/cash-flow'
+    headers:
+      - name: x-hasura-admin-secret
+        value_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+  permissions:
+    - role: admin
+    - role: user

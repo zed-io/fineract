@@ -2,7 +2,7 @@
 -- This script updates existing savings products with dormancy configurations
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Update savings products with dormancy tracking
 UPDATE savings_product

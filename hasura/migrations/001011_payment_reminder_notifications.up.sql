@@ -2,7 +2,7 @@
 -- This creates DB functions to automatically send repayment reminders
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create a table for storing configured payment reminder settings
 CREATE TABLE IF NOT EXISTS payment_reminder_configuration (

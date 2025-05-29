@@ -2,7 +2,7 @@
 -- Enhances the schema for handling different maturity instructions and processing
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create a table to track maturity notifications
 CREATE TABLE fixed_deposit_maturity_notification (

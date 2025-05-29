@@ -1,0 +1,119 @@
+- name: createRecurringDepositProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/product/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+
+- name: getRecurringDepositProduct
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/product/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getRecurringDepositProducts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/products"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: createRecurringDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/create"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getRecurringDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/get"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: makeRecurringDeposit
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/deposit"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: makeRecurringWithdrawal
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/withdraw"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: approveRecurringDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/approve"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: getClientRecurringDepositAccounts
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/client/accounts"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+    - role: client_self_service
+
+- name: getRecurringDepositTemplate
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/template"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: prematureCloseRecurringDepositAccount
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/premature-close"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: updateRecurringDepositMaturityInstructions
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/account/update-maturity-instructions"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+    - role: user
+
+- name: trackRecurringDepositInstallments
+  definition:
+    kind: synchronous
+    handler: "{{ACTIONS_BASE_URL}}/api/recurring-deposit/track-installments"
+    forward_client_headers: true
+  permissions:
+    - role: admin
+  comment: Track recurring deposit installments and identify overdue accounts

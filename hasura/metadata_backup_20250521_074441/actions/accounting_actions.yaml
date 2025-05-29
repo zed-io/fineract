@@ -1,0 +1,413 @@
+actions:
+  # GL Account Actions
+  - name: createGLAccount
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-account/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new GL account
+    
+  - name: updateGLAccount
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-account/update'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Update an existing GL account
+    
+  - name: deleteGLAccount
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-account/delete'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Delete a GL account
+    
+  - name: getGLAccount
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-account/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get a GL account by ID
+    
+  - name: getGLAccounts
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-accounts'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get GL accounts with optional filtering
+    
+  - name: getGLAccountsTree
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-accounts-tree'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get GL accounts in a hierarchical tree structure
+
+  # GL Closure Actions
+  - name: createGLClosure
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-closure/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new GL closure
+    
+  - name: deleteGLClosure
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-closure/delete'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Delete a GL closure
+    
+  - name: getGLClosure
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-closure/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get a GL closure by ID
+    
+  - name: getGLClosures
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/gl-closures'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get GL closures with optional filtering by office
+
+  # Accounting Rule Actions
+  - name: createAccountingRule
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/rule/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new accounting rule
+    
+  - name: updateAccountingRule
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/rule/update'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Update an existing accounting rule
+    
+  - name: deleteAccountingRule
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/rule/delete'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Delete an accounting rule
+    
+  - name: getAccountingRule
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/rule/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get an accounting rule by ID
+    
+  - name: getAccountingRules
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/rules'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get all accounting rules
+
+  # Payment Type Actions
+  - name: createPaymentType
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/payment-type/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new payment type
+    
+  - name: updatePaymentType
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/payment-type/update'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Update an existing payment type
+    
+  - name: deletePaymentType
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/payment-type/delete'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Delete a payment type
+    
+  - name: getPaymentType
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/payment-type/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get a payment type by ID
+    
+  - name: getPaymentTypes
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/payment-types'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get all payment types with optional filtering
+
+  # Template Actions
+  - name: getAccountingTemplate
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/template'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get accounting template data
+
+  # Provisioning Category Actions
+  - name: createProvisioningCategory
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-categories/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new provisioning category
+
+  - name: updateProvisioningCategory
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-categories/update'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Update an existing provisioning category
+
+  - name: deleteProvisioningCategory
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-categories/delete'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Delete a provisioning category
+
+  - name: getProvisioningCategory
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-categories/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get a provisioning category by ID
+
+  - name: getProvisioningCategories
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-categories/list'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get all provisioning categories
+
+  # Provisioning Entry Actions
+  - name: createProvisioningEntry
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-entries/create'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Create a new provisioning entry
+
+  - name: approveProvisioningEntry
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-entries/approve'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Approve a provisioning entry
+
+  - name: rejectProvisioningEntry
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-entries/reject'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+    comment: Reject a provisioning entry
+
+  - name: getProvisioningEntry
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-entries/get'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get a provisioning entry by ID
+
+  - name: getProvisioningEntries
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/api/accounting/provisioning/provisioning-entries/list'
+      forward_client_headers: true
+    permissions:
+      - role: admin
+      - role: user
+    comment: Get all provisioning entries with optional filtering
+
+custom_types:
+  enums:
+    - name: AccountType
+    - name: AccountUsage
+    - name: AccountingRuleType
+    - name: ProvisioningEntryStatus
+
+  input_objects:
+    # GL Account input objects
+    - name: GLAccountCreateInput
+    - name: GLAccountUpdateInput
+    - name: GLAccountDeleteInput
+    - name: GLAccountGetInput
+    - name: GLAccountsGetInput
+    - name: GLAccountsTreeInput
+
+    # GL Closure input objects
+    - name: GLClosureCreateInput
+    - name: GLClosureDeleteInput
+    - name: GLClosureGetInput
+    - name: GLClosuresGetInput
+
+    # Accounting Rule input objects
+    - name: AccountingRuleCreateInput
+    - name: AccountingRuleUpdateInput
+    - name: AccountingRuleDeleteInput
+    - name: AccountingRuleGetInput
+
+    # Payment Type input objects
+    - name: PaymentTypeCreateInput
+    - name: PaymentTypeUpdateInput
+    - name: PaymentTypeDeleteInput
+    - name: PaymentTypeGetInput
+    - name: PaymentTypesGetInput
+
+    # Provisioning Category input objects
+    - name: ProvisioningCategoryCreateInput
+    - name: ProvisioningCategoryUpdateInput
+    - name: ProvisioningCategoryDeleteInput
+    - name: ProvisioningCategoryGetInput
+
+    # Provisioning Entry input objects
+    - name: ProvisioningEntryCreateInput
+    - name: ProvisioningEntryApproveInput
+    - name: ProvisioningEntryRejectInput
+    - name: ProvisioningEntryGetInput
+    - name: ProvisioningEntriesGetInput
+
+  objects:
+    # GL Account objects
+    - name: GLAccount
+    - name: GLAccountsResponse
+    - name: GLAccountCreateResponse
+    - name: GLAccountUpdateResponse
+    - name: GLAccountDeleteResponse
+    - name: GLAccountGetResponse
+    - name: GLAccountsGetResponse
+    - name: GLAccountsTreeResponse
+
+    # GL Closure objects
+    - name: GLClosure
+    - name: GLClosuresResponse
+    - name: GLClosureCreateResponse
+    - name: GLClosureDeleteResponse
+    - name: GLClosureGetResponse
+    - name: GLClosuresGetResponse
+
+    # Accounting Rule objects
+    - name: AccountTag
+    - name: AccountingRule
+    - name: AccountingRulesResponse
+    - name: AccountingRuleCreateResponse
+    - name: AccountingRuleUpdateResponse
+    - name: AccountingRuleDeleteResponse
+    - name: AccountingRuleGetResponse
+    - name: AccountingRulesGetResponse
+
+    # Payment Type objects
+    - name: PaymentType
+    - name: PaymentTypesResponse
+    - name: PaymentTypeCreateResponse
+    - name: PaymentTypeUpdateResponse
+    - name: PaymentTypeDeleteResponse
+    - name: PaymentTypeGetResponse
+    - name: PaymentTypesGetResponse
+
+    # Template objects
+    - name: AccountingTemplateResponse
+    - name: AccountingTemplate
+    - name: AccountTypeOption
+    - name: AccountUsageOption
+    - name: OfficeOption
+    - name: PaymentTypeOption
+
+    # Provisioning Category objects
+    - name: ProvisioningCategory
+    - name: ProvisioningCategoriesResponse
+    - name: ProvisioningCategoryCreateResponse
+    - name: ProvisioningCategoryUpdateResponse
+    - name: ProvisioningCategoryDeleteResponse
+    - name: ProvisioningCategoryGetResponse
+    - name: ProvisioningCategoriesGetResponse
+
+    # Provisioning Entry objects
+    - name: ProvisioningEntryDetail
+    - name: ProvisioningEntry
+    - name: ProvisioningEntriesResponse
+    - name: ProvisioningEntryCreateResponse
+    - name: ProvisioningEntryApproveResponse
+    - name: ProvisioningEntryRejectResponse
+    - name: ProvisioningEntryGetResponse
+    - name: ProvisioningEntriesGetResponse

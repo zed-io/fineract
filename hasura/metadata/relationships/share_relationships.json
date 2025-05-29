@@ -3,11 +3,11 @@
     {
       "name": "clients_share_accounts",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "clients"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "mapping": {
@@ -18,11 +18,11 @@
     {
       "name": "groups_share_accounts",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "groups"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "mapping": {
@@ -33,11 +33,11 @@
     {
       "name": "share_product",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "mapping": {
@@ -48,11 +48,11 @@
     {
       "name": "client",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "client"
       },
       "mapping": {
@@ -63,11 +63,11 @@
     {
       "name": "group",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "groups"
       },
       "mapping": {
@@ -78,11 +78,11 @@
     {
       "name": "office",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "office"
       },
       "mapping": {
@@ -93,11 +93,11 @@
     {
       "name": "staff",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "staff"
       },
       "mapping": {
@@ -108,11 +108,11 @@
     {
       "name": "charges",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_charge"
       },
       "mapping": {
@@ -123,11 +123,11 @@
     {
       "name": "purchase_requests",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_purchase_request"
       },
       "mapping": {
@@ -138,11 +138,11 @@
     {
       "name": "transactions",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_transaction"
       },
       "mapping": {
@@ -153,11 +153,11 @@
     {
       "name": "dividends",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_dividend"
       },
       "mapping": {
@@ -168,11 +168,11 @@
     {
       "name": "purchase_request",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_transaction"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_purchase_request"
       },
       "mapping": {
@@ -183,11 +183,11 @@
     {
       "name": "account",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_transaction"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "mapping": {
@@ -198,11 +198,11 @@
     {
       "name": "share_account",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_charge"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "mapping": {
@@ -213,11 +213,11 @@
     {
       "name": "charge",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_charge"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "charge"
       },
       "mapping": {
@@ -228,11 +228,11 @@
     {
       "name": "product_charges",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_charge"
       },
       "mapping": {
@@ -243,11 +243,11 @@
     {
       "name": "market_prices",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_market_price"
       },
       "mapping": {
@@ -258,11 +258,11 @@
     {
       "name": "share_product_dividends",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_dividend"
       },
       "mapping": {
@@ -273,11 +273,11 @@
     {
       "name": "share_product",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_charge"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "mapping": {
@@ -288,11 +288,11 @@
     {
       "name": "charge",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_charge"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "charge"
       },
       "mapping": {
@@ -303,11 +303,11 @@
     {
       "name": "share_product",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_market_price"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "mapping": {
@@ -318,11 +318,11 @@
     {
       "name": "share_product",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_dividend"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product"
       },
       "mapping": {
@@ -333,11 +333,11 @@
     {
       "name": "share_account",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_dividend"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account"
       },
       "mapping": {
@@ -348,11 +348,11 @@
     {
       "name": "dividend_payout",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_account_dividend"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "share_product_dividend"
       },
       "mapping": {

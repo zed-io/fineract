@@ -1,0 +1,745 @@
+type Query {
+  getShareProduct(
+    productId: String!
+  ): ShareProductResponse
+  
+  getShareProducts: ShareProductsResponse
+  
+  getShareAccount(
+    accountId: String!
+  ): ShareAccountResponse
+  
+  getClientShareAccounts(
+    clientId: String!
+  ): ShareAccountsResponse
+  
+  getGroupShareAccounts(
+    groupId: String!
+  ): ShareAccountsResponse
+  
+  getShareTemplate(
+    clientId: String
+    productId: String
+  ): ShareTemplateResponse
+  
+  # Certificate related queries
+  getShareCertificateTemplates: ShareCertificateTemplatesResponse
+  
+  getShareCertificateTemplate(
+    templateId: String!
+  ): ShareCertificateTemplateResponse
+  
+  getShareCertificateSeries(
+    productId: String!
+  ): ShareCertificateSeriesListResponse
+  
+  getShareCertificateById(
+    certificateId: String!
+  ): ShareCertificateResponse
+  
+  getShareCertificates(
+    accountId: String!
+  ): ShareCertificatesResponse
+  
+  getShareCertificateBatches(
+    productId: String
+    status: String
+  ): ShareCertificateBatchesResponse
+  
+  getShareCertificateBatch(
+    batchId: String!
+  ): ShareCertificateBatchResponse
+  
+  verifyShareCertificate(
+    certificateNumber: String!
+    verificationCode: String!
+  ): ShareCertificateVerificationResponse
+}
+
+type Mutation {
+  createShareProduct(
+    name: String!
+    shortName: String!
+    description: String
+    currencyCode: String!
+    currencyDigits: Int
+    currencyMultiplesOf: Int
+    externalId: String
+    totalShares: Int!
+    totalSharesToBeIssued: Int!
+    nominalPrice: Float!
+    marketPrice: Float
+    shareCapitalType: String
+    shareValueCalculationType: String
+    allowDividendsForInactiveClients: Boolean
+    lockinPeriod: Int
+    lockinPeriodType: String
+    minimumShares: Int
+    nominateSharesDefault: Int
+    maximumShares: Int
+    accountingRule: String!
+    charges: [String]
+    marketPrices: [ShareProductMarketPriceInput]
+  ): CreateShareProductResponse
+  
+  createShareAccount(
+    clientId: String
+    groupId: String
+    productId: String!
+    submittedDate: String!
+    externalId: String
+    savingsAccountId: String
+    applicationDate: String
+    fieldOfficerId: String
+    requestedShares: Int!
+    lockinPeriod: Int
+    lockinPeriodFrequencyType: String
+    charges: [ShareAccountChargeInput]
+    dateFormat: String
+    locale: String
+  ): CreateShareAccountResponse
+  
+  approveShareAccount(
+    accountId: String!
+    approvedDate: String!
+    approvedShares: Int!
+    note: String
+  ): ShareAccountApprovalResponse
+  
+  rejectShareAccount(
+    accountId: String!
+    rejectedDate: String!
+    note: String
+  ): ShareAccountRejectResponse
+  
+  activateShareAccount(
+    accountId: String!
+    activatedDate: String!
+    note: String
+  ): ShareAccountActivateResponse
+  
+  closeShareAccount(
+    accountId: String!
+    closedDate: String!
+    note: String
+  ): ShareAccountCloseResponse
+  
+  submitSharePurchaseRequest(
+    accountId: String!
+    requestedDate: String!
+    requestedShares: Int!
+  ): SharePurchaseSubmitResponse
+  
+  approveSharePurchaseRequest(
+    accountId: String!
+    purchaseRequestId: String!
+    processedDate: String!
+    approvedShares: Int!
+  ): SharePurchaseApprovalResponse
+  
+  rejectSharePurchaseRequest(
+    accountId: String!
+    purchaseRequestId: String!
+    processedDate: String!
+    note: String
+  ): SharePurchaseRejectResponse
+  
+  redeemShares(
+    accountId: String!
+    transactionDate: String!
+    sharesQuantity: Int!
+  ): ShareRedeemResponse
+  
+  declareShareProductDividend(
+    productId: String!
+    dividendPeriodStartDate: String!
+    dividendPeriodEndDate: String!
+    dividendAmount: Float!
+  ): ShareProductDividendDeclareResponse
+  
+  processShareDividend(
+    accountId: String!
+    dividendPayOutId: String!
+    savingsAccountId: String
+  ): ShareAccountDividendProcessResponse
+  
+  # Certificate related mutations
+  createShareCertificateTemplate(
+    name: String!
+    description: String
+    templateContent: String!
+    isActive: Boolean
+    isDefault: Boolean
+  ): ShareCertificateTemplateCreateResponse
+  
+  updateShareCertificateTemplate(
+    templateId: String!
+    name: String
+    description: String
+    templateContent: String
+    isActive: Boolean
+    isDefault: Boolean
+  ): ShareCertificateTemplateUpdateResponse
+  
+  createShareCertificateSeries(
+    productId: String!
+    prefix: String!
+    nextNumber: Int
+    isActive: Boolean
+  ): ShareCertificateSeriesCreateResponse
+  
+  updateShareCertificateSeries(
+    seriesId: String!
+    prefix: String
+    nextNumber: Int
+    isActive: Boolean
+  ): ShareCertificateSeriesUpdateResponse
+  
+  generateShareCertificate(
+    accountId: String!
+    templateId: String!
+    issueDate: String!
+    sharesQuantity: Int!
+    expiryDate: String
+    notes: String
+  ): ShareCertificateGenerateResponse
+  
+  revokeShareCertificate(
+    certificateId: String!
+    revocationDate: String!
+    reason: String!
+  ): ShareCertificateRevokeResponse
+  
+  regenerateShareCertificate(
+    certificateId: String!
+    newTemplateId: String
+    newIssueDate: String!
+    newExpiryDate: String
+    notes: String
+  ): ShareCertificateRegenerateResponse
+  
+  startShareCertificateBatch(
+    productId: String
+    templateId: String!
+    seriesId: String!
+    accountIds: [String]
+    notes: String
+  ): ShareCertificateBatchStartResponse
+  
+  downloadShareCertificate(
+    certificateId: String!
+    format: String # pdf, png, etc.
+  ): ShareCertificateDownloadResponse
+}
+
+# Common types
+type Currency {
+  code: String!
+  name: String!
+  decimalPlaces: Int!
+  inMultiplesOf: Int!
+  displaySymbol: String!
+  nameCode: String!
+  displayLabel: String!
+}
+
+type EnumOption {
+  id: Int!
+  code: String!
+  value: String!
+}
+
+# Share Product types
+input ShareProductMarketPriceInput {
+  fromDate: String!
+  price: Float!
+}
+
+type ShareProductMarketPrice {
+  id: String
+  productId: String!
+  fromDate: String!
+  price: Float!
+}
+
+type ShareProductCharge {
+  id: String
+  productId: String!
+  chargeId: String!
+  chargeName: String
+  chargeType: String
+  chargeCalculationType: String
+  chargeTimeType: String
+  amount: Float
+}
+
+type ShareProductResponse {
+  id: String!
+  name: String!
+  shortName: String!
+  description: String
+  externalId: String
+  totalShares: Int!
+  issuedShares: Int!
+  totalSharesToBeIssued: Int!
+  nominalPrice: Float!
+  marketPrice: Float
+  shareCapitalType: String!
+  shareValueCalculationType: String!
+  allowDividendsForInactiveClients: Boolean!
+  lockinPeriod: Int
+  lockinPeriodType: String
+  minimumShares: Int
+  nominateSharesDefault: Int
+  maximumShares: Int
+  accountingRule: String!
+  isActive: Boolean!
+  charges: [ShareProductCharge!]!
+  marketPrices: [ShareProductMarketPrice!]!
+  currency: Currency!
+}
+
+type ShareProductsResponse {
+  products: [ShareProductResponse!]!
+}
+
+type CreateShareProductResponse {
+  productId: String!
+}
+
+# Share Account types
+input ShareAccountChargeInput {
+  chargeId: String!
+  amount: Float!
+  dueDate: String
+}
+
+type ShareAccountCharge {
+  id: String
+  accountId: String!
+  chargeId: String!
+  chargeName: String
+  chargeTimeType: String
+  chargeCalculationType: String
+  amount: Float!
+  amountPaid: Float!
+  amountWaived: Float!
+  amountOutstanding: Float!
+  isPaid: Boolean!
+  isWaived: Boolean!
+  isActive: Boolean!
+  isPenalty: Boolean!
+  dueDate: String
+}
+
+type SharePurchaseRequest {
+  id: String
+  accountId: String!
+  requestDate: String!
+  requestedShares: Int!
+  status: String!
+  requestedDate: String!
+  requestedByUsername: String
+  requestedByFirstname: String
+  requestedByLastname: String
+  processedDate: String
+  processedByUsername: String
+  processedByFirstname: String
+  processedByLastname: String
+}
+
+type ShareAccountTransaction {
+  id: String
+  accountId: String!
+  purchaseRequestId: String
+  transactionDate: String!
+  transactionType: String!
+  sharesQuantity: Int!
+  unitPrice: Float!
+  totalAmount: Float!
+  chargedAmount: Float!
+  isReversed: Boolean!
+}
+
+type ShareAccountDividend {
+  id: String
+  accountId: String!
+  dividendPayOutId: String!
+  amount: Float!
+  status: String!
+  processedDate: String
+  savingsTransactionId: String
+}
+
+type ShareAccountSummary {
+  totalApprovedShares: Int!
+  totalPendingShares: Int!
+  totalRejectedShares: Int
+  totalActive: Int!
+  totalShareValue: Float!
+  totalDividends: Float
+  totalCharges: Float
+}
+
+type ShareAccountResponse {
+  id: String!
+  accountNo: String!
+  externalId: String
+  clientId: String
+  clientName: String
+  groupId: String
+  groupName: String
+  productId: String!
+  productName: String!
+  fieldOfficerId: String
+  fieldOfficerName: String
+  officeId: String!
+  officeName: String
+  status: String!
+  submittedDate: String!
+  submittedByUsername: String
+  submittedByFirstname: String
+  submittedByLastname: String
+  approvedDate: String
+  approvedByUsername: String
+  approvedByFirstname: String
+  approvedByLastname: String
+  rejectedDate: String
+  rejectedByUsername: String
+  rejectedByFirstname: String
+  rejectedByLastname: String
+  activatedDate: String
+  activatedByUsername: String
+  activatedByFirstname: String
+  activatedByLastname: String
+  closedDate: String
+  closedByUsername: String
+  closedByFirstname: String
+  closedByLastname: String
+  totalApprovedShares: Int!
+  totalPendingShares: Int!
+  lockinPeriod: Int
+  lockinPeriodType: String
+  isDividendPosted: Boolean!
+  currency: Currency
+  summary: ShareAccountSummary
+  charges: [ShareAccountCharge!]
+  purchaseRequests: [SharePurchaseRequest!]
+  transactions: [ShareAccountTransaction!]
+  dividends: [ShareAccountDividend!]
+}
+
+type ShareAccountsResponse {
+  accounts: [ShareAccountResponse!]!
+}
+
+type CreateShareAccountResponse {
+  accountId: String!
+}
+
+type ShareAccountApprovalResponse {
+  accountId: String!
+  approvedDate: String!
+  approvedShares: Int!
+}
+
+type ShareAccountRejectResponse {
+  accountId: String!
+  rejectedDate: String!
+}
+
+type ShareAccountActivateResponse {
+  accountId: String!
+  activatedDate: String!
+}
+
+type ShareAccountCloseResponse {
+  accountId: String!
+  closedDate: String!
+}
+
+type SharePurchaseSubmitResponse {
+  accountId: String!
+  purchaseRequestId: String!
+  requestedDate: String!
+  requestedShares: Int!
+}
+
+type SharePurchaseApprovalResponse {
+  accountId: String!
+  purchaseRequestId: String!
+  processedDate: String!
+  approvedShares: Int!
+  transactionId: String!
+}
+
+type SharePurchaseRejectResponse {
+  accountId: String!
+  purchaseRequestId: String!
+  processedDate: String!
+}
+
+type ShareRedeemResponse {
+  accountId: String!
+  transactionId: String!
+  transactionDate: String!
+  sharesQuantity: Int!
+  totalAmount: Float!
+}
+
+type ShareProductDividendDeclareResponse {
+  productId: String!
+  dividendId: String!
+  dividendPeriodStartDate: String!
+  dividendPeriodEndDate: String!
+  dividendAmount: Float!
+}
+
+type ShareAccountDividendProcessResponse {
+  accountId: String!
+  dividendId: String!
+  processedDate: String!
+  amount: Float!
+  savingsTransactionId: String
+}
+
+type ChargeTemplateOption {
+  id: String!
+  name: String!
+  active: Boolean!
+  chargeTimeType: String!
+  chargeCalculationType: String!
+  currencyCode: String!
+  amount: Float!
+}
+
+type ShareProductTemplateOption {
+  id: String!
+  name: String!
+  shortName: String!
+  totalShares: Int!
+  totalSharesToBeIssued: Int!
+  nominalPrice: Float!
+  marketPrice: Float
+  currency: Currency!
+}
+
+type SavingsAccountOption {
+  id: String!
+  accountNo: String!
+  productName: String!
+  status: String!
+}
+
+type ShareTemplateResponse {
+  productOptions: [ShareProductTemplateOption!]!
+  chargeOptions: [ChargeTemplateOption!]!
+  savingsAccountOptions: [SavingsAccountOption!]!
+  selectedProduct: ShareProductTemplateOption
+}
+
+# Share Certificate types
+type ShareCertificateTemplate {
+  id: String!
+  name: String!
+  description: String
+  templateContent: String!
+  isActive: Boolean!
+  isDefault: Boolean!
+  createdDate: String
+  lastModifiedDate: String
+}
+
+type ShareCertificateTemplatesResponse {
+  templates: [ShareCertificateTemplate!]!
+}
+
+type ShareCertificateTemplateResponse {
+  template: ShareCertificateTemplate!
+}
+
+type ShareCertificateTemplateCreateResponse {
+  templateId: String!
+  name: String!
+}
+
+type ShareCertificateTemplateUpdateResponse {
+  templateId: String!
+  name: String!
+  updated: Boolean!
+}
+
+type ShareCertificateSeries {
+  id: String!
+  productId: String!
+  productName: String
+  prefix: String!
+  nextNumber: Int!
+  isActive: Boolean!
+  createdDate: String
+  lastModifiedDate: String
+}
+
+type ShareCertificateSeriesListResponse {
+  seriesList: [ShareCertificateSeries!]!
+}
+
+type ShareCertificateSeriesCreateResponse {
+  seriesId: String!
+  prefix: String!
+}
+
+type ShareCertificateSeriesUpdateResponse {
+  seriesId: String!
+  prefix: String
+  updated: Boolean!
+}
+
+type ShareCertificate {
+  id: String!
+  certificateNumber: String!
+  accountId: String!
+  accountNumber: String
+  clientId: String
+  clientName: String
+  groupId: String
+  groupName: String
+  productId: String
+  productName: String
+  templateId: String!
+  templateName: String
+  seriesId: String!
+  seriesPrefix: String
+  
+  issueDate: String!
+  issuedByUsername: String
+  issuedByFirstname: String
+  issuedByLastname: String
+  revocationDate: String
+  revokedByUsername: String
+  revokedByFirstname: String
+  revokedByLastname: String
+  expiryDate: String
+  
+  sharesQuantity: Int!
+  shareValue: Float!
+  totalValue: Float!
+  
+  status: String!
+  
+  notes: String
+  signatureImagePath: String
+  digitalSignatureData: String
+  
+  isDigital: Boolean!
+  documentPath: String
+  verificationCode: String
+  
+  createdDate: String
+  lastModifiedDate: String
+}
+
+type ShareCertificateResponse {
+  certificate: ShareCertificate!
+}
+
+type ShareCertificatesResponse {
+  certificates: [ShareCertificate!]!
+}
+
+type ShareCertificateGenerateResponse {
+  certificateId: String!
+  certificateNumber: String!
+  accountId: String!
+  issueDate: String!
+  sharesQuantity: Int!
+  downloadUrl: String
+}
+
+type ShareCertificateRevokeResponse {
+  certificateId: String!
+  certificateNumber: String!
+  revocationDate: String!
+  status: String!
+}
+
+type ShareCertificateRegenerateResponse {
+  originalCertificateId: String!
+  newCertificateId: String!
+  newCertificateNumber: String!
+  issueDate: String!
+  status: String!
+  downloadUrl: String
+}
+
+type ShareCertificateBatchItem {
+  id: String!
+  batchId: String!
+  accountId: String!
+  accountNumber: String
+  clientName: String
+  groupName: String
+  certificateId: String
+  certificateNumber: String
+  status: String!
+  errorMessage: String
+  createdDate: String
+  lastModifiedDate: String
+}
+
+type ShareCertificateBatch {
+  id: String!
+  productId: String
+  productName: String
+  templateId: String!
+  templateName: String
+  seriesId: String!
+  seriesPrefix: String
+  
+  startedDate: String!
+  completedDate: String
+  startedByUsername: String
+  startedByFirstname: String
+  startedByLastname: String
+  
+  totalCertificates: Int!
+  processedCertificates: Int!
+  failedCertificates: Int!
+  
+  status: String!
+  notes: String
+  
+  items: [ShareCertificateBatchItem!]
+  
+  createdDate: String
+  lastModifiedDate: String
+}
+
+type ShareCertificateBatchResponse {
+  batch: ShareCertificateBatch!
+}
+
+type ShareCertificateBatchesResponse {
+  batches: [ShareCertificateBatch!]!
+}
+
+type ShareCertificateBatchStartResponse {
+  batchId: String!
+  status: String!
+  totalAccounts: Int!
+  message: String
+}
+
+type ShareCertificateDownloadResponse {
+  certificateId: String!
+  certificateNumber: String!
+  downloadUrl: String!
+  format: String!
+  expiryTime: String! # When the download URL expires
+}
+
+type ShareCertificateVerificationResponse {
+  isValid: Boolean!
+  certificate: ShareCertificate
+  message: String
+}

@@ -3,7 +3,7 @@
 -- Specific to Trinidad and Tobago regulatory requirements
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create enum types for regulatory reporting
 CREATE TYPE report_frequency AS ENUM (
@@ -295,7 +295,7 @@ BEGIN
         (ri.due_date - CURRENT_DATE) as days_until_due,
         ri.status
     FROM 
-        fineract_default.regulatory_report_instance ri
+        "default".regulatory_report_instance ri
     WHERE 
         ri.due_date IS NOT NULL
         AND ri.due_date > CURRENT_DATE
@@ -322,7 +322,7 @@ BEGIN
         SELECT 
             rd.id, rd.name, rd.report_type, rd.frequency, rd.deadline
         FROM 
-            fineract_default.regulatory_report_definition rd
+            "default".regulatory_report_definition rd
         WHERE 
             rd.is_active = true
             AND rd.frequency != 'on_demand'
@@ -358,13 +358,13 @@ BEGIN
         -- Check if a report instance already exists for this period
         IF NOT EXISTS (
             SELECT 1 
-            FROM fineract_default.regulatory_report_instance 
+            FROM "default".regulatory_report_instance 
             WHERE definition_id = report_def.id
             AND start_date = next_period_start
             AND end_date = next_period_end
         ) THEN
             -- Create a pending report instance
-            INSERT INTO fineract_default.regulatory_report_instance (
+            INSERT INTO "default".regulatory_report_instance (
                 id, definition_id, name, report_type, start_date, end_date, due_date,
                 status, format, generated_by, generated_at, created_date, created_by
             ) VALUES (

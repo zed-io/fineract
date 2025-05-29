@@ -1,0 +1,48 @@
+FROM eclipse-temurin:17-jdk-alpine as builder
+
+WORKDIR /app
+
+# Copy gradle wrapper and dependencies
+COPY gradlew ./
+COPY gradle ./gradle/
+COPY build.gradle ./
+COPY settings.gradle ./
+COPY gradle.properties ./
+
+# Copy buildSrc
+COPY buildSrc ./buildSrc/
+
+# Copy source code
+COPY fineract-core ./fineract-core/
+COPY fineract-provider ./fineract-provider/
+COPY fineract-accounting ./fineract-accounting/
+COPY fineract-branch ./fineract-branch/
+COPY fineract-charge ./fineract-charge/
+COPY fineract-client ./fineract-client/
+COPY fineract-command ./fineract-command/
+COPY fineract-document ./fineract-document/
+COPY fineract-investor ./fineract-investor/
+COPY fineract-loan ./fineract-loan/
+COPY fineract-progressive-loan ./fineract-progressive-loan/
+COPY fineract-rates ./fineract-rates/
+COPY fineract-report ./fineract-report/
+COPY fineract-savings ./fineract-savings/
+COPY fineract-tax ./fineract-tax/
+COPY fineract-war ./fineract-war/
+COPY fineract-db ./fineract-db/
+COPY custom ./custom/
+
+# Build the application
+RUN ./gradlew build -x test
+
+FROM eclipse-temurin:17-jre-alpine
+
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+COPY --from=builder /app/fineract-provider/build/libs/*.jar app.jar
+
+EXPOSE 8443
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

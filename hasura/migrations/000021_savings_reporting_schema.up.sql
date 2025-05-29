@@ -2,7 +2,7 @@
 -- Creates tables and views for advanced savings analytics and reporting
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Savings Product Performance Metrics
 CREATE TABLE IF NOT EXISTS savings_product_metrics (

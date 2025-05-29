@@ -2,7 +2,7 @@
 -- Creates the schema for savings products and savings accounts
 
 -- Set search path to the tenant schema
-SET search_path TO fineract_default;
+SET search_path TO "default";
 
 -- Create additional enum types for savings
 CREATE TYPE interest_compounding_period_type AS ENUM ('daily', 'monthly', 'quarterly', 'semi_annual', 'annual');

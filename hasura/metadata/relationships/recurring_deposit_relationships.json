@@ -3,11 +3,11 @@
     {
       "name": "clients_recurring_deposit_accounts",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "clients"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "mapping": {
@@ -18,11 +18,11 @@
     {
       "name": "recurring_deposit_account",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_transactions"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "mapping": {
@@ -33,11 +33,11 @@
     {
       "name": "recurring_deposit_transactions",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_transactions"
       },
       "mapping": {
@@ -48,11 +48,11 @@
     {
       "name": "recurring_deposit_schedule",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_installments"
       },
       "mapping": {
@@ -63,11 +63,11 @@
     {
       "name": "recurring_deposit_account_product",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_products"
       },
       "mapping": {
@@ -78,11 +78,11 @@
     {
       "name": "recurring_deposit_chart_slabs",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_interest_rate_charts"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_interest_rate_slabs"
       },
       "mapping": {
@@ -93,11 +93,11 @@
     {
       "name": "recurring_deposit_product_charts",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_products"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_interest_rate_charts"
       },
       "mapping": {
@@ -108,11 +108,11 @@
     {
       "name": "recurring_deposit_accounts",
       "source_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "groups"
       },
       "target_table": {
-        "schema": "fineract_default",
+        "schema": "default",
         "name": "recurring_deposit_accounts"
       },
       "mapping": {

@@ -2,7 +2,7 @@
 -- Designed for PostgreSQL with normalized tables, constraints, and indexes
 
 -- Set search path
-SET search_path TO fineract_default, public;
+SET search_path TO "default", public;
 
 -- Create beneficiary management table if not exists
 CREATE TABLE IF NOT EXISTS savings_account_beneficiary (
